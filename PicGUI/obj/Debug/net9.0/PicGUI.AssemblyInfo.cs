@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PicGUI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+385fc864cee668ac6c80b6c1fb9941d9c0a47051")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+15cfd4c18249c7b1aa8864abff378a88d6608df4")]
 [assembly: System.Reflection.AssemblyProductAttribute("PicGUI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PicGUI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
