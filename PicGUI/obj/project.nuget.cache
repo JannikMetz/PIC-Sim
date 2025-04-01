@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "KMw8QLPsbss=",
+  "dgSpecHash": "MYwg+NcvBDM=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Jannik\\RiderProjects\\PIC-Sim\\PicGUI\\PicGUI.csproj",
+  "projectFilePath": "C:\\Users\\Jannik\\Desktop\\DHBW\\Semester_4\\Rechenarchitektur\\PIC-Sim\\PicGUI\\PicGUI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Jannik\\.nuget\\packages\\avalonia\\11.2.6\\avalonia.11.2.6.nupkg.sha512",
     "C:\\Users\\Jannik\\.nuget\\packages\\avalonia.angle.windows.natives\\2.1.22045.20230930\\avalonia.angle.windows.natives.2.1.22045.20230930.nupkg.sha512",

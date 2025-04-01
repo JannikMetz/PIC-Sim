@@ -68,7 +68,7 @@ public class ALU
         
         // Calculate the result
         
-        // Set Flags
+        // Set Flags in Status Register
         
         // write back to register f or W
         if (destinationBit == 0)
@@ -79,6 +79,8 @@ public class ALU
         {
             // write to register f
         }
+        
+        //Update the program counter
         
         return true;
     }
@@ -92,7 +94,7 @@ public class ALU
         
         // Calculate the result
         
-        // Set Flags
+        // Set Flags in Status Register
         
         // write back to register f or W
         if (destinationBit == 0)
@@ -103,6 +105,8 @@ public class ALU
         {
             // write to register f
         }
+        
+        //Update the program counter
         
         return true;
     }

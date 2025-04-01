@@ -1436,11 +1436,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Jannik\\RiderProjects\\PIC-Sim\\PicGUI\\PicGUI.csproj",
+      "projectUniqueName": "C:\\Users\\Jannik\\Desktop\\DHBW\\Semester_4\\Rechenarchitektur\\PIC-Sim\\PicGUI\\PicGUI.csproj",
       "projectName": "PicGUI",
-      "projectPath": "C:\\Users\\Jannik\\RiderProjects\\PIC-Sim\\PicGUI\\PicGUI.csproj",
+      "projectPath": "C:\\Users\\Jannik\\Desktop\\DHBW\\Semester_4\\Rechenarchitektur\\PIC-Sim\\PicGUI\\PicGUI.csproj",
       "packagesPath": "C:\\Users\\Jannik\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Jannik\\RiderProjects\\PIC-Sim\\PicGUI\\obj\\",
+      "outputPath": "C:\\Users\\Jannik\\Desktop\\DHBW\\Semester_4\\Rechenarchitektur\\PIC-Sim\\PicGUI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Jannik\\AppData\\Roaming\\NuGet\\NuGet.Config"
