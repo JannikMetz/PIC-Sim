@@ -12,7 +12,7 @@ public class ALU
             case 0x0700:
                 return AddWF(operation); // ADDWF
             case 0x0500:
-                return ANDWF(operation); // ANDWF
+                return ANDWF(operation); // AndWF
             case 0x0900:
                 return COMF(operation); // COMF
             case 0x0300:
@@ -81,9 +81,31 @@ public class ALU
         }
         
         return true;
-        
     }
     
+    public bool AndWF(int f)
+    {
+        int mask = 0x0080;
+        int destinationBit = f & mask;
+        
+        // get f from registers with address
+        
+        // Calculate the result
+        
+        // Set Flags
+        
+        // write back to register f or W
+        if (destinationBit == 0)
+        {
+            // write to register W
+        }
+        else
+        {
+            // write to register f
+        }
+        
+        return true;
+    }
 
 }
 
