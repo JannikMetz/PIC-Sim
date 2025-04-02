@@ -12,31 +12,31 @@ public class ALU
             case 0x0700:
                 return AddWF(operation); // ADDWF
             case 0x0500:
-                return ANDWF(operation); // AndWF
+                return AndWF(operation); // AndWF
             case 0x0900:
-                return COMF(operation); // COMF
+                return ComF(operation); // COMF
             case 0x0300:
-                return DECF(operation); // DECF
+                return DecF(operation); // DECF
             case 0x0B00:
-                return DECFSZ(operation); // DECFSZ
+                return DecFSZ(operation); // DECFSZ
             case 0x0A00:
-                return INCF(operation); // INCF
+                return IncF(operation); // INCF
             case 0x0F00:
-                return INCFSZ(operation); // INCFSZ
+                return IncFSZ(operation); // INCFSZ
             case 0x0400:
-                return IORWF(operation); // IORWF
+                return IOrWF(operation); // IORWF
             case 0x0800:
-                return MOVF(operation); // MOVF
+                return MovF(operation); // MOVF
             case 0x0D00:
                 return RLF(operation); // RLF
             case 0x0C00:
                 return RRF(operation); // RRF
             case 0x0200:
-                return SUBWF(operation); // SUBWF
+                return SubWF(operation); // SUBWF
             case 0x0E00:
-                return SWAPF(operation); // SWAPF
+                return SwapF(operation); // SWAPF
             case 0x0600:
-                return XORWF(operation); // XORWF
+                return XOrWF(operation); // XORWF
         }
         
         int maskBitOrientedSpecial = 0x3F80; //CLRF AND CLRW AND MOVEWF
@@ -55,6 +55,17 @@ public class ALU
         
         
         maskBitOrientedSpecial = 0x00FF; //  NOP 
+        result = operation & maskBitOrientedSpecial;
+        switch (result)
+        {
+            case 0x0000:
+                return true; // NOP
+        }
+        
+        
+        // if this happened we have an error:
+        return false;
+
         
     }
     
@@ -111,5 +122,57 @@ public class ALU
         return true;
     }
 
+    public bool ComF(int f)
+    {
+        return true;
+    }
+
+    public bool DecF(int f)
+    {
+        return true;
+    }
+
+    public bool DecFSZ(int f)
+    {
+        return true;
+    }
+    
+    public bool IncF(int f)
+    {
+        return true;
+    }
+    public bool IncFSZ(int f)
+    {
+        return true;
+    }
+    public bool IOrWF(int f)
+    {
+        return true;
+    }
+    public bool MovF(int f)
+    {
+        return true;
+    }
+    public bool RLF(int f)
+    {
+        return true;
+    }
+    public bool RRF(int f)
+    {
+        return true;
+    }
+    public bool SubWF(int f)
+    {
+        return true;
+    }
+    public bool SwapF(int f)
+    {
+        return true;
+    }
+    public bool XOrWF(int f)
+    {
+        return true;
+    }
+    
 }
 
