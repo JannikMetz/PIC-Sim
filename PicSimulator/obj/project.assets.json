@@ -1479,19 +1479,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Jannik\\.nuget\\packages\\": {}
+    "/home/denmasch/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\DHBW\\Rechnerarchitektur\\PIC-Sim\\PicSimulator\\PicSimulator.csproj",
+      "projectUniqueName": "/home/denmasch/DHBW/Semester_4/Rechnerarchitektur/Simulator/PicSimulator/PicSimulator.csproj",
       "projectName": "PicSimulator",
-      "projectPath": "E:\\DHBW\\Rechnerarchitektur\\PIC-Sim\\PicSimulator\\PicSimulator.csproj",
-      "packagesPath": "C:\\Users\\Jannik\\.nuget\\packages\\",
-      "outputPath": "E:\\DHBW\\Rechnerarchitektur\\PIC-Sim\\PicSimulator\\obj\\",
+      "projectPath": "/home/denmasch/DHBW/Semester_4/Rechnerarchitektur/Simulator/PicSimulator/PicSimulator.csproj",
+      "packagesPath": "/home/denmasch/.nuget/packages/",
+      "outputPath": "/home/denmasch/DHBW/Semester_4/Rechnerarchitektur/Simulator/PicSimulator/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Jannik\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/home/denmasch/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -1515,7 +1515,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.200"
+      "SdkAnalysisLevel": "9.0.100"
     },
     "frameworks": {
       "net9.0": {
@@ -1557,12 +1557,18 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[9.0.3, 9.0.3]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.202/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.104/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
