@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace PicSimulator.Models;
 
@@ -17,7 +18,7 @@ public class FileReader
     {
         if (File.Exists(filePath))
         {
-            return File.ReadAllText(filePath);
+            return File.ReadAllText(filePath, Encoding.UTF8);
         }
         else
         {
@@ -26,6 +27,7 @@ public class FileReader
     }
     
     // This Function is AI-Generated, the Regex might not be correct
+    // Do we need this?
     public static int[] ExtractOpcodes(string input)
     {
         List<int> opcodes = new List<int>();
