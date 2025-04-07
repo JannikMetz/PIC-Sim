@@ -64,7 +64,7 @@ public class ALU
         switch (result)
         {
             case 0x0000:
-                return NOP(Opcode); // NOP
+                return NOP(); // NOP
         }
 
         int Mask4BitOperation = 0x3C00;
@@ -124,8 +124,113 @@ public class ALU
         return false;
 
     }
-    
-    
+
+    private bool ANDLW(int opcode)
+    {
+        throw new NotImplementedException();
+    }
+
+    private bool IORLW(int opcode)
+    {
+        throw new NotImplementedException();
+    }
+
+    private bool XORLW(int opcode)
+    {
+        throw new NotImplementedException();
+    }
+
+    private bool CLRF(int opcode)
+    {
+        throw new NotImplementedException();
+    }
+
+    private bool CLRW(int opcode)
+    {
+        throw new NotImplementedException();
+    }
+
+    private bool MOVWF(int opcode)
+    {
+        throw new NotImplementedException();
+    }
+
+    private bool NOP()
+    {
+        throw new NotImplementedException();
+    }
+
+    private bool BCF(int opcode)
+    {
+        throw new NotImplementedException();
+    }
+
+    private bool BSF(int opcode)
+    {
+        throw new NotImplementedException();
+    }
+
+    private bool BTFSC(int opcode)
+    {
+        throw new NotImplementedException();
+    }
+
+    private bool BTFSS(int opcode)
+    {
+        throw new NotImplementedException();
+    }
+
+    private bool MOVLW(int opcode)
+    {
+        throw new NotImplementedException();
+    }
+
+    private bool RETLW(int opcode)
+    {
+        throw new NotImplementedException();
+    }
+
+    private bool ADDLW(int opcode)
+    {
+        throw new NotImplementedException();
+    }
+
+    private bool SUBLW(int opcode)
+    {
+        throw new NotImplementedException();
+    }
+
+    private bool CALL(int opcode)
+    {
+        throw new NotImplementedException();
+    }
+
+    private bool GOTO(int opcode)
+    {
+        throw new NotImplementedException();
+    }
+
+    private bool SLEEP()
+    {
+        throw new NotImplementedException();
+    }
+
+    private bool RETURN()
+    {
+        throw new NotImplementedException();
+    }
+
+    private bool RETFIE()
+    {
+        throw new NotImplementedException();
+    }
+
+    private bool CLRWDT()
+    {
+        throw new NotImplementedException();
+    }
+
+
     public bool AddWF(int f)
     {
         int mask = 0x0080;
