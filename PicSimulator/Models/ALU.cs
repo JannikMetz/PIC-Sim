@@ -1,4 +1,6 @@
-﻿namespace PicSimulator.Models;
+﻿using System;
+
+namespace PicSimulator.Models;
 
 public class ALU
 {
@@ -37,6 +39,12 @@ public class ALU
                 return SwapF(Opcode); // SWAPF
             case 0x0600:
                 return XOrWF(Opcode); // XORWF
+            case 0x3900:
+                return ANDLW(Opcode); // ANDLW
+            case 0x3800:
+                return IORLW(Opcode); // IORLW
+            case 0x3A00:
+                return XORLW(Opcode); // XORLW
         }
         
         int Mask7BitOperation = 0x3F80; //CLRF AND CLRW AND MOVEWF
@@ -59,7 +67,7 @@ public class ALU
                 return NOP(Opcode); // NOP
         }
 
-        int Mask4BitOperation = 0x3B00;
+        int Mask4BitOperation = 0x3C00;
         result = Opcode & Mask4BitOperation;
         switch (result)
         {
@@ -67,9 +75,52 @@ public class ALU
                 return BCF(Opcode); // BCF
             case 0x1400:
                 return BSF(Opcode); // BSF
+            case 0x1800:
+                return BTFSC(Opcode); // BTFSC
+            case 0x1C00:
+                return BTFSS(Opcode); // BTFSS
+            case 0x3000:
+                return MOVLW(Opcode); // MOVLW
+            case 0x3400:
+                return RETLW(Opcode); // RETLW
+        }
+        
+        int Mask5BitOperation = 0x3E00;
+        result = Opcode & Mask5BitOperation;
+        switch (result)
+        {
+            case 0x3E00:
+                return ADDLW(Opcode); // ADDLW
+            case 0x3C00:
+                return SUBLW(Opcode); // SUBLW
+        }
+        
+        int Mask3BitOperation = 0x3F00;
+        result = Opcode & Mask3BitOperation;
+        switch (result)
+        {
+            case 0x2000:
+                return CALL(Opcode);
+            case 0x2800:
+                return GOTO(Opcode);
+        }
+        
+        int Mask14BitOperation = 0x3FFF;
+        result = Opcode & Mask14BitOperation;
+        switch (result)
+        {
+            case 0x0064:
+                return CLRWDT();
+            case 0x0009:
+                return RETFIE();
+            case 0x0008:
+                return RETURN();
+            case 0x0063:
+                return SLEEP();
         }
         
         // if this happened we have an error:
+        Console.WriteLine("Unbekannter Opcode: " + Opcode.ToString("X4"));
         return false;
 
     }
