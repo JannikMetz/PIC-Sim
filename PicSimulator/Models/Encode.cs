@@ -6,14 +6,9 @@ using System.Text;
 
 namespace PicSimulator.Models;
 
-//Class Encode is Readign the Code and Extracting the operations
-// and giving the operations to the Memory
 public class Encode
 {
-}
-
-public class FileReader
-{
+    
     public string ReadFile(string filePath)
     {
         
@@ -36,11 +31,14 @@ public class FileReader
         
         foreach (string line in lines)
         {
-            Match match = Regex.Match(line, "^\\s*\\d{4}\\s([0-9A-F]{4})\\b");
-            if (match.Success)
+            //check if line starts with whitespace or number
+            if (line[0] != ' ')
             {
-                opcodes.Add(Convert.ToInt32(match.Groups[1].Value, 16));
+                // Extract the opcode from the line
+                string code =  line.Substring(0, 3);
+                opcodes.Add(int.Parse(code, System.Globalization.NumberStyles.HexNumber));
             }
+            
         }
         
         return opcodes.ToArray();

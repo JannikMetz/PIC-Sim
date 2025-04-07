@@ -13,7 +13,7 @@ public partial class MainWindowViewModel : ViewModelBase
     #region Fields
     
     private string _fileContent;
-    private FileReader _fileReader;
+    private Encode _encode;
     
     #endregion
     
@@ -45,7 +45,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public MainWindowViewModel()
     {
-        _fileReader = new FileReader();
+        _encode = new Encode();
         LoadCommand = new RelayCommand(Load);
         SaveCommand = new RelayCommand(Save);
         SaveAsCommand = new RelayCommand(SaveAs);
@@ -64,7 +64,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
         if (result != null && result.Length > 0)
         {
-            FileContent = _fileReader.ReadFile(result[0]);
+            FileContent = _encode.ReadFile(result[0]);
         }
     }
 
