@@ -38,15 +38,18 @@
             </MenuItem>
             <MenuItem Header="Einstellungen">
             </MenuItem>
+            <MenuItem Header="Dokumentation">
+            </MenuItem>
         </Menu>
         <Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" BorderBrush="#FF000000" BorderThickness="1" CornerRadius="10" Margin="10,10,10,10" ClipToBounds="True">
-        
-        <ScrollViewer  Background="#1b1b1b"></ScrollViewer>
+            <ScrollViewer Background="#1b1b1b">
+                
+            </ScrollViewer>
         </Border>
-            <Border Grid.Row="2" Grid.Column="1" BorderBrush="#FF000000" BorderThickness="1" CornerRadius="10" Margin="0,10,10,10" ClipToBounds="True">
-        <ScrollViewer  Background="#1b1b1b">
-            <TextBlock Text="{Binding FileContent}" TextWrapping="Wrap" />
-        </ScrollViewer>
+        <Border Grid.Row="2" Grid.Column="1" BorderBrush="#FF000000" BorderThickness="1" CornerRadius="10" Margin="0,10,10,10" ClipToBounds="True">
+            <ScrollViewer  Background="#1b1b1b">
+                <TextBlock Text="{Binding FileContent}" TextWrapping="Wrap" FontFamily="Consolas"/>
+            </ScrollViewer>
         </Border>
     </Grid>
 </Window>
