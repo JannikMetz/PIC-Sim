@@ -1,11 +1,11 @@
                     00001           ;TPicSim5
                     00002           ;Programm zum Test des 16F84-Simulators.
-                    00003           ;Es werden die Befehle BCF, BSF, BTFSC und BTFSS geprüft
+                    00003           ;Es werden die Befehle BCF, BSF, BTFSC und BTFSS geprft
                     00004           ;(c) St. Lehmann
                     00005           ;Ersterstellung: 23.03.2016
-                    00006           ;mod. 18.10.2018 für HSO
+                    00006           ;mod. 18.10.2018 fr HSO
                     00007           ;
-                    00008           list c=132          ;Zeilenlänge im LST auf 132 Zeichen setzen
+                    00008           list c=132          ;Zeilenlnge im LST auf 132 Zeichen setzen
                     00009           
                     00010           ;Definition einiger Symbole
                     00011           ;zuerst Hardware-Register
@@ -13,7 +13,7 @@
                     00013           ra       equ 05h
                     00014           rb       equ 06h
                     00015           
-                    00016           ;für den Benutzer frei verwendbare Register
+                    00016           ;fr den Benutzer frei verwendbare Register
                     00017           wert1    equ 0ch             ;Variable Nr.1
                     00018           wert2    equ 0dh             ;Variable Nr.2
                     00019           ergeb    equ 0eh             ;Variable Nr.3

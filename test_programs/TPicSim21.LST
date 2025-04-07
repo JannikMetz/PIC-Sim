@@ -1,19 +1,19 @@
                     00001           ;TPicSim21
                     00002           ;Programm zum Test des 16F84-Simulators.
-                    00003           ;Testprogramm für verschachtelte Unterprogramme
+                    00003           ;Testprogramm fr verschachtelte Unterprogramme
                     00004           ;Beim 1. Durchlauf ist alles in Ordnung, da nur 8 CALLs
                     00005           ;verschachtelt werden. Im 2. Durchgang werden 9 CALLs
-                    00006           ;durchgeführt, was zu einem Überlauf des Stacks führt. Die
-                    00007           ;Rücksprungadresse des 1. CALLs wird überschrieben was zur 
+                    00006           ;durchgefhrt, was zu einem berlauf des Stacks fhrt. Die
+                    00007           ;Rcksprungadresse des 1. CALLs wird berschrieben was zur 
                     00008           ;Folge hat, dass jetzt nicht mehr in die Hauptschleife
-                    00009           ;zurückgefunden wird, sondern den Befehl nach CALL up9 ausführt.
-                    00010           ;Weil die Stackinhalte beim Lesen nicht gelöscht werden, werden
-                    00011           ;von nun an, nur noch RETURNs und keine CALLS ausgeführt.
+                    00009           ;zurckgefunden wird, sondern den Befehl nach CALL up9 ausfhrt.
+                    00010           ;Weil die Stackinhalte beim Lesen nicht gelscht werden, werden
+                    00011           ;von nun an, nur noch RETURNs und keine CALLS ausgefhrt.
                     00012           ;
                     00013           ;(c) St. Lehmann  
                     00014           ;13.04.2023 
                     00015           
-                    00016           list c=132          ;Zeilenlänge im LST auf 132 Zeichen setzen
+                    00016           list c=132          ;Zeilenlnge im LST auf 132 Zeichen setzen
                     00017             
                     00018           ;Definition einiger Symbole
                     00019           indirect equ 0
@@ -36,13 +36,13 @@
                     00036           org 0
                     00037           ;die ersten 4 Befehle bilden die Hauptschleife
                     00038  start    
-0000 0100           00039           clrw                ;Rückgabewerte kommen ins W-Register
+0000 0100           00039           clrw                ;Rckgabewerte kommen ins W-Register
                     00040  loop       
 0001 2004           00041           call up1            ;1. CALL, 1. Eintrag auf dem Stack
 0002 3CC8           00042           sublw 200           ;ergibt 0D8H (0xd8)
 0003 2801           00043           goto loop           ;neuer Durchlauf
                     00044  up1      
-0004 2008           00045           call up2            ;jeder weitere CALL füllt den Stack
+0004 2008           00045           call up2            ;jeder weitere CALL fllt den Stack
 0005 3E08           00046           addlw 8
 0006 00A0           00047           movwf erg1          ;hier muss 24h (0x24) stehen
 0007 34F0           00048           retlw 240
@@ -77,7 +77,7 @@
 001D 3E01           00077           addlw 1
 001E 0008           00078           return
                     00079  up9      
-001F 3005           00080           movlw 5             ;die Rücksprungadresse von CALL up1 ist verloren
+001F 3005           00080           movlw 5             ;die Rcksprungadresse von CALL up1 ist verloren
 0020 0008           00081           return         
                     00082             
                     00083  ende     

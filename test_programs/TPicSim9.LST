@@ -3,10 +3,10 @@
                     00003           ;Funktion: SLEEP-Befehl
                     00004           ;(c) St. Lehmann   Ersterstellung: 31.03.2016
                     00005           ;19.05.2020
-                    00006           ;20.04.2021 Ergänzungen bei den Kommentaren
+                    00006           ;20.04.2021 Ergnzungen bei den Kommentaren
                     00007           ;Definition einiger Symbole
                     00008           
-                    00009           list c=132          ;Zeilenlänge im LST auf 132 Zeichen setzen
+                    00009           list c=132          ;Zeilenlnge im LST auf 132 Zeichen setzen
                     00010           
                     00011           status   equ       03h
                     00012           rb       equ       06h
