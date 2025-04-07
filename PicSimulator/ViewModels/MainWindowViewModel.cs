@@ -40,6 +40,8 @@ public partial class MainWindowViewModel : ViewModelBase
     public ICommand SaveCommand { get; }
     public ICommand SaveAsCommand { get; }
     
+    public ICommand TestCommand { get; }
+    
     #endregion
     
 
@@ -49,6 +51,7 @@ public partial class MainWindowViewModel : ViewModelBase
         LoadCommand = new RelayCommand(Load);
         SaveCommand = new RelayCommand(Save);
         SaveAsCommand = new RelayCommand(SaveAs);
+        TestCommand = new RelayCommand(Test);
     }
 
     private async void Load(object parameter)
@@ -76,5 +79,10 @@ public partial class MainWindowViewModel : ViewModelBase
     private void SaveAs(object parameter)
     {
         Console.WriteLine("Save as command executed");
+    }
+    
+    private void Test(object parameter)
+    {
+        _encode.ExtractOpcodes(_fileContent);
     }
 }

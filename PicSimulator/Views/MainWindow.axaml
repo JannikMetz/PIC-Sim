@@ -34,6 +34,7 @@
                 <Separator/>
                 <MenuItem Header="Speichern" Command="{Binding SaveCommand}"/>
                 <MenuItem Header="Speichern unter" Command="{Binding SaveAsCommand}"/>
+                <MenuItem Header="Test" Command="{Binding TestCommand}"/>
             </MenuItem>
             <MenuItem Header="Einstellungen">
             </MenuItem>

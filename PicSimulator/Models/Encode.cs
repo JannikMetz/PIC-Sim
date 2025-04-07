@@ -25,7 +25,7 @@ public class Encode
     
     // This Function is AI-Generated, the Regex might not be correct
     // Do we need this?
-    public static List<int>  ExtractOpcodes(string input)
+    public List<int>  ExtractOpcodes(string input)
     {
         List<int> opcodes = new List<int>();
         string[] lines = input.Split('\n');
@@ -36,8 +36,8 @@ public class Encode
             if (line[0] != ' ')
             {
                 // Extract the opcode from the line
-                string code =  line.Substring(0, 3);
-                Console.WriteLine($"Opcode found at index {Array.IndexOf(lines, line)}: {code}");                
+                string code =  line.Substring(0, 4);
+                Console.WriteLine($"Opcode found at index {Array.IndexOf(lines, line)+1}: {code}");                
                 opcodes.Add(int.Parse(code, System.Globalization.NumberStyles.HexNumber));
             }
             
