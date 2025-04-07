@@ -15,6 +15,13 @@ public class Memory
     // Constructor to initialize the memory with default values.
     public Memory()
     {
+        ResetMemory();
+    }
+
+    public void ResetMemory()
+    {
+        Console.WriteLine("Resetting Memory");
+        // Reset the memory to default values.
         for (int i = 0; i < 2; i++)
         {
             for (int j = 0; j < 128; j++)
@@ -22,8 +29,11 @@ public class Memory
                 _memoryArray[i, j] = 0;
             }
         }
+        
+        Console.WriteLine("Resetting W-Register");
+        WReg = 0; // Reset W register
     }
-
+    
     public bool isBank0()
     {
         Console.WriteLine("Getting the Bank Status");
@@ -53,7 +63,7 @@ public class Memory
         if (isBank0())
         {
             // Bank 0
-            Console.WriteLine($"Setting Memory in Bank 0 at address {address}");
+            Console.WriteLine($"Reading Memory in Bank 0 at address {address}");
             return _memoryArray[0, address];
         }
         else
@@ -84,6 +94,7 @@ public class Memory
     public int getProgramCounter()
     {
         // Get the program counter from the memory.
+        Console.WriteLine("Reading the Program Counter");
         return _memoryArray[0, 0x02]; 
     }
 }
