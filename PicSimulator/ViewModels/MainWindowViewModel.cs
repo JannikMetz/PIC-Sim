@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
@@ -14,6 +16,7 @@ public partial class MainWindowViewModel : ViewModelBase
     
     private string _fileContent;
     private FileReader _fileReader;
+    private Memory _memory;
     
     #endregion
     
@@ -31,6 +34,8 @@ public partial class MainWindowViewModel : ViewModelBase
             }
         }
     }
+
+    
     
     #endregion
     
@@ -46,6 +51,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel()
     {
         _fileReader = new FileReader();
+        _memory = new Memory();
         LoadCommand = new RelayCommand(Load);
         SaveCommand = new RelayCommand(Save);
         SaveAsCommand = new RelayCommand(SaveAs);
