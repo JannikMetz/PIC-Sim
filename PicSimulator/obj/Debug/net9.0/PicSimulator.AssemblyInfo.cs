@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PicSimulator")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0e5a3c806f4f6959e9017e5d17352d50e606f944")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+47f8d69cbe476e8721b6fe9756cbd0aff9f0deeb")]
 [assembly: System.Reflection.AssemblyProductAttribute("PicSimulator")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PicSimulator")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

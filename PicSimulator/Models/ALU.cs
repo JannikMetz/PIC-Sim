@@ -3,70 +3,75 @@
 public class ALU
 {
     
-    public bool GetOperation(int operation)
+    public bool GetOperation(int Opcode)
     {
-        int maskByteOriented = 0x3F00;
-        int result = operation & maskByteOriented;
+        int Mask6BitOperant = 0x3F00;
+        int result = Opcode & Mask6BitOperant;
         switch (result)
         {
             case 0x0700:
-                return AddWF(operation); // ADDWF
+                return AddWF(Opcode); // ADDWF
             case 0x0500:
-                return AndWF(operation); // AndWF
+                return AndWF(Opcode); // AndWF
             case 0x0900:
-                return ComF(operation); // COMF
+                return ComF(Opcode); // COMF
             case 0x0300:
-                return DecF(operation); // DECF
+                return DecF(Opcode); // DECF
             case 0x0B00:
-                return DecFSZ(operation); // DECFSZ
+                return DecFSZ(Opcode); // DECFSZ
             case 0x0A00:
-                return IncF(operation); // INCF
+                return IncF(Opcode); // INCF
             case 0x0F00:
-                return IncFSZ(operation); // INCFSZ
+                return IncFSZ(Opcode); // INCFSZ
             case 0x0400:
-                return IOrWF(operation); // IORWF
+                return IOrWF(Opcode); // IORWF
             case 0x0800:
-                return MovF(operation); // MOVF
+                return MovF(Opcode); // MOVF
             case 0x0D00:
-                return RLF(operation); // RLF
+                return RLF(Opcode); // RLF
             case 0x0C00:
-                return RRF(operation); // RRF
+                return RRF(Opcode); // RRF
             case 0x0200:
-                return SubWF(operation); // SUBWF
+                return SubWF(Opcode); // SUBWF
             case 0x0E00:
-                return SwapF(operation); // SWAPF
+                return SwapF(Opcode); // SWAPF
             case 0x0600:
-                return XOrWF(operation); // XORWF
+                return XOrWF(Opcode); // XORWF
         }
         
-        int maskBitOrientedSpecial = 0x3F80; //CLRF AND CLRW AND MOVEWF
-        result = operation & maskBitOrientedSpecial;
+        int Mask7BitOperation = 0x3F80; //CLRF AND CLRW AND MOVEWF
+        result = Opcode & Mask7BitOperation;
         switch (result)
         {
             case 0x0180:
-                return true; // CLRF
+                return CLRF(Opcode); // CLRF
             case 0x0100:
-                return true; // CLRW
+                return CLRW(Opcode); // CLRW
             case 0x0080:
-                return true; // MOVWF
+                return MOVWF(Opcode); // MOVWF
         }
-
-
         
-        
-        maskBitOrientedSpecial = 0x00FF; //  NOP 
-        result = operation & maskBitOrientedSpecial;
+        int MaskNopOperation = 0x3F9F; //  NOP 
+        result = Opcode & MaskNopOperation;
         switch (result)
         {
             case 0x0000:
-                return true; // NOP
+                return NOP(Opcode); // NOP
         }
-        
+
+        int Mask4BitOperation = 0x3B00;
+        result = Opcode & Mask4BitOperation;
+        switch (result)
+        {
+            case 0x1000:
+                return BCF(Opcode); // BCF
+            case 0x1400:
+                return BSF(Opcode); // BSF
+        }
         
         // if this happened we have an error:
         return false;
 
-        
     }
     
     
