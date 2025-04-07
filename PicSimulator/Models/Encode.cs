@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 
 namespace PicSimulator.Models;
@@ -36,6 +37,7 @@ public class Encode
             {
                 // Extract the opcode from the line
                 string code =  line.Substring(0, 3);
+                Console.WriteLine($"Opcode found at index {Array.IndexOf(lines, line)}: {code}");                
                 opcodes.Add(int.Parse(code, System.Globalization.NumberStyles.HexNumber));
             }
             
