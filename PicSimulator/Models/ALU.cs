@@ -1,4 +1,6 @@
-﻿namespace PicSimulator.Models;
+﻿using System;
+
+namespace PicSimulator.Models;
 
 public class ALU
 {
@@ -62,7 +64,7 @@ public class ALU
         switch (result)
         {
             case 0x0000:
-                return NOP(Opcode); // NOP
+                return NOP(); // NOP
         }
 
         int Mask4BitOperation = 0x3C00;
@@ -122,7 +124,111 @@ public class ALU
         return false;
 
     }
-    
+
+    private bool ANDLW(int opcode)
+    {
+        return true;
+    }
+
+    private bool IORLW(int opcode)
+    {
+        return true;
+    }
+
+    private bool XORLW(int opcode)
+    {
+        return true;
+    }
+
+    private bool CLRF(int opcode)
+    {
+        return true;
+    }
+
+    private bool CLRW(int opcode)
+    {
+        return true;
+    }
+
+    private bool MOVWF(int opcode)
+    {
+        return true;
+    }
+
+    private bool NOP()
+    {
+        return true;
+    }
+
+    private bool BCF(int opcode)
+    {
+        return true;
+    }
+
+    private bool BSF(int opcode)
+    {
+        return true;
+    }
+
+    private bool BTFSC(int opcode)
+    {
+        return true;
+    }
+
+    private bool BTFSS(int opcode)
+    {
+        return true;
+    }
+
+    private bool MOVLW(int opcode)
+    {
+        return true;
+    }
+
+    private bool RETLW(int opcode)
+    {
+        return true;
+    }
+
+    private bool ADDLW(int opcode)
+    {
+        return true;
+    }
+
+    private bool SUBLW(int opcode)
+    {
+        return true;
+    }
+
+    private bool CALL(int opcode)
+    {
+        return true;
+    }
+
+    private bool GOTO(int opcode)
+    {
+        return true;
+    }
+
+    private bool SLEEP()
+    {
+        return true;
+    }
+
+    private bool RETURN()
+    {
+        return true;
+    }
+
+    private bool RETFIE()
+    {
+        return true;
+    }
+
+    private bool CLRWDT()
+    {
+        return true;
+    }
     
     public bool ADDWF(int f)
     {
