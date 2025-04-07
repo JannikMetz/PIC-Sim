@@ -5,7 +5,7 @@ public class Memory
 {
     // This class represents the memory of the PIC microcontroller.
     // It contains a 2D array to represent the memory banks.
-    private int[,] _memoryArray = new int[2, 128]; // 2 banks of 128 bytes each
+    public int[,] MemoryArray = new int[2, 128]; // 2 banks of 128 bytes each
     
     // Status Register is 03h, Bit 5 is the Bit for Choosing the Bank
     
@@ -26,7 +26,7 @@ public class Memory
         {
             for (int j = 0; j < 128; j++)
             {
-                _memoryArray[i, j] = 0;
+                MemoryArray[i, j] = 0;
             }
         }
         
@@ -38,7 +38,7 @@ public class Memory
     {
         Console.WriteLine("Getting the Bank Status");
         
-        int bankBit = _memoryArray[0, 0x03] & 0x20; // Bit 5 of the status register
+        int bankBit = MemoryArray[0, 0x03] & 0x20; // Bit 5 of the status register
         
         if (bankBit == 0)
         {
@@ -64,13 +64,13 @@ public class Memory
         {
             // Bank 0
             Console.WriteLine($"Reading Memory in Bank 0 at address {address}");
-            return _memoryArray[0, address];
+            return MemoryArray[0, address];
         }
         else
         {
             // Bank 1
             Console.WriteLine($"Reading Memory in Bank 0 at address {address}");
-            return _memoryArray[1, address];
+            return MemoryArray[1, address];
         }
     }
     
@@ -81,13 +81,13 @@ public class Memory
         {
             // Bank 0
             Console.WriteLine($"Setting Memory in Bank 0 at address {address} to value: {value}");
-            _memoryArray[0, address] = value;
+            MemoryArray[0, address] = value;
         }
         else
         {
             // Bank 1
             Console.WriteLine($"Setting Memory in Bank 1 at address {address} to value: {value}");
-            _memoryArray[1, address] = value;
+            MemoryArray[1, address] = value;
         }
     }
     
@@ -95,7 +95,7 @@ public class Memory
     {
         // Get the program counter from the memory.
         Console.WriteLine("Reading the Program Counter");
-        return _memoryArray[0, 0x02]; 
+        return MemoryArray[0, 0x02]; 
     }
 }
 
