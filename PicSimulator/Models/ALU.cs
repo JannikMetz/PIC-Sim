@@ -127,112 +127,108 @@ public class ALU
 
     private bool ANDLW(int opcode)
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     private bool IORLW(int opcode)
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     private bool XORLW(int opcode)
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     private bool CLRF(int opcode)
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     private bool CLRW(int opcode)
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     private bool MOVWF(int opcode)
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     private bool NOP()
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     private bool BCF(int opcode)
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     private bool BSF(int opcode)
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     private bool BTFSC(int opcode)
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     private bool BTFSS(int opcode)
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     private bool MOVLW(int opcode)
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     private bool RETLW(int opcode)
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     private bool ADDLW(int opcode)
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     private bool SUBLW(int opcode)
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     private bool CALL(int opcode)
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     private bool GOTO(int opcode)
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     private bool SLEEP()
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     private bool RETURN()
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     private bool RETFIE()
     {
-        throw new NotImplementedException();
+        return true;
     }
 
     private bool CLRWDT()
     {
-        throw new NotImplementedException();
+        return true;
     }
-
-
-    public bool AddWF(int f)
-    
     
     public bool ADDWF(int f)
     {
