@@ -10,33 +10,33 @@ public class ALU
         switch (result)
         {
             case 0x0700:
-                return AddWF(Opcode); // ADDWF
+                return ADDWF(Opcode); // ADDWF
             case 0x0500:
-                return AndWF(Opcode); // AndWF
+                return ANDWF(Opcode); // AndWF
             case 0x0900:
-                return ComF(Opcode); // COMF
+                return COMF(Opcode); // COMF
             case 0x0300:
-                return DecF(Opcode); // DECF
+                return DECF(Opcode); // DECF
             case 0x0B00:
-                return DecFSZ(Opcode); // DECFSZ
+                return DECFSZ(Opcode); // DECFSZ
             case 0x0A00:
-                return IncF(Opcode); // INCF
+                return INCF(Opcode); // INCF
             case 0x0F00:
-                return IncFSZ(Opcode); // INCFSZ
+                return INCFSZ(Opcode); // INCFSZ
             case 0x0400:
-                return IOrWF(Opcode); // IORWF
+                return IORWF(Opcode); // IORWF
             case 0x0800:
-                return MovF(Opcode); // MOVF
+                return MOVF(Opcode); // MOVF
             case 0x0D00:
                 return RLF(Opcode); // RLF
             case 0x0C00:
                 return RRF(Opcode); // RRF
             case 0x0200:
-                return SubWF(Opcode); // SUBWF
+                return SUBWF(Opcode); // SUBWF
             case 0x0E00:
-                return SwapF(Opcode); // SWAPF
+                return SWAPF(Opcode); // SWAPF
             case 0x0600:
-                return XOrWF(Opcode); // XORWF
+                return XORWF(Opcode); // XORWF
         }
         
         int Mask7BitOperation = 0x3F80; //CLRF AND CLRW AND MOVEWF
@@ -75,7 +75,7 @@ public class ALU
     }
     
     
-    public bool AddWF(int f)
+    public bool ADDWF(int f)
     {
         int mask = 0x0080;
         int destinationBit = f & mask;
@@ -101,7 +101,7 @@ public class ALU
         return true;
     }
     
-    public bool AndWF(int f)
+    public bool ANDWF(int f)
     {
         int mask = 0x0080;
         int destinationBit = f & mask;
@@ -127,34 +127,34 @@ public class ALU
         return true;
     }
 
-    public bool ComF(int f)
+    public bool COMF(int f)
     {
         return true;
     }
 
-    public bool DecF(int f)
+    public bool DECF(int f)
     {
         return true;
     }
 
-    public bool DecFSZ(int f)
+    public bool DECFSZ(int f)
     {
         return true;
     }
     
-    public bool IncF(int f)
+    public bool INCF(int f)
     {
         return true;
     }
-    public bool IncFSZ(int f)
+    public bool INCFSZ(int f)
     {
         return true;
     }
-    public bool IOrWF(int f)
+    public bool IORWF(int f)
     {
         return true;
     }
-    public bool MovF(int f)
+    public bool MOVF(int f)
     {
         return true;
     }
@@ -166,15 +166,15 @@ public class ALU
     {
         return true;
     }
-    public bool SubWF(int f)
+    public bool SUBWF(int f)
     {
         return true;
     }
-    public bool SwapF(int f)
+    public bool SWAPF(int f)
     {
         return true;
     }
-    public bool XOrWF(int f)
+    public bool XORWF(int f)
     {
         return true;
     }
