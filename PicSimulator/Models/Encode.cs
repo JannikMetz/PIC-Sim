@@ -24,7 +24,7 @@ public class Encode
     
     // This Function is AI-Generated, the Regex might not be correct
     // Do we need this?
-    public static int[] ExtractOpcodes(string input)
+    public static List<int>  ExtractOpcodes(string input)
     {
         List<int> opcodes = new List<int>();
         string[] lines = input.Split('\n');
@@ -41,7 +41,7 @@ public class Encode
             
         }
         
-        return opcodes.ToArray();
+        return opcodes;
     }
     
 }
