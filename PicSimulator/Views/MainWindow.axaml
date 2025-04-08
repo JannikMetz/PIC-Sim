@@ -34,11 +34,11 @@
                 <Separator/>
                 <MenuItem Header="Speichern" Command="{Binding SaveCommand}"/>
                 <MenuItem Header="Speichern unter" Command="{Binding SaveAsCommand}"/>
-                <MenuItem Header="Test" Command="{Binding TestCommand}"/>
+                <MenuItem Header="Test-Opcodes" Command="{Binding TestCommand}"/>
             </MenuItem>
             <MenuItem Header="Einstellungen">
             </MenuItem>
-            <MenuItem Header="Dokumentation">
+            <MenuItem Header="Dokumentation" Click="OnOpenWebsiteClick">
             </MenuItem>
         </Menu>
         <Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" BorderBrush="#FF000000" BorderThickness="1" CornerRadius="10" Margin="10,10,10,10" ClipToBounds="True">

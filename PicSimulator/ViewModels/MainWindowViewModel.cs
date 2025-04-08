@@ -3,25 +3,24 @@ using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Input;
 using PicSimulator.Models;
 
 namespace PicSimulator.ViewModels;
 
-public partial class MainWindowViewModel : ViewModelBase
+public class MainWindowViewModel : ViewModelBase
 {
     #region Fields
-    
+
     private string _fileContent;
     private Encode _encode;
-    
+
     #endregion
-    
+
     #region Properties
-    
+
     public string FileContent
     {
-        get {return _fileContent;}
+        get { return _fileContent; }
         set
         {
             if (_fileContent != value)
@@ -32,24 +31,25 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
-    
-    
+
+
     #endregion
-    
+
     #region Commands
 
     public ICommand LoadCommand { get; }
     public ICommand SaveCommand { get; }
     public ICommand SaveAsCommand { get; }
-    
+
     public ICommand TestCommand { get; }
-    
+
     #endregion
-    
+
 
     public MainWindowViewModel()
     {
         _encode = new Encode();
+        _fileContent = string.Empty;
         LoadCommand = new RelayCommand(Load);
         SaveCommand = new RelayCommand(Save);
         SaveAsCommand = new RelayCommand(SaveAs);
@@ -64,12 +64,16 @@ public partial class MainWindowViewModel : ViewModelBase
             AllowMultiple = false
         };
 
-        var mainWindow = (Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
-        var result = await openFileDialog.ShowAsync(mainWindow);
-
-        if (result != null && result.Length > 0)
+        var mainWindow = (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)
+            ?.MainWindow;
+        if (mainWindow != null)
         {
-            FileContent = _encode.ReadFile(result[0]);
+            var result = await openFileDialog.ShowAsync(mainWindow);
+
+            if (result != null && result.Length > 0)
+            {
+                FileContent = _encode.ReadFile(result[0]);
+            }
         }
     }
 
@@ -82,7 +86,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         Console.WriteLine("Save as command executed");
     }
-    
+
     private void Test(object parameter)
     {
         _encode.ExtractOpcodes(_fileContent);
