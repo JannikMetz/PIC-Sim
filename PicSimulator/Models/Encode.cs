@@ -33,7 +33,7 @@ public class Encode
         foreach (string line in lines)
         {
             //check if line starts with whitespace or number
-            if (line[0] != ' ')
+            if (!string.IsNullOrWhiteSpace(line) && line[0] != ' ')
             {
                 // Extract the opcode from the line
                 string code =  line.Substring(0, 4);
