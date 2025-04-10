@@ -14,6 +14,8 @@ public partial class MainWindowViewModel : ViewModelBase
     
     private string _fileContent;
     private FileReader _fileReader;
+    private ALU _alu;
+    private Memory _memory;
     
     #endregion
     
@@ -46,6 +48,8 @@ public partial class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel()
     {
         _fileReader = new FileReader();
+        _memory = new Memory();
+        _alu = new ALU(_memory);
         LoadCommand = new RelayCommand(Load);
         SaveCommand = new RelayCommand(Save);
         SaveAsCommand = new RelayCommand(SaveAs);

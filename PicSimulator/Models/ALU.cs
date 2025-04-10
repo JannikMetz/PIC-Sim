@@ -4,9 +4,18 @@ namespace PicSimulator.Models;
 
 public class ALU
 {
+    private Memory _memory;
+    public ALU(Memory memory)
+    {
+        _memory = memory;
+    }
+    
     
     public bool GetOperation(int Opcode)
     {
+                            // an Operation takes 1 microsecond at 4MHz but sometimes an
+         _memory.Timer++;   // Operation takes 2 microseconds then we increment again in the Operation
+        
         int Mask6BitOperant = 0x3F00;
         int result = Opcode & Mask6BitOperant;
         switch (result)
@@ -122,91 +131,328 @@ public class ALU
         // if this happened we have an error:
         Console.WriteLine("Unbekannter Opcode: " + Opcode.ToString("X4"));
         return false;
-
     }
 
     private bool ANDLW(int opcode)
     {
+        // mask with relevant bits
+        int value = opcode & 0x00FF;
+        // AND with WReg
+        int result = _memory.WReg & value;
+        if (result == 0)
+        {
+            // Set Zero Flag
+            _memory.SetZeroFlag();
+        }
+        else
+        {
+            // Clear Zero Flag
+            _memory.ClearZeroFlag();
+        }
+        
+        // result into WReg
+        _memory.WReg = result;
+        
+        // increment program counter
+        _memory.IncrementProgramCounter();
+        
         return true;
     }
 
     private bool IORLW(int opcode)
     {
+        // mask with relevant bits
+        int value = opcode & 0x00FF;
+        // IOR with WReg
+        int result = _memory.WReg | value;
+        if (result == 0)
+        {
+            // Set Zero Flag
+            _memory.SetZeroFlag();
+        }
+        else
+        {
+            // Clear Zero Flag
+            _memory.ClearZeroFlag();
+        }
+        
+        // result into WReg
+        _memory.WReg = result;
+        
+        // increment program counter
+        _memory.IncrementProgramCounter();
+        
         return true;
     }
 
     private bool XORLW(int opcode)
     {
+        // mask with relevant bits
+        int value = opcode & 0x00FF;
+        // IOR with WReg
+        int result = _memory.WReg ^ value;
+        if (result == 0)
+        {
+            // Set Zero Flag
+            _memory.SetZeroFlag();
+        }
+        else
+        {
+            // Clear Zero Flag
+            _memory.ClearZeroFlag();
+        }
+        
+        // result into WReg
+        _memory.WReg = result;
+        
+        // increment program counter
+        _memory.IncrementProgramCounter();
+        
         return true;
     }
 
     private bool CLRF(int opcode)
     {
+        int address = opcode & 0x00EF;
+        _memory.SetRegister(address, 0x00);
+       
+        // Set Zero Flag
+        _memory.SetZeroFlag();
+
+        // increment program counter
+        _memory.IncrementProgramCounter();
+        
         return true;
     }
 
     private bool CLRW(int opcode)
     {
+        _memory.WReg = 0x00;
+        
+        // Set Zero Flag
+        _memory.SetZeroFlag();
+        
+        // increment program counter
+        _memory.IncrementProgramCounter();
+        
         return true;
     }
 
     private bool MOVWF(int opcode)
     {
+        int address = opcode & 0x00EF;
+        
+        // write WReg to register
+        _memory.SetRegister(address, _memory.WReg);
+        
+        // increment program counter
+        _memory.IncrementProgramCounter();
+        
         return true;
     }
 
     private bool NOP()
     {
+        // increment program counter
+        _memory.IncrementProgramCounter();
+        
         return true;
     }
 
     private bool BCF(int opcode)
     {
+        int address = opcode & 0x00EF;
+        
+        // get bit number from opcode
+        int bitNumber = (opcode & 0x0380) >> 7;
+        
+        // clear the bit in the register
+        _memory.SetBit(address, bitNumber, 0);
+        
+        // increment program counter
+        _memory.IncrementProgramCounter();
+        
         return true;
     }
 
     private bool BSF(int opcode)
     {
+        int address = opcode & 0x00EF;
+        
+        // get bit number from opcode
+        int bitNumber = (opcode & 0x0380) >> 7;
+        
+        // set the bit in the register
+        _memory.SetBit(address, bitNumber, 1);
+        
+        // increment program counter
+        _memory.IncrementProgramCounter();
+        
         return true;
     }
 
     private bool BTFSC(int opcode)
     {
+        int address = opcode & 0x00EF;
+        
+        // get bit number from opcode
+        int bitNumber = (opcode & 0x0380) >> 7;
+        
+        // check the bit in the register
+        int bitValue = _memory.GetBit(address, bitNumber);
+        if (bitValue == 0)
+        {
+            // skip next instruction
+            _memory.IncrementProgramCounter();
+            
+            // only when we skip this instruction takes 2 microseconds
+            _memory.Timer++;
+        }
+        
+        // increment program counter
+        _memory.IncrementProgramCounter();
         return true;
     }
 
     private bool BTFSS(int opcode)
     {
+        int address = opcode & 0x00EF;
+        
+        // get bit number from opcode
+        int bitNumber = (opcode & 0x0380) >> 7;
+        
+        // check the bit in the register
+        int bitValue = _memory.GetBit(address, bitNumber);
+        if (bitValue == 1)
+        {
+            // skip next instruction
+            _memory.IncrementProgramCounter();
+            
+            // only when we skip this instruction takes 2 microseconds
+            _memory.Timer++;
+        }
+        
+        // increment program counter
+        _memory.IncrementProgramCounter();
         return true;
     }
 
     private bool MOVLW(int opcode)
     {
+        int value = opcode & 0x00FF;
+        
+        // move value into WReg
+        _memory.WReg = value;
+        
+        // increment program counter
+        _memory.IncrementProgramCounter();
+        
         return true;
     }
 
     private bool RETLW(int opcode)
     {
+        int value = opcode & 0x00FF;
+        
+        // move value into WReg
+        _memory.WReg = value;
+
+        // get the last program counter from the top of the call stack
+        int pc = _memory.CallStack.Pop();
+        
+        // set program counter
+        _memory.SetProgramCounter(pc);
+        
+        // this instruction takes 2 microseconds
+        _memory.Timer++;
+        
+        // prgramm counter is not incremented here because we did it in the CALL instruction
+        
         return true;
     }
 
     private bool ADDLW(int opcode)
     {
+        // mask with relevant bits
+        int value = opcode & 0x00FF;
+        // ADD to WReg
+        int result = _memory.WReg + value;
+        _memory.WReg = result;
+        
+        // increment program counter
+        _memory.IncrementProgramCounter();
+        
         return true;
     }
 
     private bool SUBLW(int opcode)
     {
+        // mask with relevant bits
+        int value = opcode & 0x00FF;
+        
+        // SUB to WReg
+        int result =  value - _memory.WReg;
+        if (result == 0)
+        {
+            // Set Zero Flag
+            _memory.SetZeroFlag();
+        }
+        else
+        {
+            // Clear Zero Flag
+            _memory.ClearZeroFlag();
+        }
+        
+        // this is a mistake on the PIC hardware, but we implement it as it is
+        if (result >= 0)
+        {
+            // Set Carry Flag
+            _memory.SetCarryFlag();
+        }
+        else
+        {
+            // Clear Carry Flag
+            _memory.ClearCarryFlag();
+        }
+        
+        int digitCarry = result & 0x000F;
+        
+        if (digitCarry >= 0)
+        {
+            // Set Digit Carry Flag
+            _memory.SetDigitCarryFlag();
+        }
+        else
+        {
+            // Clear Digit Carry Flag
+            _memory.ClearDigitCarryFlag();
+        }
+        
+        // result into WReg
+        _memory.WReg = result;
+        
+        // increment program counter
+        _memory.IncrementProgramCounter();
+        
         return true;
     }
 
     private bool CALL(int opcode)
     {
+        int pc = opcode & 0x07FF;
+        
+        // push the program counter, incremented by 1, onto the call stack
+        _memory.CallStack.Push(_memory.GetProgramCounter() + 1);
+        
+        
+        
+        _memory.Timer++;
         return true;
     }
 
     private bool GOTO(int opcode)
     {
+        _memory.Timer++;
         return true;
     }
 
@@ -217,11 +463,13 @@ public class ALU
 
     private bool RETURN()
     {
+        _memory.Timer++;
         return true;
     }
 
     private bool RETFIE()
     {
+        _memory.Timer++;
         return true;
     }
 
@@ -294,6 +542,8 @@ public class ALU
 
     public bool DECFSZ(int f)
     {
+        // only when we skip this instruction takes 2 microseconds
+        _memory.Timer++;
         return true;
     }
     
@@ -303,6 +553,8 @@ public class ALU
     }
     public bool INCFSZ(int f)
     {
+        // only when we skip this instruction takes 2 microseconds
+        _memory.Timer++;
         return true;
     }
     public bool IORWF(int f)
