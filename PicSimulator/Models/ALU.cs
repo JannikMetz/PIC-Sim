@@ -621,26 +621,226 @@ public class ALU
     }
     public bool MOVF(int f)
     {
+        int address = f & 0x7F;
+        int destinationBit = f & 0x80;
+        
+        // get the value from the register
+        int result = _memory.GetRegister(address);
+        
+        if (result == 0)
+        {
+            // Set Zero Flag
+            _memory.SetZeroFlag();
+        }
+        else
+        {
+            // Clear Zero Flag
+            _memory.ClearZeroFlag();
+        }
+        
+        if (destinationBit == 0)
+        {
+            // write to register W
+            _memory.WReg = result;
+        }
+        else
+        {
+            // write to register f
+            _memory.SetRegister(address, result);
+        }
+        
+        // increment program counter
+        _memory.IncrementProgramCounter();
+        
         return true;
     }
     public bool RLF(int f)
     {
+        int address = f & 0x007F;
+        int destinationBit = f & 0x0080;
+        int result = _memory.GetRegister(address);
+        
+        // get the carry bit from the status register
+        int carryBit = _memory.GetBit(0x03, 0);
+        // the bit that is shifted out
+        int newCarryBit = result & 0x80;
+        _memory.SetBit(0x03, 0, newCarryBit);
+        
+        // shift left through carry
+        result = (result << 1) + carryBit;
+        
+        if (destinationBit == 0)
+        {
+            // write to register W
+            _memory.WReg = result;
+        }
+        else
+        {
+            // write to register f
+            _memory.SetRegister(address, result);
+        }
+        
+        // increment program counter
+        _memory.IncrementProgramCounter();
+
         return true;
     }
     public bool RRF(int f)
     {
+        int address = f & 0x007F;
+        int destinationBit = f & 0x0080;
+        int result = _memory.GetRegister(address);
+        
+        // get the carry bit from the status register
+        int carryBit = _memory.GetBit(0x03, 0);
+        // the bit that is shifted out
+        int newCarryBit = result & 0x01;
+        _memory.SetBit(0x03, 0, newCarryBit);
+        
+        // shift right through carry
+        result = (result >> 1) + (carryBit << 7);
+        
+        if (destinationBit == 0)
+        {
+            // write to register W
+            _memory.WReg = result;
+        }
+        else
+        {
+            // write to register f
+            _memory.SetRegister(address, result);
+        }
+        
+        // increment program counter
+        _memory.IncrementProgramCounter();
+
         return true;
     }
     public bool SUBWF(int f)
     {
+        int address = f & 0x007F;
+        int destinationBit = f & 0x0080;
+        int result = _memory.GetRegister(address) - _memory.WReg;
+        
+        if (result == 0)
+        {
+            // Set Zero Flag
+            _memory.SetZeroFlag();
+        }
+        else
+        {
+            // Clear Zero Flag
+            _memory.ClearZeroFlag();
+        }
+        
+        if (result > 0xFF)
+        {
+            // Set Carry Flag
+            _memory.SetCarryFlag();
+        }
+        else
+        {
+            // Clear Carry Flag
+            _memory.ClearCarryFlag();
+        }
+        
+        int digitCarry = result & 0x000F;
+        
+        if (digitCarry > 0x0F)
+        {
+            // Set Digit Carry Flag
+            _memory.SetDigitCarryFlag();
+        }
+        else
+        {
+            // Clear Digit Carry Flag
+            _memory.ClearDigitCarryFlag();
+        }
+        
+        if (result == 0)
+        {
+            // Set Zero Flag
+            _memory.SetZeroFlag();
+        }
+        else
+        {
+            // Clear Zero Flag
+            _memory.ClearZeroFlag();
+        }
+        
+        if (destinationBit == 0)
+        {
+            // write to register W
+            _memory.WReg = result;
+        }
+        else
+        {
+            // write to register f
+            _memory.SetRegister(address, result);
+        }
+        
+        // increment program counter
+        _memory.IncrementProgramCounter();
+        
         return true;
     }
     public bool SWAPF(int f)
     {
+        int address = f & 0x007F;
+        int destinationBit = f & 0x0080;
+        int upperNibble = _memory.GetRegister(address) & 0xF0;
+        int lowerNibble = _memory.GetRegister(address) & 0x0F;
+        
+        int result = (lowerNibble << 4) + (upperNibble >> 4);
+        
+        if (destinationBit == 0)
+        {
+            // write to register W
+            _memory.WReg = result;
+        }
+        else
+        {
+            // write to register f
+            _memory.SetRegister(address, result);
+        }
+        
+        // increment program counter
+        _memory.IncrementProgramCounter();
+        
         return true;
     }
     public bool XORWF(int f)
     {
+        int address = f & 0x007F;
+        int destinationBit = f & 0x0080;
+        int result = _memory.WReg ^ _memory.GetRegister(address);
+        
+        if (result == 0)
+        {
+            // Set Zero Flag
+            _memory.SetZeroFlag();
+        }
+        else
+        {
+            // Clear Zero Flag
+            _memory.ClearZeroFlag();
+        }
+        
+        
+        if (destinationBit == 0)
+        {
+            // write to register W
+            _memory.WReg = result;
+        }
+        else
+        {
+            // write to register f
+            _memory.SetRegister(address, result);
+        }
+        
+        // increment program counter
+        _memory.IncrementProgramCounter();
+        
         return true;
     }
     

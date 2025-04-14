@@ -10,8 +10,20 @@ public class Memory
     private Register[,] _memoryArray = new Register[2, 128]; // 2 banks of 128 bytes each
     
     public int Timer { get; set; } // Timer in microseconds
-    
-    public int WReg { get; set; } // W register
+
+    int _wReg; // W register (accumulator)
+    public int WReg // W register
+    {
+        get
+        {
+            return _wReg & 0xFF;
+        } // W register (only lower 8 bits)
+        set
+        {
+            _wReg = value & 0xFF; // Set W register (only lower 8 bits)
+        }
+        
+    } 
     
     public Stack<int> CallStack { get; set; } // Call stack for function calls 
     
@@ -84,6 +96,7 @@ public class Memory
     
     public void SetRegister(int address, int value)
     {
+        value = value & 0xFF;
         int bankBit = GetBank();
         Console.WriteLine($"Setting Memory in Bank {bankBit} at address {address} to {value}");
         _memoryArray[bankBit, address].SetValue(value);
