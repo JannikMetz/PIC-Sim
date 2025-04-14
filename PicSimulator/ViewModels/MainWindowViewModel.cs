@@ -13,6 +13,8 @@ public partial class MainWindowViewModel : ViewModelBase
     #region Fields
     
     private string _fileContent;
+    private ALU _alu;
+    private Memory _memory;
     private Encode _encode;
     
     #endregion
@@ -31,8 +33,6 @@ public partial class MainWindowViewModel : ViewModelBase
             }
         }
     }
-
-    
     
     #endregion
     
@@ -50,6 +50,8 @@ public partial class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel()
     {
         _encode = new Encode();
+        _memory = new Memory();
+        _alu = new ALU(_memory);
         LoadCommand = new RelayCommand(Load);
         SaveCommand = new RelayCommand(Save);
         SaveAsCommand = new RelayCommand(SaveAs);

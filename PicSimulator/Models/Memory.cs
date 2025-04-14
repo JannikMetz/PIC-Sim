@@ -1,15 +1,45 @@
-﻿namespace PicSimulator.Models;
+﻿using System.Collections.Generic;
+
+namespace PicSimulator.Models;
 
 using System;
 public class Memory
 {
     // This class represents the memory of the PIC microcontroller.
     // It contains a 2D array to represent the memory banks.
-    public int[,] MemoryArray = new int[2, 128]; // 2 banks of 128 bytes each
+    private Register[,] _memoryArray = new Register[2, 128]; // 2 banks of 128 bytes each
     
-    // Status Register is 03h, Bit 5 is the Bit for Choosing the Bank
+    public int Timer { get; set; } // Timer in microseconds
     
     public int WReg { get; set; } // W register
+    
+    public Stack<int> CallStack { get; set; } // Call stack for function calls 
+    
+    /// <summary>
+    /// This property is used to push the program counter to the call stack.
+    /// </summary>
+    public int ProgramCounter {
+        get
+        {
+            var pcLath = GetPcLath();
+            var pc = GetProgramCounter();
+            pcLath = pcLath << 8;
+            
+            return pc + pcLath; // combine pcl and pclath to get the full program counter
+        }
+        set
+        {
+            int pc = value & 0xFF; // Lower 8 bits
+            int pcLath = (value >> 8) & 0x07; // Upper 3 bits
+            
+            // add the upper 2 Bits of pcLath to the value
+            pcLath = pcLath + (GetPcLath() & 0x18);
+            
+            // write the values back to the memory
+            SetProgramCounter(pc);
+            SetPcLath(pcLath);
+        }
+    }
     
     
     // Constructor to initialize the memory with default values.
@@ -22,80 +52,159 @@ public class Memory
     {
         Console.WriteLine("Resetting Memory");
         // Reset the memory to default values.
-        for (int i = 0; i < 2; i++)
+        for (int bank = 0; bank < 2; bank++)
         {
-            for (int j = 0; j < 128; j++)
+            for (int register = 0; register < 128; register++)
             {
-                MemoryArray[i, j] = 0;
+                _memoryArray[bank, register] = new Register();
             }
         }
         
         Console.WriteLine("Resetting W-Register");
         WReg = 0; // Reset W register
     }
-    
-    public bool isBank0()
+
+    public int GetBank()
     {
         Console.WriteLine("Getting the Bank Status");
         
-        int bankBit = MemoryArray[0, 0x03] & 0x20; // Bit 5 of the status register
+        int bankBit = _memoryArray[0, 0x03].GetBitValue(5); // Bit 5 of the status register
+
+        Console.WriteLine("Bank Status: " + bankBit);
         
-        if (bankBit == 0)
-        {
-            // Bank 0
-            Console.WriteLine("Bank0 is selected");
-            return true;
-        }
-        else
-        {
-            // Bank 1
-            Console.WriteLine("Bank1 is selected");           
-            return false;
-        }   
-        
-        
-        
+        return bankBit;
     }
     
-    public int GetMemory(int address)
+    public int GetRegister(int address)
+    { 
+        int bankBit = GetBank();
+        Console.WriteLine($"Getting Memory in Bank {bankBit} at address {address}");
+        return _memoryArray[bankBit, address].GetValue();
+    }
+    
+    public void SetRegister(int address, int value)
     {
-        // Get the value from the specified memory bank and address.
-        if (isBank0())
+        int bankBit = GetBank();
+        Console.WriteLine($"Setting Memory in Bank {bankBit} at address {address} to {value}");
+        _memoryArray[bankBit, address].SetValue(value);
+
+        // these addresses are mirrored in the other bank
+        if (address == 0x02 || address == 0x03 || address == 0x04 || address == 0x0A || address == 0x0B)
         {
-            // Bank 0
-            Console.WriteLine($"Reading Memory in Bank 0 at address {address}");
-            return MemoryArray[0, address];
-        }
-        else
-        {
-            // Bank 1
-            Console.WriteLine($"Reading Memory in Bank 0 at address {address}");
-            return MemoryArray[1, address];
+            // Update the other bank as well
+            _memoryArray[1 - bankBit, address].SetValue(value);
         }
     }
-    
-    public void SetMemory(int address, int value)
+
+    public int GetBit(int address, int bitNumber)
     {
-        // Set the value in the specified memory bank and address.
-        if (isBank0())
+        int bankBit = GetBank();
+        Console.WriteLine($"Getting Bit {bitNumber} in Bank {bankBit} at address {address}");
+        int value = _memoryArray[bankBit, address].GetBitValue(bitNumber);
+        return value;
+    }
+    
+    public void SetBit(int address, int bitNumber, int value)
+    {
+        int bankBit = GetBank();
+        Console.WriteLine($"Setting Bit {bitNumber} in Bank {bankBit} at address {address} to {value}");
+        _memoryArray[bankBit, address].SetBitValue(bitNumber, value);
+        // these addresses are mirrored in the other bank
+        if (address == 0x02 || address == 0x03 || address == 0x04 || address == 0x0A || address == 0x0B)
         {
-            // Bank 0
-            Console.WriteLine($"Setting Memory in Bank 0 at address {address} to value: {value}");
-            MemoryArray[0, address] = value;
-        }
-        else
-        {
-            // Bank 1
-            Console.WriteLine($"Setting Memory in Bank 1 at address {address} to value: {value}");
-            MemoryArray[1, address] = value;
+            // Update the other bank as well
+            _memoryArray[1 - bankBit, address].SetBitValue(bitNumber, value);
         }
     }
     
-    public int getProgramCounter()
+    public int GetProgramCounter()
     {
         // Get the program counter from the memory.
-        Console.WriteLine("Reading the Program Counter");
-        return MemoryArray[0, 0x02]; 
+        return _memoryArray[0, 0x02].GetValue(); 
+    }
+    
+    public void SetProgramCounter(int value)
+    {
+        // Set the program counter in the memory.
+        // TODO: nur 1 mal setten
+        _memoryArray[0, 0x02].SetValue(value);
+        _memoryArray[1, 0x02].SetValue(value);
+    }
+    
+    public void IncrementProgramCounter()
+    {
+        int pc = GetProgramCounter();
+        if (pc == 0xFF)
+        {
+            pc = 0;
+            IncrementPcLath();
+        }
+        else
+        {
+            pc++;
+        }
+        SetProgramCounter(pc);
+    }
+    
+    public int GetPcLath()
+    {
+        // this value is the same on both banks
+        return _memoryArray[0, 0x0A].GetValue(); 
+    }
+    
+    public void SetPcLath(int value)
+    {
+        // Set the program counter latch in the memory.
+        _memoryArray[0, 0x0A].SetValue(value);
+        _memoryArray[1, 0x0A].SetValue(value);
+    }
+
+    public void IncrementPcLath()
+    {
+        int pcLath = GetPcLath();
+        if (pcLath == 0x07)
+        {
+            pcLath = 0;
+        }
+        else
+        {
+            pcLath++;
+        }
+        SetPcLath(pcLath);
+    }
+
+    public void SetCarryFlag()
+    {
+        _memoryArray[0, 0x03].SetBitValue(0, 1); // Set the carry flag (bit 0 of the status register)
+        _memoryArray[1, 0x03].SetBitValue(0, 1); 
+    }
+    public void ClearCarryFlag()
+    {
+        _memoryArray[0, 0x03].SetBitValue(0, 0); // Clear the carry flag (bit 0 of the status register)
+        _memoryArray[1, 0x03].SetBitValue(0, 0); 
+    }
+    
+    public void SetZeroFlag()
+    {
+        _memoryArray[0, 0x03].SetBitValue(2, 1); // Set the zero flag (bit 2 of the status register)
+        _memoryArray[1, 0x03].SetBitValue(2, 1); 
+    }
+    public void ClearZeroFlag()
+    {
+        _memoryArray[0, 0x03].SetBitValue(2, 0); // Clear the zero flag (bit 2 of the status register)
+        _memoryArray[1, 0x03].SetBitValue(2, 0);
+    }
+    
+    public void SetDigitCarryFlag()
+    {
+        _memoryArray[0, 0x03].SetBitValue(1, 1); // Set the digit flag (bit 3 of the status register)
+        _memoryArray[1, 0x03].SetBitValue(1, 1); 
+    }
+    
+    public void ClearDigitCarryFlag()
+    {
+        _memoryArray[0, 0x03].SetBitValue(1, 0); // Clear the digit flag (bit 3 of the status register)
+        _memoryArray[1, 0x03].SetBitValue(1, 0); 
     }
 }
 
