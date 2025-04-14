@@ -429,7 +429,7 @@ public class ALU
         }
         
         // result into WReg
-        _memory.WReg = result;
+        _memory.WReg = result & 0x00FF; // ensure result is 8 bits
         
         // increment program counter
         _memory.IncrementProgramCounter();
@@ -732,10 +732,9 @@ public class ALU
         int destinationBit = f & 0x0080;
         int result = _memory.GetRegister(address);
         result++;
-        
+
         if (result == 0x100)
         {
-            result = 0;
             // Set Zero Flag if result is more than 8 bits
             _memory.SetZeroFlag();
         }
@@ -744,8 +743,6 @@ public class ALU
             // Clear Zero Flag
             _memory.ClearZeroFlag();
         }
-        
-        if (result == 0)
         {
             // Skip: increment program counter twice
             _memory.IncrementProgramCounter();
@@ -914,7 +911,7 @@ public class ALU
             _memory.ClearZeroFlag();
         }
         
-        if (result > 0xFF)
+        if (result >= 0x00)
         {
             // Set Carry Flag
             _memory.SetCarryFlag();
@@ -927,7 +924,7 @@ public class ALU
         
         int digitCarry = result & 0x000F;
         
-        if (digitCarry > 0x0F)
+        if (digitCarry >= 0)
         {
             // Set Digit Carry Flag
             _memory.SetDigitCarryFlag();
@@ -948,6 +945,8 @@ public class ALU
             // Clear Zero Flag
             _memory.ClearZeroFlag();
         }
+        
+        result = result & 0x00FF; // ensure result is 8 bits
         
         if (destinationBit == 0)
         {
