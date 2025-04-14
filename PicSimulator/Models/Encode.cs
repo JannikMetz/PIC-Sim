@@ -42,8 +42,9 @@ public class Encode
             //check if line starts with whitespace or number
             if (!string.IsNullOrWhiteSpace(line) && line[0] != ' ')
             {
+                string[] parts = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
                 // Extract the opcode from the line
-                string code =  line.Substring(0, 4);
+                string code =  parts[1];
                 Console.WriteLine($"Opcode found at index {Array.IndexOf(lines, line)+1}: {code}");                
                 opcodes.Add(int.Parse(code, System.Globalization.NumberStyles.HexNumber));
             }

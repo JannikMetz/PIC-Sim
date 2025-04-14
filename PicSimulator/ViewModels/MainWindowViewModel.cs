@@ -79,6 +79,7 @@ public class MainWindowViewModel : ViewModelBase
             if (result != null && result.Length > 0)
             {
                 FileContent = _encode.ReadFile(result[0]);
+                _encode.ExtractOpcodes(_fileContent);
             }
         }
     }
