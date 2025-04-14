@@ -590,33 +590,214 @@ public class ALU
 
     public bool COMF(int f)
     {
+        int address = f & 0x007F;
+        int destinationBit = f & 0x0080;
+        int result = ~_memory.GetRegister(address);
+        // ensure result is 8 bits
+        result = result & 0x00FF; 
+        
+        if (result == 0)
+        {
+            // Set Zero Flag
+            _memory.SetZeroFlag();
+        }
+        else
+        {
+            // Clear Zero Flag
+            _memory.ClearZeroFlag();
+        }
+        if (destinationBit == 0)
+        {
+            // write to register W
+            _memory.WReg = result;
+        }
+        else
+        {
+            // write to register f
+            _memory.SetRegister(address, result);
+        }
+
+        
+        // increment program counter
+        _memory.IncrementProgramCounter();
+        
         return true;
     }
 
     public bool DECF(int f)
     {
+        int address = f & 0x007F;
+        int destinationBit = f & 0x0080;
+        int result = _memory.GetRegister(address);
+        result--;
+        
+        if (result == 0)
+        {
+            // Set Zero Flag
+            _memory.SetZeroFlag();
+        }
+        else
+        {
+            // Clear Zero Flag
+            _memory.ClearZeroFlag();
+        }
+        if (destinationBit == 0)
+        {
+            // write to register W
+            _memory.WReg = result;
+        }
+        else
+        {
+            // write to register f
+            _memory.SetRegister(address, result);
+        }
+
+        
+        // increment program counter
+        _memory.IncrementProgramCounter();
+        
         return true;
     }
 
     public bool DECFSZ(int f)
     {
-        // only when we skip this instruction takes 2 microseconds
-        _memory.Timer++;
+        int address = f & 0x007F;
+        int destinationBit = f & 0x0080;
+        int result = _memory.GetRegister(address);
+        result--;
+        
+        
+        if (result == 0)
+        {
+            // Skip: increment program counter twice
+            _memory.IncrementProgramCounter();
+            
+            // only when we skip this instruction takes 2 microseconds
+            _memory.Timer++;
+        }
+        if (destinationBit == 0)
+        {
+            // write to register W
+            _memory.WReg = result;
+        }
+        else
+        {
+            // write to register f
+            _memory.SetRegister(address, result);
+        }
+        
+        _memory.IncrementProgramCounter();
+ 
         return true;
     }
     
     public bool INCF(int f)
     {
+        int address = f & 0x007F;
+        int destinationBit = f & 0x0080;
+        int result = _memory.GetRegister(address);
+        result++;
+        
+        if (result == 0x100)
+        {
+            // Set Zero Flag if result is more than 8 bits
+            _memory.SetZeroFlag();
+        }
+        else
+        {
+            // Clear Zero Flag
+            _memory.ClearZeroFlag();
+        }
+        
+        if (destinationBit == 0)
+        {
+            // write to register W
+            _memory.WReg = result;
+        }
+        else
+        {
+            // write to register f
+            _memory.SetRegister(address, result);
+        }
+
+        
+        // increment program counter
+        _memory.IncrementProgramCounter();
+        
         return true;
     }
     public bool INCFSZ(int f)
     {
-        // only when we skip this instruction takes 2 microseconds
-        _memory.Timer++;
+        int address = f & 0x007F;
+        int destinationBit = f & 0x0080;
+        int result = _memory.GetRegister(address);
+        result++;
+        
+        if (result == 0x100)
+        {
+            result = 0;
+            // Set Zero Flag if result is more than 8 bits
+            _memory.SetZeroFlag();
+        }
+        else
+        {
+            // Clear Zero Flag
+            _memory.ClearZeroFlag();
+        }
+        
+        if (result == 0)
+        {
+            // Skip: increment program counter twice
+            _memory.IncrementProgramCounter();
+            
+            // only when we skip this instruction takes 2 microseconds
+            _memory.Timer++;
+        }
+        if (destinationBit == 0)
+        {
+            // write to register W
+            _memory.WReg = result;
+        }
+        else
+        {
+            // write to register f
+            _memory.SetRegister(address, result);
+        }
+        
+        _memory.IncrementProgramCounter();
+ 
         return true;
     }
     public bool IORWF(int f)
     {
+        int address = f & 0x007F;
+        int destinationBit = f & 0x0080;
+        int result = _memory.GetRegister(address);
+        result = _memory.WReg | result;
+        
+        if (result == 0)
+        {
+            // Set Zero Flag
+            _memory.SetZeroFlag();
+        }
+        else
+        {
+            // Clear Zero Flag
+            _memory.ClearZeroFlag();
+        }
+        if (destinationBit == 0)
+        {
+            // write to register W
+            _memory.WReg = result;
+        }
+        else
+        {
+            // write to register f
+            _memory.SetRegister(address, result);
+        }
+        
+        _memory.IncrementProgramCounter();
+        
         return true;
     }
     public bool MOVF(int f)
