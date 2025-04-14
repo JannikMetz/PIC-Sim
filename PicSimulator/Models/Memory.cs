@@ -22,6 +22,7 @@ public class Memory
         {
            // value.CopyTo(_programMemory, 0); Could also work 
             _programMemory = value;
+            Console.WriteLine("Program Memory Set");
 
         }
     } // Program memory (ROM) - 2kB

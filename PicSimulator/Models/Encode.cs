@@ -35,6 +35,8 @@ public class Encode
         List<int> opcodes = new List<int>();
         string[] lines = input.Split('\n');
         
+        Console.WriteLine("<----------- Extracting Opcodes ----------->");
+        
         foreach (string line in lines)
         {
             //check if line starts with whitespace or number
@@ -47,6 +49,8 @@ public class Encode
             }
             
         }
+        
+        Console.WriteLine("<----------- End of Opcodes ----------->");
         
         _memory.ProgramMemory = opcodes.ToArray();
         
