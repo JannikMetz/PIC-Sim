@@ -120,6 +120,11 @@ public class MainWindowViewModel : ViewModelBase
     }
     private void Start(object parameter)
     {
+        if (_fileContent == null || _fileContent == string.Empty)
+        {
+            Console.WriteLine("No file loaded");
+            return;
+        }
         Console.WriteLine("Start command executed");
         // Start the Simulator in a new thread
         Thread aluThread = new Thread(() =>
