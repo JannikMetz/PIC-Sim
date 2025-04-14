@@ -29,18 +29,18 @@
         
         <!-- Navigationsleiste -->
         <Menu Grid.Row="0" Grid.ColumnSpan="3" Background="#1b1b1b" >
-            <MenuItem Header="Datei">
-                <MenuItem Header="Laden" Command="{Binding LoadCommand}"/>
+            <MenuItem Header="File">
+                <MenuItem Header="Load" Command="{Binding LoadCommand}"/>
                 <Separator/>
-                <MenuItem Header="Speichern" Command="{Binding SaveCommand}"/>
-                <MenuItem Header="Speichern unter" Command="{Binding SaveAsCommand}"/>
+                <MenuItem Header="Save" Command="{Binding SaveCommand}"/>
+                <MenuItem Header="Save As" Command="{Binding SaveAsCommand}"/>
                 <MenuItem Header="Test-Opcodes" Command="{Binding TestCommand}"/>
-                <MenuItem Header="Start" Command="{Binding StartCommand}"/>
+                <MenuItem Header="Run" Command="{Binding StartCommand}"/>
                 
             </MenuItem>
-            <MenuItem Header="Einstellungen">
+            <MenuItem Header="Settings">
             </MenuItem>
-            <MenuItem Header="Dokumentation" Click="OnOpenWebsiteClick">
+            <MenuItem Header="Documentation" Click="OnOpenWebsiteClick">
             </MenuItem>
         </Menu>
         <Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" BorderBrush="#FF000000" BorderThickness="1" CornerRadius="10" Margin="10,10,10,10" ClipToBounds="True">
