@@ -13,6 +13,8 @@ public class MainWindowViewModel : ViewModelBase
 
     private string _fileContent;
     private Encode _encode;
+    private Memory _memory;
+    private ALU _alu;
 
     #endregion
 
@@ -49,7 +51,10 @@ public class MainWindowViewModel : ViewModelBase
 
     public MainWindowViewModel()
     {
-        _encode = new Encode();
+        
+        _memory = new Memory();
+        _encode = new Encode(_memory);
+        _alu = new ALU(_memory);
         _fileContent = string.Empty;
         LoadCommand = new RelayCommand(Load);
         SaveCommand = new RelayCommand(Save);

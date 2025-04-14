@@ -1,13 +1,32 @@
 ﻿using System.Collections.Generic;
+using System.Reflection.Emit;
 
 namespace PicSimulator.Models;
 
 using System;
+
+
+
 public class Memory
 {
     // This class represents the memory of the PIC microcontroller.
     // It contains a 2D array to represent the memory banks.
     private Register[,] _memoryArray = new Register[2, 128]; // 2 banks of 128 bytes each
+
+    private int [] _programMemory = new int[1024]; // Program memory (ROM) - 2kB
+    public int[] ProgramMemory
+    {
+        get { return _programMemory; }
+
+        set
+        {
+           // value.CopyTo(_programMemory, 0); Could also work 
+            _programMemory = value;
+
+        }
+    } // Program memory (ROM) - 2kB
+    
+
     
     public int Timer { get; set; } // Timer in microseconds
 

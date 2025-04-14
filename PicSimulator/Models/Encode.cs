@@ -7,6 +7,13 @@ namespace PicSimulator.Models;
 
 public class Encode
 {
+
+    private Memory _memory;
+
+    public Encode(Memory memory)
+    {
+        _memory = memory;
+    }
     
     public string ReadFile(string filePath)
     {
@@ -23,7 +30,7 @@ public class Encode
     
     // This Function is AI-Generated, the Regex might not be correct
     // Do we need this?
-    public List<int>  ExtractOpcodes(string input)
+    public void ExtractOpcodes(string input)
     {
         List<int> opcodes = new List<int>();
         string[] lines = input.Split('\n');
@@ -41,7 +48,9 @@ public class Encode
             
         }
         
-        return opcodes;
+        _memory.ProgramMemory = opcodes.ToArray();
+        
+        
     }
     
 }
