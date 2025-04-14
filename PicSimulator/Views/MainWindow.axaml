@@ -35,6 +35,8 @@
                 <MenuItem Header="Speichern" Command="{Binding SaveCommand}"/>
                 <MenuItem Header="Speichern unter" Command="{Binding SaveAsCommand}"/>
                 <MenuItem Header="Test-Opcodes" Command="{Binding TestCommand}"/>
+                <MenuItem Header="Start" Command="{Binding StartCommand}"/>
+                
             </MenuItem>
             <MenuItem Header="Einstellungen">
             </MenuItem>

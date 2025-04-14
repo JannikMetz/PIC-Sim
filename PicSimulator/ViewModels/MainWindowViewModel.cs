@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
@@ -33,7 +34,30 @@ public class MainWindowViewModel : ViewModelBase
         }
     }
     
-
+    public int WReg
+    {
+        get { return _memory.WReg; }
+        set
+        {
+            if (_memory.WReg != value)
+            {
+                _memory.WReg = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+    public int ProgramCounter
+    {
+        get { return _memory.ProgramCounter; }
+        set
+        {
+            if (_memory.ProgramCounter != value)
+            {
+                _memory.ProgramCounter = value;
+                OnPropertyChanged();
+            }
+        }
+    }
 
 
     #endregion
@@ -43,7 +67,7 @@ public class MainWindowViewModel : ViewModelBase
     public ICommand LoadCommand { get; }
     public ICommand SaveCommand { get; }
     public ICommand SaveAsCommand { get; }
-
+    public ICommand StartCommand { get; }
     public ICommand TestCommand { get; }
 
     #endregion
@@ -59,6 +83,7 @@ public class MainWindowViewModel : ViewModelBase
         LoadCommand = new RelayCommand(Load);
         SaveCommand = new RelayCommand(Save);
         SaveAsCommand = new RelayCommand(SaveAs);
+        StartCommand = new RelayCommand(Start);
         TestCommand = new RelayCommand(Test);
     }
 
@@ -93,6 +118,19 @@ public class MainWindowViewModel : ViewModelBase
     {
         Console.WriteLine("Save as command executed");
     }
+    private void Start(object parameter)
+    {
+        Console.WriteLine("Start command executed");
+        // Start the Simulator in a new thread
+        Thread aluThread = new Thread(() =>
+        {
+            _alu.Start(); 
+        });
+
+        aluThread.IsBackground = true;
+        aluThread.Start();
+    }
+    
 
     private void Test(object parameter)
     {

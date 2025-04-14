@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace PicSimulator.Models;
 
@@ -10,6 +11,19 @@ public class ALU
         _memory = memory;
     }
     
+    public void Start()
+    {
+        while (true)
+        {
+            // Read the opcode from the program memory
+            int opcode = _memory.ProgramMemory[_memory.ProgramCounter];
+            
+            // Execute the operation
+            GetOperation(opcode);
+            Console.WriteLine("Executing Opcode: " + opcode.ToString("X4"));
+            Thread.Sleep(1000);
+        }
+    }
     
     public bool GetOperation(int Opcode)
     {
