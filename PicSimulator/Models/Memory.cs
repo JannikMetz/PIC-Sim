@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Reflection.Emit;
 
 namespace PicSimulator.Models;
 
@@ -53,11 +52,12 @@ public class Memory
     public int ProgramCounter {
         get
         {
+            Console.WriteLine("Getting Program Counter:");
             var pcLath = GetPcLath();
             var pc = GetProgramCounter();
             pcLath = pcLath << 8;
-            
-            return pc + pcLath; // combine pcl and pclath to get the full program counter
+            Console.WriteLine("Program Counter is: " + pc + " and pcLath is: " + pcLath);
+            return (pc + pcLath); // combine pcl and pclath to get the full program counter
         }
         set
         {
@@ -70,6 +70,7 @@ public class Memory
             // write the values back to the memory
             SetProgramCounter(pc);
             SetPcLath(pcLath);
+            Console.WriteLine("Program Counter set");
         }
     }
     
@@ -78,6 +79,7 @@ public class Memory
     public Memory()
     {
         ResetMemory();
+        CallStack = new Stack<int>();
     }
 
     public void ResetMemory()

@@ -19,9 +19,9 @@ public class ALU
             int opcode = _memory.ProgramMemory[_memory.ProgramCounter];
             
             // Execute the operation
+            Console.WriteLine("Executing Opcode: " + opcode.ToString("X4") + " at PC: " + _memory.ProgramCounter.ToString("X4"));
             GetOperation(opcode);
-            Console.WriteLine("Executing Opcode: " + opcode.ToString("X4"));
-            Thread.Sleep(1000);
+            Thread.Sleep(100);
         }
     }
     
@@ -227,7 +227,7 @@ public class ALU
 
     private bool CLRF(int opcode)
     {
-        int address = opcode & 0x00EF;
+        int address = opcode & 0x007F;
         _memory.SetRegister(address, 0x00);
        
         // Set Zero Flag
@@ -254,7 +254,7 @@ public class ALU
 
     private bool MOVWF(int opcode) 
     {
-        int address = opcode & 0x00EF;
+        int address = opcode & 0x007F;
         
         // write WReg to register
         _memory.SetRegister(address, _memory.WReg);
@@ -275,7 +275,7 @@ public class ALU
 
     private bool BCF(int opcode)
     {
-        int address = opcode & 0x00EF;
+        int address = opcode & 0x007F;
         
         // get bit number from opcode
         int bitNumber = (opcode & 0x0380) >> 7;
@@ -291,7 +291,7 @@ public class ALU
 
     private bool BSF(int opcode)
     {
-        int address = opcode & 0x00EF;
+        int address = opcode & 0x007F;
         
         // get bit number from opcode
         int bitNumber = (opcode & 0x0380) >> 7;
@@ -307,7 +307,7 @@ public class ALU
 
     private bool BTFSC(int opcode)
     {
-        int address = opcode & 0x00EF;
+        int address = opcode & 0x007F;
         
         // get bit number from opcode
         int bitNumber = (opcode & 0x0380) >> 7;
@@ -330,7 +330,7 @@ public class ALU
 
     private bool BTFSS(int opcode)
     {
-        int address = opcode & 0x00EF;
+        int address = opcode & 0x007F;
         
         // get bit number from opcode
         int bitNumber = (opcode & 0x0380) >> 7;
@@ -456,8 +456,9 @@ public class ALU
         int pc = opcode & 0x07FF;
         
         // push the program counter, incremented by 1, onto the call stack
+        Console.WriteLine("Calling Stack");
         _memory.CallStack.Push(_memory.ProgramCounter + 1);
-        
+        Console.WriteLine("Calling Stack done");
         _memory.ProgramCounter = pc;
         
         _memory.Timer++;
