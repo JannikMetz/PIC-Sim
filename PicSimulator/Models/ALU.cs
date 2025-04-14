@@ -238,7 +238,7 @@ public class ALU
         return true;
     }
 
-    private bool MOVWF(int opcode)
+    private bool MOVWF(int opcode) 
     {
         int address = opcode & 0x00EF;
         
@@ -361,7 +361,7 @@ public class ALU
         int pc = _memory.CallStack.Pop();
         
         // set program counter
-        _memory.SetProgramCounter(pc);
+        _memory.ProgramCounter = pc;
         
         // this instruction takes 2 microseconds
         _memory.Timer++;
@@ -442,9 +442,9 @@ public class ALU
         int pc = opcode & 0x07FF;
         
         // push the program counter, incremented by 1, onto the call stack
-        _memory.CallStack.Push(_memory.GetProgramCounter() + 1);
+        _memory.CallStack.Push(_memory.ProgramCounter + 1);
         
-        
+        _memory.ProgramCounter = pc;
         
         _memory.Timer++;
         return true;
@@ -452,80 +452,138 @@ public class ALU
 
     private bool GOTO(int opcode)
     {
+        int pc = opcode & 0x07FF; 
+        
+        // set the program counter
+        _memory.ProgramCounter = pc;
+        
         _memory.Timer++;
         return true;
     }
 
     private bool SLEEP()
     {
+        // TODO: implement sleep mode (watchdog timer is needed)
         return true;
     }
 
     private bool RETURN()
     {
+        // get the last program counter from the top of the call stack
+        int pc = _memory.CallStack.Pop();
+        
+        // set program counter
+        _memory.ProgramCounter = pc;
+        
+        // this instruction takes 2 microseconds
         _memory.Timer++;
+        
+        // prgramm counter is not incremented here because we did it in the CALL instruction
+        
         return true;
     }
 
     private bool RETFIE()
     {
+        // TODO: implement RETFIE (return from interrupt)
         _memory.Timer++;
         return true;
     }
 
     private bool CLRWDT()
     {
+        // TODO: implement CLRWDT (clear watchdog timer)
         return true;
     }
     
     public bool ADDWF(int f)
     {
-        int mask = 0x0080;
-        int destinationBit = f & mask;
+        int address = f & 0x007F;
+        int destinationBit = f & 0x0080;
+        int result = _memory.WReg + _memory.GetRegister(address);
+        if (result == 0)
+        {
+            // Set Zero Flag
+            _memory.SetZeroFlag();
+        }
+        else
+        {
+            // Clear Zero Flag
+            _memory.ClearZeroFlag();
+        }
         
-        // get f from registers with address
+        if (result > 0xFF)
+        {
+            // Set Carry Flag
+            _memory.SetCarryFlag();
+        }
+        else
+        {
+            // Clear Carry Flag
+            _memory.ClearCarryFlag();
+        }
         
-        // Calculate the result
+        int digitCarry = result & 0x000F;
         
-        // Set Flags in Status Register
+        if (digitCarry > 0x0F)
+        {
+            // Set Digit Carry Flag
+            _memory.SetDigitCarryFlag();
+        }
+        else
+        {
+            // Clear Digit Carry Flag
+            _memory.ClearDigitCarryFlag();
+        }
         
-        // write back to register f or W
         if (destinationBit == 0)
         {
             // write to register W
+            _memory.WReg = result;
         }
         else
         {
             // write to register f
+            _memory.SetRegister(address, result);
         }
         
-        //Update the program counter
+        // increment program counter
+        _memory.IncrementProgramCounter();
         
         return true;
     }
     
     public bool ANDWF(int f)
     {
-        int mask = 0x0080;
-        int destinationBit = f & mask;
+        int address = f & 0x007F;
+        int destinationBit = f & 0x0080;
+        int result = _memory.WReg & _memory.GetRegister(address);
         
-        // get f from registers with address
+        if (result == 0)
+        {
+            // Set Zero Flag
+            _memory.SetZeroFlag();
+        }
+        else
+        {
+            // Clear Zero Flag
+            _memory.ClearZeroFlag();
+        }
         
-        // Calculate the result
         
-        // Set Flags in Status Register
-        
-        // write back to register f or W
         if (destinationBit == 0)
         {
             // write to register W
+            _memory.WReg = result;
         }
         else
         {
             // write to register f
+            _memory.SetRegister(address, result);
         }
         
-        //Update the program counter
+        // increment program counter
+        _memory.IncrementProgramCounter();
         
         return true;
     }

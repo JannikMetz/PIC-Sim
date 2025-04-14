@@ -13,7 +13,33 @@ public class Memory
     
     public int WReg { get; set; } // W register
     
-    public Stack<int> CallStack { get; set; } // Call stack for function calls
+    public Stack<int> CallStack { get; set; } // Call stack for function calls 
+    
+    /// <summary>
+    /// This property is used to push the program counter to the call stack.
+    /// </summary>
+    public int ProgramCounter {
+        get
+        {
+            var pcLath = GetPcLath();
+            var pc = GetProgramCounter();
+            pcLath = pcLath << 8;
+            
+            return pc + pcLath; // combine pcl and pclath to get the full program counter
+        }
+        set
+        {
+            int pc = value & 0xFF; // Lower 8 bits
+            int pcLath = (value >> 8) & 0x07; // Upper 3 bits
+            
+            // add the upper 2 Bits of pcLath to the value
+            pcLath = pcLath + (GetPcLath() & 0x18);
+            
+            // write the values back to the memory
+            SetProgramCounter(pc);
+            SetPcLath(pcLath);
+        }
+    }
     
     
     // Constructor to initialize the memory with default values.
@@ -73,6 +99,12 @@ public class Memory
         int bankBit = GetBank();
         Console.WriteLine($"Setting Bit {bitNumber} in Bank {bankBit} at address {address} to {value}");
         _memoryArray[bankBit, address].SetBitValue(bitNumber, value);
+        // these addresses are mirrored in the other bank
+        if (address == 0x02 || address == 0x03 || address == 0x04 || address == 0x0A || address == 0x0B)
+        {
+            // Update the other bank as well
+            _memoryArray[1 - bankBit, address].SetBitValue(bitNumber, value);
+        }
     }
     
     public int GetProgramCounter()
@@ -84,8 +116,24 @@ public class Memory
     public void SetProgramCounter(int value)
     {
         // Set the program counter in the memory.
+        // TODO: nur 1 mal setten
         _memoryArray[0, 0x02].SetValue(value);
         _memoryArray[1, 0x02].SetValue(value);
+    }
+    
+    public void IncrementProgramCounter()
+    {
+        int pc = GetProgramCounter();
+        if (pc == 0xFF)
+        {
+            pc = 0;
+            IncrementPcLath();
+        }
+        else
+        {
+            pc++;
+        }
+        SetProgramCounter(pc);
     }
     
     public int GetPcLath()
@@ -100,12 +148,19 @@ public class Memory
         _memoryArray[0, 0x0A].SetValue(value);
         _memoryArray[1, 0x0A].SetValue(value);
     }
-    
-    public void IncrementProgramCounter()
+
+    public void IncrementPcLath()
     {
-        // Increment the program counter in the memory.
-        int pc = GetProgramCounter();
-        SetProgramCounter(pc + 1);
+        int pcLath = GetPcLath();
+        if (pcLath == 0x07)
+        {
+            pcLath = 0;
+        }
+        else
+        {
+            pcLath++;
+        }
+        SetPcLath(pcLath);
     }
 
     public void SetCarryFlag()
