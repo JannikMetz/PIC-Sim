@@ -1,34 +1,37 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Threading;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using PicSimulator.Models;
+using PicSimulator.ViewModels;
 
 namespace PicSimulator.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase
 {
     #region Fields
-
-    private string _fileContent;
+    
     private Encode _encode;
     private Memory _memory;
     private ALU _alu;
-
+    private string _fileContent;
+    private ObservableCollection<ProgramLine> _programLines;
+    
     #endregion
 
     #region Properties
 
-    public string FileContent
+    public ObservableCollection<ProgramLine> ProgramLines
     {
-        get { return _fileContent; }
+        get => _programLines;
         set
         {
-            if (_fileContent != value)
+            if (_programLines != value)
             {
-                _fileContent = value;
+                _programLines = value;
                 OnPropertyChanged();
             }
         }
@@ -58,6 +61,20 @@ public class MainWindowViewModel : ViewModelBase
             }
         }
     }
+    
+    // This is the content of the file as a string
+    public string FileContent
+    {
+        get { return _fileContent; }
+        set
+        {
+            if (_fileContent != value)
+            {
+                _fileContent = value;
+                OnPropertyChanged();
+            }
+        }
+    }
 
 
     #endregion
@@ -77,9 +94,9 @@ public class MainWindowViewModel : ViewModelBase
     {
         
         _memory = new Memory();
+        _memory.ProgramCounterChanged += OnProgramCounterChanged;
         _encode = new Encode(_memory);
         _alu = new ALU(_memory);
-        _fileContent = string.Empty;
         LoadCommand = new RelayCommand(Load);
         SaveCommand = new RelayCommand(Save);
         SaveAsCommand = new RelayCommand(SaveAs);
@@ -104,7 +121,7 @@ public class MainWindowViewModel : ViewModelBase
             if (result != null && result.Length > 0)
             {
                 FileContent = _encode.ReadFile(result[0]);
-                _encode.ExtractOpcodes(_fileContent);
+                ProgramLines= _encode.ExtractOpcodes(_fileContent);
             }
         }
     }
@@ -140,5 +157,18 @@ public class MainWindowViewModel : ViewModelBase
     private void Test(object parameter)
     {
         _encode.ExtractOpcodes(_fileContent);
+    }
+    
+    private void OnProgramCounterChanged()
+    {
+        HighlightCurrentLine();
+    }
+    
+    private void HighlightCurrentLine()
+    {
+        foreach (var line in ProgramLines)
+        {
+            line.IsHighlighted = (line.LineNumber == _encode.OpcodeLines[_memory.ProgramCounter]);
+        }
     }
 }

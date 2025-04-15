@@ -3,13 +3,16 @@
         xmlns:vm="using:PicSimulator.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="using:PicSimulator.ViewModels"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="PicSimulator.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/Icon.ico"
         Title="PicSimulator"
         Background="#3c3f41">
-
+    <Window.Resources>
+        <local:BooleanToBrushConverter x:Key="BooleanToBrushConverter" />
+    </Window.Resources>
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
@@ -50,7 +53,16 @@
         </Border>
         <Border Grid.Row="2" Grid.Column="1" BorderBrush="#FF000000" BorderThickness="1" CornerRadius="10" Margin="0,10,10,10" ClipToBounds="True">
             <ScrollViewer  Background="#1b1b1b">
-                <TextBlock Text="{Binding FileContent}" TextWrapping="Wrap" FontFamily="Consolas"/>
+                <ItemsControl ItemsSource="{Binding ProgramLines}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Content}" 
+                                       TextWrapping="Wrap" 
+                                       FontFamily="Consolas" 
+                                       Background="{Binding IsHighlighted, Converter={StaticResource BooleanToBrushConverter}}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl> 
             </ScrollViewer>
         </Border>
     </Grid>

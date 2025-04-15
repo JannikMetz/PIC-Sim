@@ -1,7 +1,9 @@
 ﻿using System.IO;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
+using PicSimulator.ViewModels;
 
 namespace PicSimulator.Models;
 
@@ -12,6 +14,11 @@ public class Encode
     
     private int[] opcodeLines = new int[1024]; // Program memory (ROM) - 2kB
 
+    public int[] OpcodeLines
+    {
+        get { return opcodeLines; }
+        set { opcodeLines = value; }
+    }
     public Encode(Memory memory)
     {
         _memory = memory;
@@ -32,16 +39,21 @@ public class Encode
     
     // This Function is AI-Generated, the Regex might not be correct
     // Do we need this?
-    public void ExtractOpcodes(string input)
+    public ObservableCollection<ProgramLine> ExtractOpcodes(string input)
     {
+        ObservableCollection<ProgramLine> programLines = new ObservableCollection<ProgramLine>();
         List<int> opcodes = new List<int>();
         string[] lines = input.Split('\n');
         int ProgramCounterLineIndex = 0;
-        
+        int lineIndex = 0;
         Console.WriteLine("<----------- Extracting Opcodes ----------->");
-        
+            
         foreach (string line in lines)
         {
+            // Create a new ProgramLine object and add it to the collection
+            ProgramLine programLine = new ProgramLine(lineIndex, line);
+            lineIndex++;
+            programLines.Add(programLine);
             
             //check if line starts with whitespace or number
             if (!string.IsNullOrWhiteSpace(line) && line[0] != ' ')
@@ -52,24 +64,18 @@ public class Encode
                 Console.WriteLine($"Opcode found at line index {Array.IndexOf(lines, line)+1}: {code}");
                 opcodes.Add(int.Parse(code, System.Globalization.NumberStyles.HexNumber));
                 
-                
                 // Save the opcode to the opcodeLines array
-
                 opcodeLines[ProgramCounterLineIndex] = Array.IndexOf(lines, line);
+                
                 ProgramCounterLineIndex++;
             }
-
-            
-
         }
         
         Console.WriteLine("<----------- End of Opcodes ----------->");
         
         // Write the opcodes to the program memory
         _memory.ProgramMemory = opcodes.ToArray(); 
-        
-        
+        return programLines;
     }
-    
 }
     

@@ -21,7 +21,7 @@ public class ALU
             // Execute the operation
             Console.WriteLine("Executing Opcode: " + opcode.ToString("X4") + " at PC: " + _memory.ProgramCounter.ToString("X4"));
             GetOperation(opcode);
-            Thread.Sleep(100);
+            Thread.Sleep(1000);
         }
     }
     
