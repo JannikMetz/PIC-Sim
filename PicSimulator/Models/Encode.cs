@@ -2,19 +2,24 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using PicSimulator.ViewModels;
+using PicSimulator.Views;
 
 namespace PicSimulator.Models;
+
 
 public class Encode
 {
 
     private Memory _memory;
+    private MainWindow _mainWindow;
     
     private int[] opcodeLines = new int[1024]; // Program memory (ROM) - 2kB
 
     public Encode(Memory memory)
     {
         _memory = memory;
+        _mainWindow = new MainWindow();
     }
     
     public string ReadFile(string filePath)
@@ -26,6 +31,7 @@ public class Encode
         }
         else
         {
+            _mainWindow.ErrorMessageBox(1);
             throw new FileNotFoundException("Die Datei wurde nicht gefunden.", filePath);
         }
     }

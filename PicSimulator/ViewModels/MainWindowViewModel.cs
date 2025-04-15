@@ -5,6 +5,9 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using PicSimulator.Models;
+using System.Collections.Generic;
+
+using PicSimulator.Views;
 
 namespace PicSimulator.ViewModels;
 
@@ -16,6 +19,7 @@ public class MainWindowViewModel : ViewModelBase
     private Encode _encode;
     private Memory _memory;
     private ALU _alu;
+    private MainWindow _mainWindow;
 
     #endregion
 
@@ -75,7 +79,7 @@ public class MainWindowViewModel : ViewModelBase
 
     public MainWindowViewModel()
     {
-        
+        _mainWindow = new MainWindow();
         _memory = new Memory();
         _encode = new Encode(_memory);
         _alu = new ALU(_memory);
@@ -92,7 +96,15 @@ public class MainWindowViewModel : ViewModelBase
         var openFileDialog = new OpenFileDialog
         {
             Title = "Select a file",
-            AllowMultiple = false
+            AllowMultiple = false,
+            Filters =
+            [
+                new FileDialogFilter
+                {
+                    Name = "LST Files",
+                    Extensions = ["lst"]
+                }
+            ]
         };
 
         var mainWindow = (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)
@@ -100,6 +112,7 @@ public class MainWindowViewModel : ViewModelBase
         if (mainWindow != null)
         {
             var result = await openFileDialog.ShowAsync(mainWindow);
+            
 
             if (result != null && result.Length > 0)
             {
@@ -122,6 +135,7 @@ public class MainWindowViewModel : ViewModelBase
     {
         if (_fileContent == null || _fileContent == string.Empty)
         {
+            _mainWindow.ErrorMessageBox(0);
             Console.WriteLine("No file loaded");
             return;
         }
