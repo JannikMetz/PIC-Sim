@@ -65,7 +65,7 @@
                                 <ItemsControl ItemsSource="{Binding Breakpoints}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <CheckBox IsChecked="{Binding IsActive}" Content="{Binding LineNumber}"
+                                            <CheckBox IsChecked="{Binding IsActive}" Content="{Binding LineNumberPlusOne}"
                                                       Margin="5,0,10,0" IsVisible="{Binding IsOpcode, Converter={StaticResource BooleanToVisibilityConverter}}" />
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>

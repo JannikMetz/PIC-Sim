@@ -7,6 +7,7 @@ namespace PicSimulator.ViewModels;
 public class Breakpoint : ViewModelBase
 {
     public int LineNumber { get; set; }
+    public int LineNumberPlusOne { get; set; }
     private int PcIndex { get; set; }
     private bool _isActive;
     private bool _isOpcode;
@@ -16,6 +17,7 @@ public class Breakpoint : ViewModelBase
     public Breakpoint(int lineNumber, Memory memory, int pcIndex = 1025, bool isOpcode = false, bool isActive = false)
     {
         LineNumber = lineNumber;
+        LineNumberPlusOne = lineNumber + 1;
         PcIndex = pcIndex;
         _isActive = isActive;
         _isOpcode = isOpcode;

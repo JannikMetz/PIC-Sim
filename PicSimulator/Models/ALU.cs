@@ -40,13 +40,14 @@ public class ALU
     
     public void UpdateBreakpoints(int ProgramCounterIndex, bool active)
     {
-        if (ProgramCounterIndex <= 1024)
+        if (ProgramCounterIndex <= 1024 && ProgramCounterIndex >= 0)
         {
+            Console.WriteLine("Updating Breakpoint at Program counter: " + ProgramCounterIndex.ToString("X4"));
             breakpoints[ProgramCounterIndex] = active;
         }
         else
         {
-            Console.WriteLine("Breakpoint index out of range.");
+            Console.WriteLine("Breakpoint is not part of Opcodes");
         }
     }
     
