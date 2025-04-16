@@ -95,12 +95,12 @@ public class Encode
             //check if line starts with whitespace or number
             if (!string.IsNullOrWhiteSpace(line) && line[0] != ' ')
             {
-                breakpoint = new Breakpoint(lineIndex, ProgramCounterLineIndex, true);
+                breakpoint = new Breakpoint(lineIndex, _memory, ProgramCounterLineIndex, true);
                 ProgramCounterLineIndex++;
             }
             else
             {
-                breakpoint = new Breakpoint(lineIndex);
+                breakpoint = new Breakpoint(lineIndex, _memory);
             }
 
             breakpoints.Add(breakpoint);

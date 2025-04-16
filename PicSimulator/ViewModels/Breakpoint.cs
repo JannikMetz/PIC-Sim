@@ -13,12 +13,13 @@ public class Breakpoint : ViewModelBase
     private ALU _alu;
 
     
-    public Breakpoint(int lineNumber, int pcIndex = 1025, bool isOpcode = false, bool isActive = false)
+    public Breakpoint(int lineNumber, Memory memory, int pcIndex = 1025, bool isOpcode = false, bool isActive = false)
     {
         LineNumber = lineNumber;
         PcIndex = pcIndex;
         _isActive = isActive;
         _isOpcode = isOpcode;
+        _alu = new ALU(memory);
 
         
     }
@@ -31,6 +32,8 @@ public class Breakpoint : ViewModelBase
         {
             if (_isActive != value)
             {
+                // _alu checks if PcIndex is or over 1025 and does not set the breakpoint if it is
+                _alu.UpdateBreakpoints(PcIndex, value);
                 _isActive = value;
                 OnPropertyChanged();
             }
@@ -43,9 +46,6 @@ public class Breakpoint : ViewModelBase
         {
             if (_isOpcode != value)
             {
-                // _alu checks if PcIndex is or over 1025 and does not set the breakpoint if it is
-                _alu.UpdateBreakpoints(PcIndex, value);
-                    
                 _isOpcode = value;
                 OnPropertyChanged();
             }
