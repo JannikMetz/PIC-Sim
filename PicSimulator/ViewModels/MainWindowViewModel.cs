@@ -8,7 +8,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using PicSimulator.Models;
 using PicSimulator.ViewModels;
 using System.Collections.Generic;
-
+using System.Linq;
 using PicSimulator.Views;
 
 namespace PicSimulator.ViewModels;
@@ -22,6 +22,7 @@ public class MainWindowViewModel : ViewModelBase
     private ALU _alu;
     private string _fileContent;
     private ObservableCollection<ProgramLine> _programLines;
+    public ObservableCollection<Breakpoint> _breakpoints;
     
     private MainWindow _mainWindow;
 
@@ -37,6 +38,19 @@ public class MainWindowViewModel : ViewModelBase
             if (_programLines != value)
             {
                 _programLines = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+    
+    public ObservableCollection<Breakpoint> Breakpoints
+    {
+        get => _breakpoints;
+        set
+        {
+            if (_breakpoints != value)
+            {
+                _breakpoints = value;
                 OnPropertyChanged();
             }
         }
@@ -136,6 +150,7 @@ public class MainWindowViewModel : ViewModelBase
             {
                 FileContent = _encode.ReadFile(result[0]);
                 ProgramLines= _encode.ExtractOpcodes(_fileContent);
+                Breakpoints = _encode.CreateBreakpoints(_fileContent); 
             }
         }
     }

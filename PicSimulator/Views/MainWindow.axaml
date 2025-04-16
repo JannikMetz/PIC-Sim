@@ -12,6 +12,7 @@
         Background="#3c3f41">
     <Window.Resources>
         <local:BooleanToBrushConverter x:Key="BooleanToBrushConverter" />
+        <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </Window.Resources>
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
@@ -57,16 +58,32 @@
         <!-- Codeview with Breakpoints -->
         <Border Grid.Row="2" Grid.Column="1" BorderBrush="#FF000000" BorderThickness="1" CornerRadius="10" Margin="0,10,10,10" ClipToBounds="True">
             <ScrollViewer  Background="#1b1b1b">
-                <ItemsControl ItemsSource="{Binding ProgramLines}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Content}" 
+
+                            <StackPanel Orientation="Horizontal">
+                                
+                                <!-- Breakpoints -->
+                                <ItemsControl ItemsSource="{Binding Breakpoints}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <CheckBox IsChecked="{Binding IsActive}" Content="{Binding LineNumber}"
+                                                      Margin="5,0,10,0" IsVisible="{Binding IsOpcode, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl> 
+                                
+                                <!-- Codeview -->
+                                <ItemsControl ItemsSource="{Binding ProgramLines}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                        <TextBlock Text="{Binding Content}" 
                                        TextWrapping="Wrap" 
                                        FontFamily="Consolas" 
-                                       Background="{Binding IsHighlighted, Converter={StaticResource BooleanToBrushConverter}}" />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl> 
+                                       Background="{Binding IsHighlighted, 
+                                       Converter={StaticResource BooleanToBrushConverter}}" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl> 
+                            </StackPanel>
             </ScrollViewer>
         </Border>
     </Grid>
