@@ -39,9 +39,15 @@
                 <MenuItem Header="Save" Command="{Binding SaveCommand}"/>
                 <MenuItem Header="Save As" Command="{Binding SaveAsCommand}"/>
                 <MenuItem Header="Test-Opcodes" Command="{Binding TestCommand}"/>
-                <MenuItem Header="Run" Command="{Binding StartCommand}"/>
-                
             </MenuItem>
+            
+            <MenuItem Header="Code Execution">
+                <MenuItem Header="Run" Command="{Binding StartCommand}"/>
+                <Separator />
+                <MenuItem Header="Pause" Command="{Binding PauseCommand}"/>
+                <MenuItem Header="Reset" Command="{Binding ResetCommand}"/>
+            </MenuItem>
+            
             <MenuItem Header="Settings">
             </MenuItem>
             <MenuItem Header="Documentation" Click="OnOpenWebsiteClick">
