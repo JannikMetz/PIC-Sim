@@ -8,7 +8,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using PicSimulator.Models;
 using PicSimulator.ViewModels;
 using System.Collections.Generic;
-
+using System.Linq;
 using PicSimulator.Views;
 
 namespace PicSimulator.ViewModels;
@@ -22,6 +22,7 @@ public class MainWindowViewModel : ViewModelBase
     private ALU _alu;
     private string _fileContent;
     private ObservableCollection<ProgramLine> _programLines;
+    public ObservableCollection<Breakpoint> _breakpoints;
     
     private MainWindow _mainWindow;
 
@@ -37,6 +38,19 @@ public class MainWindowViewModel : ViewModelBase
             if (_programLines != value)
             {
                 _programLines = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+    
+    public ObservableCollection<Breakpoint> Breakpoints
+    {
+        get => _breakpoints;
+        set
+        {
+            if (_breakpoints != value)
+            {
+                _breakpoints = value;
                 OnPropertyChanged();
             }
         }
@@ -102,6 +116,10 @@ public class MainWindowViewModel : ViewModelBase
     public ICommand SaveAsCommand { get; }
     public ICommand StartCommand { get; }
     public ICommand TestCommand { get; }
+    
+    public ICommand ResetCommand { get; }
+    
+    public ICommand PauseCommand { get; }
 
     #endregion
 
@@ -123,6 +141,9 @@ public class MainWindowViewModel : ViewModelBase
         SaveAsCommand = new RelayCommand(SaveAs);
         StartCommand = new RelayCommand(Start);
         TestCommand = new RelayCommand(Test);
+        ResetCommand = new RelayCommand(Reset);
+        PauseCommand = new RelayCommand(Pause);
+
     }
     
     private void InitializeObservableMemoryArray()
@@ -176,6 +197,7 @@ public class MainWindowViewModel : ViewModelBase
             {
                 FileContent = _encode.ReadFile(result[0]);
                 ProgramLines= _encode.ExtractOpcodes(_fileContent);
+                Breakpoints = _encode.CreateBreakpoints(_fileContent); 
             }
         }
     }
@@ -201,11 +223,27 @@ public class MainWindowViewModel : ViewModelBase
         // Start the Simulator in a new thread
         Thread aluThread = new Thread(() =>
         {
+            _alu.IsActive = true;
             _alu.Start(); 
         });
 
         aluThread.IsBackground = true;
         aluThread.Start();
+    }
+    
+    private void Pause(object parameter)
+    {
+        Console.WriteLine("Pause command executed");
+        _alu.IsActive = false;
+    }
+    
+    
+    private void Reset(object parameter)
+    {
+        Console.WriteLine("Reset command executed");
+        _alu.IsActive = false;
+        _alu.BreakpointSecs = 0;
+        _memory.ResetMemory();
     }
     
 

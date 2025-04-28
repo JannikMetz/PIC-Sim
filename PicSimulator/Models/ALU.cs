@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using PicSimulator.ViewModels;
 
 namespace PicSimulator.Models;
 
@@ -11,17 +12,52 @@ public class ALU
         _memory = memory;
     }
     
+    public int BreakpointSecs = 0;
+    
+    private static bool[] breakpoints = new bool[1024]; // Max of 1024 Opcodes
+    
+    public bool IsActive = true;
+    
     public void Start()
     {
-        while (true)
+        
+        while (IsActive)
         {
-            // Read the opcode from the program memory
-            int opcode = _memory.ProgramMemory[_memory.ProgramCounter];
-            
-            // Execute the operation
-            Console.WriteLine("Executing Opcode: " + opcode.ToString("X4") + " at PC: " + _memory.ProgramCounter.ToString("X4"));
-            GetOperation(opcode);
-            Thread.Sleep(1000);
+            if(breakpoints[_memory.ProgramCounter])
+            {
+                Console.WriteLine("Breakpoint active at: " + _memory.ProgramCounter.ToString("X4") +  " for " + BreakpointSecs + " Secs");
+                BreakpointSecs++;
+                Thread.Sleep(1000);
+            }
+            else
+            {
+                BreakpointSecs = 0;
+                // Read the opcode from the program memory
+                int opcode = _memory.ProgramMemory[_memory.ProgramCounter];
+
+                // Execute the operation
+                Console.WriteLine("Executing Opcode: " + opcode.ToString("X4") + " at PC: " +
+                                  _memory.ProgramCounter.ToString("X4"));
+                GetOperation(opcode);
+                Thread.Sleep(1000);
+            }
+        }
+        // Stopped 
+        Console.WriteLine("Execution Stopped");
+        
+        
+    }
+    
+    public void UpdateBreakpoints(int ProgramCounterIndex, bool active)
+    {
+        if (ProgramCounterIndex <= 1024 && ProgramCounterIndex >= 0)
+        {
+            Console.WriteLine("Updating Breakpoint at Program counter: " + ProgramCounterIndex.ToString("X4"));
+            breakpoints[ProgramCounterIndex] = active;
+        }
+        else
+        {
+            Console.WriteLine("Breakpoint is not part of Opcodes");
         }
     }
     
