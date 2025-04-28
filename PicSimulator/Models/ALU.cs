@@ -27,7 +27,6 @@ public class ALU
             {
                 Console.WriteLine("Breakpoint active at: " + _memory.ProgramCounter.ToString("X4") +  " for " + BreakpointSecs + " Secs");
                 BreakpointSecs++;
-                Thread.Sleep(1000);
             }
             else
             {
@@ -39,8 +38,8 @@ public class ALU
                 Console.WriteLine("Executing Opcode: " + opcode.ToString("X4") + " at PC: " +
                                   _memory.ProgramCounter.ToString("X4"));
                 GetOperation(opcode);
-                Thread.Sleep(1000);
             }
+            Thread.Sleep(1000);
         }
         // Stopped 
         Console.WriteLine("Execution Stopped");
