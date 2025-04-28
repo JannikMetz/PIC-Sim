@@ -59,7 +59,7 @@
         
         <!-- Registers -->
         <Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" BorderBrush="#FF000000" BorderThickness="1" CornerRadius="10" Margin="10,10,10,10" ClipToBounds="True">
-            <ScrollViewer Background="#1b1b1b">
+            <ScrollViewer Background="#1b1b1b" Padding="0, 20, 20, 0">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" /> <!-- Spaltenüberschriften -->
