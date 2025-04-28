@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace PicSimulator.Models;
@@ -92,7 +93,7 @@ public class Memory : ObservableObject
     // Constructor to initialize the memory with default values.
     public Memory()
     {
-        ResetMemory();
+        InitializeMemory();
         CallStack = new Stack<int>();
     }
 
@@ -110,6 +111,17 @@ public class Memory : ObservableObject
         
         Console.WriteLine("Resetting W-Register");
         WReg = 0; // Reset W register
+    }
+
+    public void InitializeMemory()
+    {
+        ResetMemory();
+        Console.WriteLine("Initializing Memory");
+        
+        Console.WriteLine("Setting TRISA and TRISB to Input");
+        MemoryArray[1,5].Value = 255; // Set TRISA to Input
+        MemoryArray[1,6].Value = 255; // Set TRISB to Input
+                
     }
 
     public int GetBank()

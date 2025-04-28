@@ -15,6 +15,7 @@
         <converters:BooleanToBrushConverter x:Key="BooleanToBrushConverter" />
         <converters:IntToHexConverter x:Key="IntToHexConverter" />
         <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
     </Window.Resources>
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
@@ -57,7 +58,7 @@
         
         <!-- Registers -->
         <Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" BorderBrush="#FF000000" BorderThickness="1" CornerRadius="10" Margin="10,10,10,10" ClipToBounds="True">
-            <ScrollViewer Background="#1b1b1b" Padding="0, 20, 20, 0">
+            <ScrollViewer Background="#1b1b1b" Padding="0, 20, 20, 20">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -138,24 +139,79 @@
             </ScrollViewer>
         </Border>
         
+<!-- IO Pins and Other -->
+<Border Grid.Row="1" Grid.Column="1" BorderBrush="#FF000000" BorderThickness="1" CornerRadius="10" Margin="0,10,10,10" ClipToBounds="True">
+    <ScrollViewer Background="#1b1b1b" Padding="0,20,20,0">
+        <StackPanel Orientation="Vertical" Margin="10">
+            
+            <!-- PORTA -->
+            <TextBlock Text="PORTA" Foreground="White" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+            <ItemsControl ItemsSource="{Binding IOPins}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox Content="{Binding Index}" 
+                                  IsEnabled="{Binding IsInput}"
+                                  IsVisible="{Binding IsPORTA}"
+                                  Foreground="White"
+                                  Margin="5"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="8"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+
+            <!-- PORTB -->
+            <TextBlock Text="PORTB" Foreground="White" FontWeight="Bold" FontSize="16" Margin="20,20,0,10"/>
+            <ItemsControl ItemsSource="{Binding IOPins}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox Content="{Binding Index}" 
+                                  IsEnabled="{Binding IsInput}"
+                                  IsVisible="{Binding !IsPORTA, Converter={StaticResource InverseBooleanConverter}}"
+                                  Foreground="White"
+                                  Margin="5"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="8"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+
+        </StackPanel>
+    </ScrollViewer>
+</Border>
+
+        
         <!-- Codeview with Breakpoints -->
         <Border Grid.Row="2" Grid.Column="1" BorderBrush="#FF000000" BorderThickness="1" CornerRadius="10" Margin="0,10,10,10" ClipToBounds="True">
             <ScrollViewer  Background="#1b1b1b">
 
-                            <StackPanel Orientation="Horizontal">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
                                 
                                 <!-- Breakpoints -->
-                                <ItemsControl ItemsSource="{Binding Breakpoints}">
+                                <ItemsControl Grid.Column="0" ItemsSource="{Binding Breakpoints}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <CheckBox IsChecked="{Binding IsActive}" Content="{Binding LineNumberPlusOne}"
-                                                      Margin="5,0,10,0" IsVisible="{Binding IsOpcode, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                                      Margin="5,0,10,0" IsEnabled="{Binding IsOpcode}"
+                                            />
+                                            <!-- IsVisible="{Binding IsOpcode}"  -->
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl> 
                                 
                                 <!-- Codeview -->
-                                <ItemsControl ItemsSource="{Binding ProgramLines}">
+                                <ItemsControl Grid.Column="1" ItemsSource="{Binding ProgramLines}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                         <TextBlock Text="{Binding Content}" 
@@ -166,7 +222,7 @@
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl> 
-                            </StackPanel>
+                    </Grid>
             </ScrollViewer>
         </Border>
     </Grid>
