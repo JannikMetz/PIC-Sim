@@ -23,6 +23,7 @@ public class MainWindowViewModel : ViewModelBase
     private string _fileContent;
     private ObservableCollection<ProgramLine> _programLines;
     private ObservableCollection<Breakpoint> _breakpoints;
+    private ObservableCollection<IOPin> _IOPins;
     
     private MainWindow _mainWindow;
 
@@ -157,6 +158,8 @@ public class MainWindowViewModel : ViewModelBase
         }
     }
     
+    public ObservableCollection<IOPin> IOPins { get; set; } = new ObservableCollection<IOPin>();
+    
     #endregion
 
     #region Commands
@@ -183,6 +186,7 @@ public class MainWindowViewModel : ViewModelBase
         // Initialisiere die ObservableCollection
         ObservableMemoryArray = new ObservableCollection<ObservableCollection<Register>>();
         InitializeObservableMemoryArray();
+        InitializeIOPins();
         _encode = new Encode(_memory);
         _alu = new ALU(_memory);
         LoadCommand = new RelayCommand(Load);
@@ -192,6 +196,18 @@ public class MainWindowViewModel : ViewModelBase
         TestCommand = new RelayCommand(Test);
         ResetCommand = new RelayCommand(Reset);
         PauseCommand = new RelayCommand(Pause);
+    }
+    
+    private void InitializeIOPins()
+    {
+        // Initialize the I/O pins here
+        for (int j = 0; j < 2; j++)
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                IOPins.Add(new IOPin( _memory, i, Convert.ToBoolean(j)));
+            }
+        }
     }
     
     private void InitializeObservableMemoryArray()
@@ -297,7 +313,7 @@ public class MainWindowViewModel : ViewModelBase
         Console.WriteLine("Reset command executed");
         _alu.IsActive = false;
         _alu.BreakpointSecs = 0;
-        _memory.ResetMemory();
+        _memory.InitializeMemory();
     }
     
 
