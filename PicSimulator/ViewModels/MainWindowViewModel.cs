@@ -80,8 +80,19 @@ public class MainWindowViewModel : ViewModelBase
             }
         }
     }
+    
+    public ObservableCollection<string> ColumnHeaders { get; set; } = new ObservableCollection<string>
+    {
+        "00", "01", "02", "03", "04", "05", "06", "07"
+    };
 
+    public ObservableCollection<string> RowHeaders { get; set; } = new ObservableCollection<string>
+    {
+        "00", "08", "10", "18", "20", "28", "30", "38", "40", "48", "50", "58", "60", "68", "70", "78", "80", "88", "90", "98", "A0", "A8", "B0", "B8", "C0", "C8", "D0", "D8", "E0", "E8", "F0", "F8"
+    };
 
+    public ObservableCollection<ObservableCollection<Register>> ObservableMemoryArray { get; private set; }
+    
     #endregion
 
     #region Commands
@@ -100,6 +111,11 @@ public class MainWindowViewModel : ViewModelBase
         _mainWindow = new MainWindow();
         _memory = new Memory();
         _memory.ProgramCounterChanged += OnProgramCounterChanged;
+        _memory.MemoryArrayChanged += OnMemoryArrayChanged;
+
+        // Initialisiere die ObservableCollection
+        ObservableMemoryArray = new ObservableCollection<ObservableCollection<Register>>();
+        InitializeObservableMemoryArray();
         _encode = new Encode(_memory);
         _alu = new ALU(_memory);
         LoadCommand = new RelayCommand(Load);
@@ -107,6 +123,30 @@ public class MainWindowViewModel : ViewModelBase
         SaveAsCommand = new RelayCommand(SaveAs);
         StartCommand = new RelayCommand(Start);
         TestCommand = new RelayCommand(Test);
+    }
+    
+    private void InitializeObservableMemoryArray()
+    {
+        for (int i = 0; i < 2; i++)
+        {
+            var row = new ObservableCollection<Register>();
+            for (int j = 0; j < 128; j++)
+            {
+                row.Add(_memory.MemoryArray[i, j]);
+            }
+            ObservableMemoryArray.Add(row);
+        }
+    }
+
+    private void OnMemoryArrayChanged()
+    {
+        for (int i = 0; i < 2; i++)
+        {
+            for (int j = 0; j < 128; j++)
+            {
+                ObservableMemoryArray[i][j] = _memory.MemoryArray[i, j];
+            }
+        }
     }
 
     private async void Load(object parameter)

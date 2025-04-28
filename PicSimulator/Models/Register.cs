@@ -5,16 +5,13 @@ namespace PicSimulator.Models;
 public class Register
 {
     private int _value;
-
-    public int GetValue()
+    
+    public int Value
     {
-        return _value;
+        get { return _value; }
+        set { _value = value & 0xFF; } // Nur die unteren 8 Bits verwenden
     }
-
-    public void SetValue(int value)
-    {
-        _value = value & 0xFF; // Nur die unteren 8 Bits verwenden
-    }
+    
     
     public int GetBitValue(int bitNumber)
     {

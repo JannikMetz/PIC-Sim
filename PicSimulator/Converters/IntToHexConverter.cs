@@ -1,0 +1,27 @@
+using System;
+using System.Globalization;
+using Avalonia.Data.Converters;
+
+namespace PicSimulator.Converters
+{
+    public class IntToHexConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is int intValue)
+            {
+                return $"{intValue:X2}";
+            }
+            return value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is string strValue && int.TryParse(strValue, NumberStyles.HexNumber, culture, out int intValue))
+            {
+                return intValue;
+            }
+            return value;
+        }
+    }
+}
