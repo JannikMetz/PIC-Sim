@@ -5,7 +5,7 @@ using Avalonia.Media;
 using Avalonia.Data;
 
 
-namespace PicSimulator.ViewModels;
+namespace PicSimulator.Converters;
 
 public class BooleanToVisibilityConverter : IValueConverter
 {
