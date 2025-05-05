@@ -118,10 +118,22 @@ public class Memory : ObservableObject
         ResetMemory();
         Console.WriteLine("Initializing Memory");
         
-        Console.WriteLine("Setting TRISA and TRISB to Input");
-        MemoryArray[1,5].Value = 255; // Set TRISA to Input
-        MemoryArray[1,6].Value = 255; // Set TRISB to Input
-                
+        Console.WriteLine("Setting Registers to Reset Values");
+        
+
+        // DO NOT USE SetRegister() HERE BECAUSE IT ONLY SETS ADDRESSES ON CURRENT BANK
+        
+        // Set Status Bank 1 & 2 to 0001 1XXX
+        MemoryArray[0,3].Value = 24;
+        MemoryArray[1,3].Value = 24;
+        
+        // Set OPTION_REG to 1111 1111
+        MemoryArray[1,1].Value = 255;
+        
+        // Set TRISA to ---1 1111 and TRISB to 1111 1111
+        MemoryArray[1,5].Value = 31;
+        MemoryArray[1,6].Value = 255;
+        
     }
 
     public int GetBank()
