@@ -1,15 +1,23 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace PicSimulator.Models;
 
-public class Register
+public class Register : INotifyPropertyChanged
 {
     private int _value;
     
     public int Value
     {
         get { return _value; }
-        set { _value = value & 0xFF; } // Nur die unteren 8 Bits verwenden
+        set
+        {
+            if (value >= 0x00 && value <= 0xFF)
+            {
+                _value = value;
+                OnPropertyChanged(nameof(Value));
+            }
+        }
     }
     
     
@@ -33,5 +41,12 @@ public class Register
     public Register()
     {
         _value = 0;
+    }
+    
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    protected virtual void OnPropertyChanged(string propertyName)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

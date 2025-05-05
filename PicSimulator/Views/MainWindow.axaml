@@ -55,40 +55,42 @@
             </MenuItem>
         </Menu>
         
+        
+        
         <!-- Registers -->
         <Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" BorderBrush="#FF000000" BorderThickness="1" CornerRadius="10" Margin="10,10,10,10" ClipToBounds="True">
             <ScrollViewer Background="#1b1b1b">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" /> <!-- Spaltenüberschriften -->
+                        <RowDefinition Height="*" />    <!-- Inhalt -->
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" /> <!-- Zeilenüberschriften -->
+                        <ColumnDefinition Width="*" />    <!-- Inhalt -->
                     </Grid.ColumnDefinitions>
 
-                    <ItemsControl Grid.Row="0" Grid.Column="1" ItemsSource="{Binding ColumnHeaders}">
+                    <!-- Spaltenüberschriften -->
+                    <ItemsControl Grid.Row="0" Grid.Column="1" ItemsSource="{Binding ColumnHeaders}" HorizontalAlignment="Stretch">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <UniformGrid Columns="8" />
+                                <UniformGrid Columns="{Binding ColumnHeaders.Count}" />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border BorderBrush="Gray" BorderThickness="1">
-                                    <TextBlock Text="{Binding}"
-                                               HorizontalAlignment="Center"
-                                               VerticalAlignment="Center"
-                                               FontFamily="Consolas"
-                                               Foreground="White"
-                                               Margin="5" />
-                                </Border>
+                                <TextBlock Text="{Binding }"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           TextAlignment="Center"
+                                           Padding="0,10,0,10"
+                                           Foreground="White" />
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
 
-                    <ItemsControl Grid.Row="1" Grid.Column="0" ItemsSource="{Binding RowHeaders}">
+                    <!-- Zeilenüberschriften -->
+                    <ItemsControl Grid.Row="1" Grid.Column="0" ItemsSource="{Binding RowHeaders}" >
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel Orientation="Vertical" />
@@ -96,19 +98,21 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border BorderBrush="Gray" BorderThickness="1">
-                                    <TextBlock Text="{Binding}"
-                                               HorizontalAlignment="Center"
-                                               VerticalAlignment="Center"
-                                               FontFamily="Consolas"
-                                               Foreground="White"
-                                               Margin="5" />
-                                </Border>
+                                <TextBlock Text="{Binding }"
+                                           VerticalAlignment="Center"
+                                           Padding="10"
+                                           Foreground="White" />
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
 
+                    <!-- Der Hauptspeicherbereich -->
                     <ItemsControl Grid.Row="1" Grid.Column="1" ItemsSource="{Binding ObservableMemoryArray}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <ItemsControl ItemsSource="{Binding}">
@@ -119,15 +123,20 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border BorderBrush="Gray" BorderThickness="1">
-                                                <TextBlock
-                                                    Text="{Binding Value, Converter={StaticResource IntToHexConverter}}"
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"
-                                                    FontFamily="Consolas"
-                                                    Foreground="White"
-                                                    Margin="5" />
-                                            </Border>
+                                            <TextBox
+                                                Text="{Binding Value, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}"
+                                                HorizontalAlignment="Stretch"
+                                                VerticalAlignment="Center"
+                                                TextAlignment="Center"
+                                                FontFamily="Consolas"
+                                                Padding="0,10,0,10"
+                                                Background="Transparent"
+                                                BorderBrush="Transparent"
+                                                Foreground="White"
+                                                MaxLength="2"
+                                                TextInput="HexTextBox_TextInput"
+                                                LostFocus="HexTextBox_LostFocus"
+                                                KeyDown="HexTextBox_KeyDown" />
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>

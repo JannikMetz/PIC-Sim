@@ -22,7 +22,7 @@ public class MainWindowViewModel : ViewModelBase
     private ALU _alu;
     private string _fileContent;
     private ObservableCollection<ProgramLine> _programLines;
-    public ObservableCollection<Breakpoint> _breakpoints;
+    private ObservableCollection<Breakpoint> _breakpoints;
     
     private MainWindow _mainWindow;
 
@@ -105,7 +105,57 @@ public class MainWindowViewModel : ViewModelBase
         "00", "08", "10", "18", "20", "28", "30", "38", "40", "48", "50", "58", "60", "68", "70", "78", "80", "88", "90", "98", "A0", "A8", "B0", "B8", "C0", "C8", "D0", "D8", "E0", "E8", "F0", "F8"
     };
 
-    public ObservableCollection<ObservableCollection<Register>> ObservableMemoryArray { get; private set; }
+    public ObservableCollection<ObservableCollection<Register>> ObservableMemoryArray
+    {
+        get
+        {
+            int bank;
+            int address = 0;
+            ObservableCollection<ObservableCollection<Register>> observableMemoryArray = new ObservableCollection<ObservableCollection<Register>>();
+            
+            for (int i = 0; i < 32; i++)
+            {
+                if (i == 16)
+                {
+                    address = 0;
+                }
+                if (i < 16)
+                {
+                    bank = 0;
+                }
+                else
+                {
+                    bank = 1;
+                }
+            
+                var row = new ObservableCollection<Register>();
+                for (int j = 0; j < 8; j++)
+                {
+                    row.Add(_memory.MemoryArray[bank, address]);
+                    address++;
+                }
+                observableMemoryArray.Add(row);
+            }
+            return observableMemoryArray;
+        }
+        set 
+        {
+            if (value != null)
+            {
+                for (int i = 0; i < value.Count; i++)
+                {
+                    int bank = i < 16 ? 0 : 1; 
+                    int address = (i % 16) * 8; 
+
+                    for (int j = 0; j < value[i].Count; j++)
+                    {
+                        _memory.MemoryArray[bank, address + j] = value[i][j];
+                    }
+                }
+                OnPropertyChanged();
+            }
+        }
+    }
     
     #endregion
 
@@ -129,7 +179,6 @@ public class MainWindowViewModel : ViewModelBase
         _mainWindow = new MainWindow();
         _memory = new Memory();
         _memory.ProgramCounterChanged += OnProgramCounterChanged;
-        _memory.MemoryArrayChanged += OnMemoryArrayChanged;
 
         // Initialisiere die ObservableCollection
         ObservableMemoryArray = new ObservableCollection<ObservableCollection<Register>>();
@@ -143,30 +192,35 @@ public class MainWindowViewModel : ViewModelBase
         TestCommand = new RelayCommand(Test);
         ResetCommand = new RelayCommand(Reset);
         PauseCommand = new RelayCommand(Pause);
-
     }
     
     private void InitializeObservableMemoryArray()
     {
-        for (int i = 0; i < 2; i++)
+        int bank;
+        int address = 0;
+        
+        for (int i = 0; i < 32; i++)
         {
-            var row = new ObservableCollection<Register>();
-            for (int j = 0; j < 128; j++)
+            if (i == 16)
             {
-                row.Add(_memory.MemoryArray[i, j]);
+                address = 0;
+            }
+            if (i < 16)
+            {
+                bank = 0;
+            }
+            else
+            {
+                bank = 1;
+            }
+            
+            var row = new ObservableCollection<Register>();
+            for (int j = 0; j < 8; j++)
+            {
+                row.Add(_memory.MemoryArray[bank, address]);
+                address++;
             }
             ObservableMemoryArray.Add(row);
-        }
-    }
-
-    private void OnMemoryArrayChanged()
-    {
-        for (int i = 0; i < 2; i++)
-        {
-            for (int j = 0; j < 128; j++)
-            {
-                ObservableMemoryArray[i][j] = _memory.MemoryArray[i, j];
-            }
         }
     }
 

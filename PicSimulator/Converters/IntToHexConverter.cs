@@ -17,11 +17,16 @@ namespace PicSimulator.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (value is "")
+            {
+                return 0;
+            }
+            
             if (value is string strValue && int.TryParse(strValue, NumberStyles.HexNumber, culture, out int intValue))
             {
                 return intValue;
             }
-            return value;
+            return 0;
         }
     }
 }
