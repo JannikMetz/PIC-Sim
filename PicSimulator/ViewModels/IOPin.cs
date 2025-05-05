@@ -7,6 +7,7 @@ public class IOPin : ViewModelBase
 {
     private Memory _memory;
     private Register _register;
+    private Register _trisRegister;
     private int _index;
     private int _registerValue; // 0 = PORTA, 1 = TRISA; 2 = PORTB, 3 = TRISB
     private bool _isInput; // else is Output
@@ -22,6 +23,7 @@ public class IOPin : ViewModelBase
         _index = index;
         _isSet = false;
         _registerValue = registerValue;
+
 
         if (registerValue == 0)
         {
@@ -44,20 +46,30 @@ public class IOPin : ViewModelBase
             _address = 6;
         }
         
-        _register = memory.MemoryArray[_bank, _address];
+        _register = _memory.MemoryArray[_bank, _address];
+        _trisRegister = _memory.MemoryArray[1, _address];
 
-        if (_register.GetBitValue(index) == 1)
+
+        if (_register.GetBitValue(_index) == 1)
         {
-            _isInput = true;
             _isSet = true;
         }
         else
         {
-            _isInput = false;
             _isSet = false;
         }
+        
+        if (_trisRegister.GetBitValue(_index) == 1)
+        {
+            _isInput = true;
+        }
+        else
+        {
+            _isInput = false;
+        }
+        
     }
-
+    
     public int Index
     {
         get { return _index; }
