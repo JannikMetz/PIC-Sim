@@ -274,13 +274,36 @@ public class Memory : ObservableObject
         
         MemoryArrayChanged?.Invoke();
     }
-    
+
     public void ClearDigitCarryFlag()
     {
         MemoryArray[0, 0x03].SetBitValue(1, 0); // Clear the digit flag (bit 3 of the status register)
-        MemoryArray[1, 0x03].SetBitValue(1, 0); 
-        
+        MemoryArray[1, 0x03].SetBitValue(1, 0);
+
         MemoryArrayChanged?.Invoke();
+    }
+
+    public void PushToCallStack(int value)
+    {
+        if (CallStack.Count >= 8)
+        {
+            // reverse Stack and remove the top element 
+            Stack<int> tempStack = new Stack<int>();
+
+            while (CallStack.Count > 0)
+            {
+                tempStack.Push(CallStack.Pop());
+            }
+
+            tempStack.Pop();
+
+            while (tempStack.Count > 0)
+            {
+                CallStack.Push(tempStack.Pop());
+            }
+        }
+
+        CallStack.Push(value);
     }
 }
 

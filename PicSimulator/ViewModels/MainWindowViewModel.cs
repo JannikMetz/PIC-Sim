@@ -10,6 +10,7 @@ using PicSimulator.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
 using PicSimulator.Views;
+using Timer = System.Timers.Timer;
 
 namespace PicSimulator.ViewModels;
 
@@ -25,6 +26,8 @@ public class MainWindowViewModel : ViewModelBase
     private ObservableCollection<Breakpoint> _breakpoints;
     
     private MainWindow _mainWindow;
+    private Watchdog _watchdog;
+    private Timer0 _timer;
 
     #endregion
 
@@ -183,8 +186,10 @@ public class MainWindowViewModel : ViewModelBase
         // Initialisiere die ObservableCollection
         ObservableMemoryArray = new ObservableCollection<ObservableCollection<Register>>();
         InitializeObservableMemoryArray();
-        _encode = new Encode(_memory);
-        _alu = new ALU(_memory);
+        _watchdog = new Watchdog(_memory);
+        _timer = new Timer0(_memory);
+        _alu = new ALU(_memory, _watchdog, _timer);
+        _encode = new Encode(_memory, _alu);
         LoadCommand = new RelayCommand(Load);
         SaveCommand = new RelayCommand(Save);
         SaveAsCommand = new RelayCommand(SaveAs);
@@ -288,9 +293,8 @@ public class MainWindowViewModel : ViewModelBase
     private void Pause(object parameter)
     {
         Console.WriteLine("Pause command executed");
-        _alu.IsActive = false;
+        _alu.IsStopped = false;
     }
-    
     
     private void Reset(object parameter)
     {

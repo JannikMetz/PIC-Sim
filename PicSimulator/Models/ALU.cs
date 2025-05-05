@@ -7,9 +7,13 @@ namespace PicSimulator.Models;
 public class ALU
 {
     private Memory _memory;
-    public ALU(Memory memory)
+    private Watchdog _watchdog;
+    private Timer0 _timer;
+    public ALU(Memory memory, Watchdog watchdog, Timer0 timer)
     {
         _memory = memory;
+        _watchdog = watchdog;
+        _timer = timer;
     }
     
     public int BreakpointSecs = 0;
@@ -17,12 +21,17 @@ public class ALU
     private static bool[] breakpoints = new bool[1024]; // Max of 1024 Opcodes
     
     public bool IsActive = true;
+    public bool IsStopped = false;
     
     public void Start()
     {
         
         while (IsActive)
         {
+            while (IsStopped)
+            {
+                Thread.Sleep(1000);
+            }
             if(breakpoints[_memory.ProgramCounter])
             {
                 Console.WriteLine("Breakpoint active at: " + _memory.ProgramCounter.ToString("X4") +  " for " + BreakpointSecs + " Secs");
@@ -39,12 +48,10 @@ public class ALU
                                   _memory.ProgramCounter.ToString("X4"));
                 GetOperation(opcode);
             }
-            Thread.Sleep(1000);
+            Thread.Sleep(100);
         }
         // Stopped 
         Console.WriteLine("Execution Stopped");
-        
-        
     }
     
     public void UpdateBreakpoints(int ProgramCounterIndex, bool active)
@@ -62,9 +69,12 @@ public class ALU
     
     public bool GetOperation(int Opcode)
     {
-                            // an Operation takes 1 microsecond at 4MHz but sometimes an
-         _memory.Timer++;   // Operation takes 2 microseconds then we increment again in the Operation
-        
+        if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+        {
+            // an Operation takes 1 microsecond at 4MHz but sometimes an
+            _timer.IncrementTimer(); // Operation takes 2 microseconds then we increment again in the Operation
+        }
+
         int Mask6BitOperant = 0x3F00;
         int result = Opcode & Mask6BitOperant;
         switch (result)
@@ -355,7 +365,10 @@ public class ALU
             _memory.IncrementProgramCounter();
             
             // only when we skip this instruction takes 2 microseconds
-            _memory.Timer++;
+            if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+            {
+                _timer.IncrementTimer();
+            }
         }
         
         // increment program counter
@@ -378,7 +391,10 @@ public class ALU
             _memory.IncrementProgramCounter();
             
             // only when we skip this instruction takes 2 microseconds
-            _memory.Timer++;
+            if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+            {
+                _timer.IncrementTimer();
+            }
         }
         
         // increment program counter
@@ -413,7 +429,10 @@ public class ALU
         _memory.ProgramCounter = pc;
         
         // this instruction takes 2 microseconds
-        _memory.Timer++;
+        if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+        {
+            _timer.IncrementTimer();
+        }
         
         // prgramm counter is not incremented here because we did it in the CALL instruction
         
@@ -492,11 +511,14 @@ public class ALU
         
         // push the program counter, incremented by 1, onto the call stack
         Console.WriteLine("Calling Stack");
-        _memory.CallStack.Push(_memory.ProgramCounter + 1);
+        _memory.PushToCallStack(_memory.ProgramCounter + 1);
         Console.WriteLine("Calling Stack done");
         _memory.ProgramCounter = pc;
         
-        _memory.Timer++;
+        if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+        {
+            _timer.IncrementTimer();
+        }
         return true;
     }
 
@@ -507,7 +529,10 @@ public class ALU
         // set the program counter
         _memory.ProgramCounter = pc;
         
-        _memory.Timer++;
+        if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+        {
+            _timer.IncrementTimer();
+        }
         return true;
     }
 
@@ -526,7 +551,10 @@ public class ALU
         _memory.ProgramCounter = pc;
         
         // this instruction takes 2 microseconds
-        _memory.Timer++;
+        if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+        {
+            _timer.IncrementTimer();
+        }
         
         // prgramm counter is not incremented here because we did it in the CALL instruction
         
@@ -536,7 +564,10 @@ public class ALU
     private bool RETFIE()
     {
         // TODO: implement RETFIE (return from interrupt)
-        _memory.Timer++;
+        if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+        {
+            _timer.IncrementTimer();
+        }
         return true;
     }
 
@@ -723,7 +754,10 @@ public class ALU
             _memory.IncrementProgramCounter();
             
             // only when we skip this instruction takes 2 microseconds
-            _memory.Timer++;
+            if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+            {
+                _timer.IncrementTimer();
+            }
         }
         if (destinationBit == 0)
         {
@@ -798,7 +832,10 @@ public class ALU
             _memory.IncrementProgramCounter();
             
             // only when we skip this instruction takes 2 microseconds
-            _memory.Timer++;
+            if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+            {
+                _timer.IncrementTimer();
+            }
         }
         if (destinationBit == 0)
         {
