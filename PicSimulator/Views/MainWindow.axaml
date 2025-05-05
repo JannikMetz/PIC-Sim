@@ -152,16 +152,58 @@
 <!-- IO Pins and Other -->
 <Border Grid.Row="1" Grid.Column="1" BorderBrush="#FF000000" BorderThickness="1" CornerRadius="10" Margin="0,10,10,10" ClipToBounds="True">
     <ScrollViewer Background="#1b1b1b" Padding="0,20,20,0">
-        <StackPanel Orientation="Vertical" Margin="10">
             
-            <!-- PORTA -->
-            <TextBlock Text="PORTA" Foreground="White" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
-            <ItemsControl ItemsSource="{Binding IOPins}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" /> <!-- PORT Description -->
+                    <RowDefinition Height="Auto" /> <!-- PIN Number -->
+                    <RowDefinition Height="*" />    <!-- PORTA -->
+                    <RowDefinition Height="*" />    <!-- TRISA -->
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" /> <!-- PIN0 -->
+                    <ColumnDefinition Width="Auto" /> <!-- PIN1 -->
+                    <ColumnDefinition Width="Auto" /> <!-- PIN2 -->
+                    <ColumnDefinition Width="Auto" /> <!-- PIN3 -->
+                    <ColumnDefinition Width="Auto" /> <!-- PIN4 -->
+                    <ColumnDefinition Width="Auto" /> <!-- PIN5 -->
+                    <ColumnDefinition Width="Auto" /> <!-- PIN6 -->
+                    <ColumnDefinition Width="Auto" /> <!-- PIN7 -->
+                </Grid.ColumnDefinitions>
+                
+                <!-- PORTA Description -->
+                
+                            <TextBlock Grid.Row="0" Text="PORTA" 
+                                       HorizontalAlignment="Center"
+                                       Foreground="White"
+                                       Margin="5"/>
+
+                
+                
+                <!-- 0 - 7 -->
+                <ItemsControl Grid.Row="1" ItemsSource="{Binding PinNumbers}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" 
+                                       HorizontalAlignment="Center"
+                                       Foreground="White"
+                                       Margin="5"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="8"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+                
+            <!-- TRISA -->
+            <ItemsControl Grid.Row="2" ItemsSource="{Binding IOPins}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <CheckBox Content="{Binding Index}" 
-                                  IsEnabled="{Binding IsInput}"
-                                  IsVisible="{Binding IsPORTA}"
+                        <CheckBox
+                                  IsVisible="{Binding IsTRISA}"
+                                  IsChecked="{Binding IsSet}"
                                   Foreground="White"
                                   Margin="5"/>
                     </DataTemplate>
@@ -172,27 +214,27 @@
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
-
-            <!-- PORTB -->
-            <TextBlock Text="PORTB" Foreground="White" FontWeight="Bold" FontSize="16" Margin="20,20,0,10"/>
-            <ItemsControl ItemsSource="{Binding IOPins}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <CheckBox Content="{Binding Index}" 
-                                  IsEnabled="{Binding IsInput}"
-                                  IsVisible="{Binding !IsPORTA, Converter={StaticResource InverseBooleanConverter}}"
-                                  Foreground="White"
-                                  Margin="5"/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <UniformGrid Columns="8"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
-
-        </StackPanel>
+                
+                <!-- PORTA -->
+                <ItemsControl Grid.Row="3" ItemsSource="{Binding IOPins}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox
+                                IsEnabled="{Binding IsInput}"
+                                IsVisible="{Binding IsPORTA}"
+                                IsChecked="{Binding IsSet}"
+                                Foreground="White"
+                                Margin="5"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="8"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+        </Grid>
+            
     </ScrollViewer>
 </Border>
 

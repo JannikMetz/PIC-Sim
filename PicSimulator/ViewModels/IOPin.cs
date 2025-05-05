@@ -1,4 +1,5 @@
-﻿using PicSimulator.Models;
+﻿using System;
+using PicSimulator.Models;
 
 namespace PicSimulator.ViewModels;
 
@@ -7,39 +8,56 @@ public class IOPin : ViewModelBase
     private Memory _memory;
     private Register _register;
     private int _index;
-    private bool _isPORTA; // true = TRISA, false = TRISB
+    private int _registerValue; // 0 = PORTA, 1 = TRISA; 2 = PORTB, 3 = TRISB
     private bool _isInput; // else is Output
-    private bool _isHigh; // true = high, false = low
+    private bool _isSet; // true = high, false = low
+    private int _bank; // 0 = bank0, 1 = bank1
+    private int _address; // 5 = A, 6 = B
 
 
-    public IOPin(Memory memory, int index, bool isPORTA)
+    public IOPin(Memory memory, int index, int registerValue)
     {
         
         _memory = memory;
         _index = index;
-        _isPORTA = isPORTA;
-        _isHigh = false;
-        
-        if (_isPORTA)
+        _isSet = false;
+        _registerValue = registerValue;
+
+        if (registerValue == 0)
         {
-            _register = memory.MemoryArray[1, 5];
+            _bank = 0;
+            _address = 5;
         }
-        else
+        else if (registerValue == 1)
         {
-            _register = memory.MemoryArray[1, 6];
+            _bank = 1;
+            _address = 5;
+        }
+        else if (registerValue == 2)
+        {
+            _bank = 0;
+            _address = 6;
+        }
+        else 
+        {
+            _bank = 1;
+            _address = 6;
         }
         
+        _register = memory.MemoryArray[_bank, _address];
+
         if (_register.GetBitValue(index) == 1)
         {
             _isInput = true;
+            _isSet = true;
         }
         else
         {
             _isInput = false;
-        };
-
+            _isSet = false;
+        }
     }
-    
+
     public int Index
     {
         get { return _index; }
@@ -53,14 +71,10 @@ public class IOPin : ViewModelBase
         }
     }
 
-    
+
     public bool IsInput
     {
-        get
-        {
-            return _isInput;
-
-        }
+        get { return _isInput; }
         set
         {
             if (_isInput != value)
@@ -70,33 +84,74 @@ public class IOPin : ViewModelBase
             }
         }
     }
-    
+
     public bool IsPORTA
     {
-        get { return _isPORTA; }
+        get
+        {
+            if (_registerValue == 0)
+            {
+                return true;
+            }
+                return false;
+        }
+    }
+    
+    public bool IsTRISA
+    {
+        get
+        {
+            if (_registerValue == 1)
+            {
+                return true;
+            }
+                return false;
+        }
+    }
+    
+    public bool IsPORTB
+    {
+        get
+        {
+            if (_registerValue == 2)
+            {
+                return true;
+            }
+                return false;
+        }
+    }
+    
+    public bool IsTRISB
+    {
+        get
+        {
+            if (_registerValue == 3)
+            {
+                return true;
+            }
+                return false;
+        }
+    }
+    public bool IsSet
+    {
+        get { return _isSet; }
         set
         {
-            if (_isPORTA != value)
+            if (_isSet != value)
             {
-                _isPORTA = value;
+                if (value)
+                {
+                    _memory.MemoryArray[_bank, _address].SetBitValue(_index, 1);
+                }
+                else
+                {
+                    _memory.MemoryArray[_bank, _address].SetBitValue(_index, 0);
+                }
+
+                _isSet = value;
                 OnPropertyChanged();
             }
         }
     }
-    
-    // public bool isHigh
-    // {
-    //     get
-    //     {
-    //         if (_isPORTA)
-    //         {
-    //             return _memory.MemoryArray[0, 5].GetBitValue(_index) != _register.GetBitValue(_index);
-    //         }
-    //         else
-    //         {
-    //             return _memory.MemoryArray[0, 6].GetBitValue(_index) != _register.GetBitValue(_index);
-    //         }
-    //     }
-    // }
-    //
 }
+

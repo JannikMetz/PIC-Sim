@@ -23,8 +23,6 @@ public class MainWindowViewModel : ViewModelBase
     private string _fileContent;
     private ObservableCollection<ProgramLine> _programLines;
     private ObservableCollection<Breakpoint> _breakpoints;
-    private ObservableCollection<IOPin> _IOPins;
-    
     private MainWindow _mainWindow;
 
     #endregion
@@ -105,7 +103,11 @@ public class MainWindowViewModel : ViewModelBase
     {
         "00", "08", "10", "18", "20", "28", "30", "38", "40", "48", "50", "58", "60", "68", "70", "78", "80", "88", "90", "98", "A0", "A8", "B0", "B8", "C0", "C8", "D0", "D8", "E0", "E8", "F0", "F8"
     };
-
+    
+    public ObservableCollection<string> PinNumbers{ get; set; } = new ObservableCollection<string>
+    {
+        "0", "1", "2", "3", "4", "5", "6", "7"
+    };
     public ObservableCollection<ObservableCollection<Register>> ObservableMemoryArray
     {
         get
@@ -160,8 +162,6 @@ public class MainWindowViewModel : ViewModelBase
     
     public ObservableCollection<IOPin> IOPins { get; set; } = new ObservableCollection<IOPin>();
     
-    public ObservableCollection<IOPin> IOPins { get; set; } = new ObservableCollection<IOPin>();
-    
     #endregion
 
     #region Commands
@@ -203,13 +203,15 @@ public class MainWindowViewModel : ViewModelBase
     private void InitializeIOPins()
     {
         // Initialize the I/O pins here
-        for (int j = 0; j < 2; j++)
+        for (int j = 0; j < 4; j++)
         {
             for (int i = 0; i < 8; i++)
             {
-                IOPins.Add(new IOPin( _memory, i, Convert.ToBoolean(j)));
+                IOPins.Add(new IOPin( _memory, i, j));
             }
         }
+        
+        
     }
     
     private void InitializeObservableMemoryArray()
