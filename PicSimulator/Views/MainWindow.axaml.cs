@@ -52,6 +52,15 @@ public partial class MainWindow : Window
             e.Handled = true;
         }
     }
+    
+    private void HexTextBox_GotFocus(object? sender, GotFocusEventArgs e)
+    {
+        if (sender is TextBox textBox)
+        {
+            textBox.SelectAll();
+        }
+    }
+
 
     private void HexTextBox_LostFocus(object? sender, RoutedEventArgs e)
     {

@@ -135,6 +135,7 @@
                                                 Foreground="White"
                                                 MaxLength="2"
                                                 TextInput="HexTextBox_TextInput"
+                                                GotFocus="HexTextBox_GotFocus"
                                                 LostFocus="HexTextBox_LostFocus"
                                                 KeyDown="HexTextBox_KeyDown" />
                                         </DataTemplate>
