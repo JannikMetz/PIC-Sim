@@ -160,6 +160,8 @@ public class MainWindowViewModel : ViewModelBase
     
     public ObservableCollection<IOPin> IOPins { get; set; } = new ObservableCollection<IOPin>();
     
+    public ObservableCollection<IOPin> IOPins { get; set; } = new ObservableCollection<IOPin>();
+    
     #endregion
 
     #region Commands
@@ -334,4 +336,5 @@ public class MainWindowViewModel : ViewModelBase
             line.IsHighlighted = (line.LineNumber == _encode.OpcodeLines[_memory.ProgramCounter]);
         }
     }
+    
 }
