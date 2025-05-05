@@ -12,6 +12,7 @@ public class Encode
 {
 
     private Memory _memory;
+    private ALU _alu;
     private MainWindow _mainWindow;
 
     private static int[] _opcodeLines = new int[1024]; // Program memory (ROM) - 2kB
@@ -22,9 +23,10 @@ public class Encode
         set { _opcodeLines = value; }
     }
 
-    public Encode(Memory memory)
+    public Encode(Memory memory, ALU alu)
     {
         _memory = memory;
+        _alu = alu;
         _mainWindow = new MainWindow();
     }
 
@@ -95,12 +97,12 @@ public class Encode
             //check if line starts with whitespace or number
             if (!string.IsNullOrWhiteSpace(line) && line[0] != ' ')
             {
-                breakpoint = new Breakpoint(lineIndex, _memory, ProgramCounterLineIndex, true);
+                breakpoint = new Breakpoint(lineIndex, _memory, _alu, ProgramCounterLineIndex, true);
                 ProgramCounterLineIndex++;
             }
             else
             {
-                breakpoint = new Breakpoint(lineIndex, _memory);
+                breakpoint = new Breakpoint(lineIndex, _memory, _alu);
             }
 
             breakpoints.Add(breakpoint);

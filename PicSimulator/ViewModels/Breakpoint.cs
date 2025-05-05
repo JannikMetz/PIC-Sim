@@ -14,15 +14,14 @@ public class Breakpoint : ViewModelBase
     private ALU _alu;
 
     
-    public Breakpoint(int lineNumber, Memory memory, int pcIndex = 1025, bool isOpcode = false, bool isActive = false)
+    public Breakpoint(int lineNumber, Memory memory, ALU alu, int pcIndex = 1025, bool isOpcode = false,  bool isActive = false)
     {
         LineNumber = lineNumber;
         LineNumberPlusOne = lineNumber + 1;
         PcIndex = pcIndex;
         _isActive = isActive;
         _isOpcode = isOpcode;
-        _alu = new ALU(memory);
-
+        _alu = alu;
         
     }
     
