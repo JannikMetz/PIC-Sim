@@ -12,9 +12,12 @@ public class Register : INotifyPropertyChanged
         get { return _value; }
         set
         {
-            _value = value & 0xFF;
-            OnPropertyChanged(nameof(Value));
-        } // Nur die unteren 8 Bits verwenden
+            if (value >= 0x00 && value <= 0xFF)
+            {
+                _value = value;
+                OnPropertyChanged(nameof(Value));
+            }
+        }
     }
     
     

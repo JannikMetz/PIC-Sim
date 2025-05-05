@@ -23,7 +23,6 @@ public class MainWindowViewModel : ViewModelBase
     private string _fileContent;
     private ObservableCollection<ProgramLine> _programLines;
     private ObservableCollection<Breakpoint> _breakpoints;
-    private ObservableCollection<ObservableCollection<Register>> _observableMemoryArray;
     
     private MainWindow _mainWindow;
 
@@ -108,12 +107,51 @@ public class MainWindowViewModel : ViewModelBase
 
     public ObservableCollection<ObservableCollection<Register>> ObservableMemoryArray
     {
-        get { return _observableMemoryArray; }
+        get
+        {
+            int bank;
+            int address = 0;
+            ObservableCollection<ObservableCollection<Register>> observableMemoryArray = new ObservableCollection<ObservableCollection<Register>>();
+            
+            for (int i = 0; i < 32; i++)
+            {
+                if (i == 16)
+                {
+                    address = 0;
+                }
+                if (i < 16)
+                {
+                    bank = 0;
+                }
+                else
+                {
+                    bank = 1;
+                }
+            
+                var row = new ObservableCollection<Register>();
+                for (int j = 0; j < 8; j++)
+                {
+                    row.Add(_memory.MemoryArray[bank, address]);
+                    address++;
+                }
+                observableMemoryArray.Add(row);
+            }
+            return observableMemoryArray;
+        }
         set 
         {
-            if (_observableMemoryArray != value)
+            if (value != null)
             {
-                _observableMemoryArray = value;
+                for (int i = 0; i < value.Count; i++)
+                {
+                    int bank = i < 16 ? 0 : 1; 
+                    int address = (i % 16) * 8; 
+
+                    for (int j = 0; j < value[i].Count; j++)
+                    {
+                        _memory.MemoryArray[bank, address + j] = value[i][j];
+                    }
+                }
                 OnPropertyChanged();
             }
         }
