@@ -86,7 +86,16 @@ public class IOPin : ViewModelBase
 
     public bool IsInput
     {
-        get { return _isInput; }
+        get
+        {
+            if (IsPORTA && _index > 4)
+            {
+                return false;
+            }
+
+            return _isInput;
+
+        }
         set
         {
             if (_isInput != value)
@@ -97,6 +106,17 @@ public class IOPin : ViewModelBase
         }
     }
 
+    public bool CheckTRISAEnabled
+    {
+        get
+        {
+            if (IsTRISA && _index > 4)
+            {
+                return false;
+            }
+            return true;
+        }
+    }
     public bool IsPORTA
     {
         get
