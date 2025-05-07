@@ -311,7 +311,6 @@ public class MainWindowViewModel : ViewModelBase
         _alu.IsStopped = false;
     }
     
-    
     private void Reset(object parameter)
     {
         Console.WriteLine("Reset command executed");
