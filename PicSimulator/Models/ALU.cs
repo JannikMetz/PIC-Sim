@@ -9,6 +9,7 @@ public class ALU
     private Memory _memory;
     private Watchdog _watchdog;
     private Timer0 _timer;
+    private bool _isSleeping;
     public ALU(Memory memory, Watchdog watchdog, Timer0 timer)
     {
         _memory = memory;
@@ -22,6 +23,18 @@ public class ALU
     
     public bool IsActive = true;
     public bool IsStopped = false;
+
+    public bool IsSleeping
+    {
+        get {return _isSleeping;}
+        set
+        {
+            if (_isSleeping != value)
+            {
+                _isSleeping = value;
+            }
+        }
+    }
     
     public void Start()
     {
@@ -46,6 +59,7 @@ public class ALU
                 // Execute the operation
                 Console.WriteLine("Executing Opcode: " + opcode.ToString("X4") + " at PC: " +
                                   _memory.ProgramCounter.ToString("X4"));
+                _watchdog.Increment(); // increment watchdog timer
                 GetOperation(opcode);
             }
             Thread.Sleep(100);
@@ -538,7 +552,24 @@ public class ALU
 
     private bool SLEEP()
     {
-        // TODO: implement sleep mode (watchdog timer is needed)
+        _watchdog.Reset();
+        
+        // set PD to 0 on both banks 
+        _memory.MemoryArray[0,3].SetBitValue(3, 0);
+        _memory.MemoryArray[1,3].SetBitValue(3, 0);
+        
+        // set TO to 1 on both banks
+        _memory.MemoryArray[0,3].SetBitValue(4, 1);
+        _memory.MemoryArray[1,3].SetBitValue(4, 1);
+        
+        _watchdog.AluIsSleeping = true;
+        
+        while (_watchdog.AluIsSleeping)
+        {
+            // wait for the watchdog to wake up
+            Thread.Sleep(1000);
+        }
+        
         return true;
     }
 

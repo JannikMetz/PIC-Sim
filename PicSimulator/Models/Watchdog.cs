@@ -7,8 +7,9 @@ namespace PicSimulator.Models;
 public class Watchdog : INotifyPropertyChanged
 {
     private Memory _memory;
-    private int _watchdogValue;
-    private int _watchdogTimerValue;
+    private int _watchdogValue; // this is only used for the prescaler
+    private int _watchdogTimerValue; // this is the actual watchdog timer value
+    private bool _aluIsSleeping = false;
     
     public int WatchdogTimerValue
     {
@@ -22,16 +23,31 @@ public class Watchdog : INotifyPropertyChanged
             }
         }
     }
+    
+    public bool AluIsSleeping
+    {
+        get { return _aluIsSleeping; }
+        set
+        {
+            if (_aluIsSleeping != value)
+            {
+                _aluIsSleeping = value;
+                OnPropertyChanged();
+            }
+        }
+    }
 
     public Watchdog(Memory memory)
     {
         _memory = memory;
         _watchdogValue = 0;
+        _watchdogTimerValue = 0;
     }
     
     public void Reset()
     {
         _watchdogValue = 0;
+        _watchdogTimerValue = 0;
     }
 
     public void Increment()
@@ -48,7 +64,15 @@ public class Watchdog : INotifyPropertyChanged
             if (WatchdogTimerValue >= 18000)
             {
                 _watchdogTimerValue = 0;
-                _memory.ProgramCounter = 0; // Reset the program counter
+                if (AluIsSleeping)
+                {
+                    _memory.WakeUpFromSleepReset();
+                    AluIsSleeping = false;
+                }
+                else
+                {
+                    _memory.MLCRReset(); 
+                }
             }
             else
             {

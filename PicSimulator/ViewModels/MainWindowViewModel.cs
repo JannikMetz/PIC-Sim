@@ -10,7 +10,6 @@ using PicSimulator.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
 using PicSimulator.Views;
-using Timer = System.Timers.Timer;
 
 namespace PicSimulator.ViewModels;
 
@@ -318,7 +317,7 @@ public class MainWindowViewModel : ViewModelBase
         Console.WriteLine("Reset command executed");
         _alu.IsActive = false;
         _alu.BreakpointSecs = 0;
-        _memory.InitializeMemory();
+        _memory.PowerOnReset();
     }
     
 

@@ -90,13 +90,17 @@ public class Memory : ObservableObject
     }
     
     
+    
+    
     // Constructor to initialize the memory with default values.
     public Memory()
     {
-        InitializeMemory();
+        ResetMemory();
+        PowerOnReset();
         CallStack = new Stack<int>();
     }
 
+    // set everything to 0
     public void ResetMemory()
     {
         Console.WriteLine("Resetting Memory");
@@ -112,10 +116,9 @@ public class Memory : ObservableObject
         Console.WriteLine("Resetting W-Register");
         WReg = 0; // Reset W register
     }
-
-    public void InitializeMemory()
+    
+    public void PowerOnReset()
     {
-        ResetMemory();
         Console.WriteLine("Initializing Memory");
         
         Console.WriteLine("Setting Registers to Reset Values");
@@ -133,6 +136,15 @@ public class Memory : ObservableObject
         // Set TRISA to ---1 1111 and TRISB to 1111 1111
         MemoryArray[1,5].Value = 31;
         MemoryArray[1,6].Value = 255;
+        
+    }
+    public void MLCRReset()
+    {
+        
+    }
+
+    public void WakeUpFromSleepReset()
+    {
         
     }
 
