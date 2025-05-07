@@ -60,36 +60,52 @@ public class Memory : ObservableObject
     
     public Stack<int> CallStack { get; set; } // Call stack for function calls 
     
-    /// <summary>
-    /// This property is used to push the program counter to the call stack.
-    /// </summary>
-    public int ProgramCounter {
-        get
+    
+
+    public int ProgramCounter2;
+    
+    public void IncrementProgramCounter()
+    {
+        int pc = ProgramCounter2;
+        if (pc == 0x3FF)
         {
-            Console.WriteLine("Getting Program Counter:");
-            var pcLath = GetPcLath();
-            var pc = GetProgramCounter();
-            pcLath = pcLath << 8;
-            Console.WriteLine("Program Counter is: " + pc + " and pcLath is: " + pcLath);
-            return (pc + pcLath); // combine pcl and pclath to get the full program counter
+            pc = 0;
         }
-        set
+        else
         {
-            int pc = value & 0xFF; // Lower 8 bits
-            int pcLath = (value >> 8) & 0x07; // Upper 3 bits
-            
-            // add the upper 2 Bits of pcLath to the value
-            pcLath = pcLath + (GetPcLath() & 0x18);
-            
-            // write the values back to the memory
-            SetProgramCounter(pc);
-            SetPcLath(pcLath);
-            Console.WriteLine("Program Counter set");  
-            ProgramCounterChanged?.Invoke();
+            pc++;
         }
+        SetRegister(0x02, pc & 0xFF); // Only lower 8 bits are represented in the register
+        ProgramCounter2 = pc;
     }
     
+    public void SetProgramCounterForJump(int address)
+    {
+        int pcLath = GetRegister(0x0A);
+        
+        // mask for bit 3 and 4
+        pcLath = pcLath & 0x18;
+        
+        // add the upper 2 Bits of pcLath to the address
+        int pc = address + (pcLath << 8);
+        
+        SetRegister(0x02, pc & 0xFF); // Only lower 8 bits are represented in the register
+        ProgramCounter2 = pc;
+    }
     
+    public void SetProgramCounterForReturn(int value)
+    {
+        SetRegister(0x02, value & 0xFF); // Only lower 8 bits are represented in the register
+        ProgramCounter2 = value;
+    }
+    
+    public void SetProgramCounterAfterManipulation()
+    {
+        int pc = GetRegister(0x02);
+        int pcLath = GetRegister(0x0A);
+        
+        ProgramCounter2 = pc + ((pcLath & 0x1F) << 8);
+    }
     
     
     // Constructor to initialize the memory with default values.
@@ -180,6 +196,12 @@ public class Memory : ObservableObject
             MemoryArray[1 - bankBit, address].Value = value;
         }
         
+        // update the program counter
+        if (address == 0x02)
+        {
+            SetProgramCounterAfterManipulation();
+        }
+        
         MemoryArrayChanged?.Invoke();
     }
 
@@ -202,73 +224,6 @@ public class Memory : ObservableObject
             // Update the other bank as well
             MemoryArray[1 - bankBit, address].SetBitValue(bitNumber, value);
         }
-        
-        MemoryArrayChanged?.Invoke();
-    }
-    
-    public int GetProgramCounter()
-    {
-        // Get the program counter from the memory.
-        return MemoryArray[0, 0x02].Value; 
-    }
-    
-    public void SetProgramCounter(int value)
-    {
-        // Set the program counter in the memory.
-        // TODO: nur 1 mal setten
-        MemoryArray[0, 0x02].Value = value;
-        MemoryArray[1, 0x02].Value = value;
-        
-        MemoryArrayChanged?.Invoke();
-    }
-    
-    public void IncrementProgramCounter()
-    {
-        int pc = ProgramCounter;
-        ProgramCounter = pc + 1;
-        
-        MemoryArrayChanged?.Invoke();
-        // Maybe we need to revert this
-        // int pc = GetProgramCounter();
-        // if (pc == 0xFF)
-        // {
-        //     pc = 0;
-        //     IncrementPcLath();
-        // }
-        // else
-        // {
-        //     pc++;
-        // }
-        // SetProgramCounter(pc);
-    }
-    
-    public int GetPcLath()
-    {
-        // this value is the same on both banks
-        return MemoryArray[0, 0x0A].Value; 
-    }
-    
-    public void SetPcLath(int value)
-    {
-        // Set the program counter latch in the memory.
-        MemoryArray[0, 0x0A].Value = value;
-        MemoryArray[1, 0x0A].Value = value;
-        
-        MemoryArrayChanged?.Invoke();
-    }
-
-    public void IncrementPcLath()
-    {
-        int pcLath = GetPcLath();
-        if (pcLath == 0x07)
-        {
-            pcLath = 0;
-        }
-        else
-        {
-            pcLath++;
-        }
-        SetPcLath(pcLath);
         
         MemoryArrayChanged?.Invoke();
     }

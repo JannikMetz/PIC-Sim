@@ -45,20 +45,20 @@ public class ALU
             {
                 Thread.Sleep(1000);
             }
-            if(breakpoints[_memory.ProgramCounter])
+            if(breakpoints[_memory.ProgramCounter2])
             {
-                Console.WriteLine("Breakpoint active at: " + _memory.ProgramCounter.ToString("X4") +  " for " + BreakpointSecs + " Secs");
+                Console.WriteLine("Breakpoint active at: " + _memory.ProgramCounter2.ToString("X4") +  " for " + BreakpointSecs + " Secs");
                 BreakpointSecs++;
             }
             else
             {
                 BreakpointSecs = 0;
                 // Read the opcode from the program memory
-                int opcode = _memory.ProgramMemory[_memory.ProgramCounter];
+                int opcode = _memory.ProgramMemory[_memory.ProgramCounter2];
 
                 // Execute the operation
                 Console.WriteLine("Executing Opcode: " + opcode.ToString("X4") + " at PC: " +
-                                  _memory.ProgramCounter.ToString("X4"));
+                                  _memory.ProgramCounter2.ToString("X4"));
                 _watchdog.Increment(); // increment watchdog timer
                 GetOperation(opcode);
             }
@@ -440,7 +440,7 @@ public class ALU
         int pc = _memory.CallStack.Pop();
         
         // set program counter
-        _memory.ProgramCounter = pc;
+        _memory.SetProgramCounterForReturn(pc);
         
         // this instruction takes 2 microseconds
         if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
@@ -448,7 +448,7 @@ public class ALU
             _timer.IncrementTimer();
         }
         
-        // prgramm counter is not incremented here because we did it in the CALL instruction
+        // program counter is not incremented here because we did it in the CALL instruction
         
         return true;
     }
@@ -525,9 +525,9 @@ public class ALU
         
         // push the program counter, incremented by 1, onto the call stack
         Console.WriteLine("Calling Stack");
-        _memory.PushToCallStack(_memory.ProgramCounter + 1);
+        _memory.PushToCallStack(_memory.ProgramCounter2 + 1);
         Console.WriteLine("Calling Stack done");
-        _memory.ProgramCounter = pc;
+        _memory.SetProgramCounterForJump(pc);
         
         if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
         {
@@ -541,7 +541,7 @@ public class ALU
         int pc = opcode & 0x07FF; 
         
         // set the program counter
-        _memory.ProgramCounter = pc;
+        _memory.SetProgramCounterForJump(pc);
         
         if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
         {
@@ -579,7 +579,7 @@ public class ALU
         int pc = _memory.CallStack.Pop();
         
         // set program counter
-        _memory.ProgramCounter = pc;
+        _memory.SetProgramCounterForReturn(pc);
         
         // this instruction takes 2 microseconds
         if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)

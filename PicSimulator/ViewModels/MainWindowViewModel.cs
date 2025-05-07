@@ -73,15 +73,7 @@ public class MainWindowViewModel : ViewModelBase
     }
     public int ProgramCounter
     {
-        get { return _memory.ProgramCounter; }
-        set
-        {
-            if (_memory.ProgramCounter != value)
-            {
-                _memory.ProgramCounter = value;
-                OnPropertyChanged();
-            }
-        }
+        get { return _memory.ProgramCounter2; }
     }
     
     // This is the content of the file as a string
@@ -334,7 +326,7 @@ public class MainWindowViewModel : ViewModelBase
     {
         foreach (var line in ProgramLines)
         {
-            line.IsHighlighted = (line.LineNumber == _encode.OpcodeLines[_memory.ProgramCounter]);
+            line.IsHighlighted = (line.LineNumber == _encode.OpcodeLines[_memory.ProgramCounter2]);
         }
     }
 }
