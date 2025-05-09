@@ -66,12 +66,12 @@ public class Watchdog : INotifyPropertyChanged
                 _watchdogTimerValue = 0;
                 if (AluIsSleeping)
                 {
-                    _memory.WakeUpFromSleepReset();
+                    _memory.WakeUpFromSleepReset(false);
                     AluIsSleeping = false;
                 }
                 else
                 {
-                    _memory.MLCRReset(); 
+                    _memory.MLCRReset(2); 
                 }
             }
             else

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using Avalonia.Threading;
 
 namespace PicSimulator.Models;
 
@@ -40,7 +41,7 @@ public class Register : INotifyPropertyChanged
 
     public Register()
     {
-        _value = 0;
+        Value = 0;
     }
     
     public event PropertyChangedEventHandler PropertyChanged;

@@ -39,6 +39,7 @@ public class Memory : ObservableObject
         {
             _memoryArray = value;
             MemoryArrayChanged?.Invoke();
+            OnPropertyChanged();
         }
     }
     
@@ -125,12 +126,14 @@ public class Memory : ObservableObject
         {
             for (int register = 0; register < 128; register++)
             {
-                MemoryArray[bank, register] = new Register();
+                Register reg = new Register();
+                MemoryArray[bank, register] = reg;
             }
         }
         
         Console.WriteLine("Resetting W-Register");
         WReg = 0; // Reset W register
+        ProgramCounter2 = 0;
     }
     
     public void PowerOnReset()
@@ -143,25 +146,91 @@ public class Memory : ObservableObject
         // DO NOT USE SetRegister() HERE BECAUSE IT ONLY SETS ADDRESSES ON CURRENT BANK
         
         // Set Status Bank 1 & 2 to 0001 1XXX
-        MemoryArray[0,3].Value = 24;
-        MemoryArray[1,3].Value = 24;
+        MemoryArray[0,3].Value = 0x18;
+        MemoryArray[1,3].Value = 0x18;
         
         // Set OPTION_REG to 1111 1111
-        MemoryArray[1,1].Value = 255;
+        MemoryArray[1,1].Value = 0xFF;
         
         // Set TRISA to ---1 1111 and TRISB to 1111 1111
-        MemoryArray[1,5].Value = 31;
-        MemoryArray[1,6].Value = 255;
+        MemoryArray[1,5].Value = 0x1F;
+        MemoryArray[1,6].Value = 0xFF;
         
     }
-    public void MLCRReset()
+    public void MLCRReset(int status)
     {
+        ProgramCounter2 = 0;
+        MemoryArray[0, 0x02].Value = 0x00;
+        MemoryArray[1, 0x02].Value = 0x00;
         
+        // manipulate the status register
+        int value;
+        switch (status)
+        {
+            // MLCR during normal operation
+            case 0:
+                value = MemoryArray[0, 0x03].Value & 0x1F;
+                MemoryArray[0, 0x03].Value = value;
+                MemoryArray[1, 0x03].Value = value;
+                break;
+            // MLCR during sleep
+            case 1:
+                value = MemoryArray[0, 0x03].Value & 0x07;
+                MemoryArray[0, 0x03].Value = value + 0x10;
+                MemoryArray[1, 0x03].Value = value + 0x10;
+                break;
+            // WDT during normal operation
+            case 2:
+                value = MemoryArray[0, 0x03].Value & 0x07;
+                MemoryArray[0, 0x03].Value = value + 0x08;
+                MemoryArray[1, 0x03].Value = value + 0x08;  
+                break;
+            default:
+                throw new Exception("Unknown memory status");
+        }
+        
+        // Clear PcLath
+        MemoryArray[0, 0x0A].Value = 0x00;
+        MemoryArray[1, 0x0A].Value = 0x00;
+        
+        // INTCON
+        MemoryArray[0, 0x0B].Value = _memoryArray[0, 0x0B].Value & 0x01;
+        MemoryArray[1, 0x0B].Value = _memoryArray[1, 0x0B].Value & 0x01;
+        
+        // OPTION_REG
+        MemoryArray[1, 0x01].Value = 0xFF;
+        
+        // TRISA
+        MemoryArray[1, 0x05].Value = 0x1F;
+        // TRISB
+        MemoryArray[1, 0x06].Value = 0xFF;
+        
+        // EECON (there is a q)
+        MemoryArray[1, 0x08].Value = 0x00;
     }
 
-    public void WakeUpFromSleepReset()
+    public void WakeUpFromSleepReset(bool isInterrupt)
     {
+        IncrementProgramCounter();
+
+        if (isInterrupt)
+        {
+            MemoryArray[0, 0x03].SetBitValue(3,0);
+            MemoryArray[1, 0x03].SetBitValue(3,0);
+            
+            MemoryArray[0, 0x03].SetBitValue(4,1);
+            MemoryArray[1, 0x03].SetBitValue(4,1);
+        }
+        else
+        {
+            MemoryArray[0, 0x03].SetBitValue(3,0);
+            MemoryArray[1, 0x03].SetBitValue(3,0);
+            
+            MemoryArray[0, 0x03].SetBitValue(4,0);
+            MemoryArray[1, 0x03].SetBitValue(4,0);
+        }
         
+        MemoryArray[1, 0x08].SetBitValue(4,0);
     }
 
     public int GetBank()
@@ -200,6 +269,7 @@ public class Memory : ObservableObject
         if (address == 0x02)
         {
             SetProgramCounterAfterManipulation();
+            ProgramCounterChanged?.Invoke();
         }
         
         MemoryArrayChanged?.Invoke();

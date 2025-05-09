@@ -9,7 +9,9 @@ using PicSimulator.Models;
 using PicSimulator.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using PicSimulator.Views;
+using Avalonia.Threading;
 
 namespace PicSimulator.ViewModels;
 
@@ -100,57 +102,68 @@ public class MainWindowViewModel : ViewModelBase
         "00", "08", "10", "18", "20", "28", "30", "38", "40", "48", "50", "58", "60", "68", "70", "78", "80", "88", "90", "98", "A0", "A8", "B0", "B8", "C0", "C8", "D0", "D8", "E0", "E8", "F0", "F8"
     };
 
+    private ObservableCollection<ObservableCollection<Register>> _observableMemoryArray;
     public ObservableCollection<ObservableCollection<Register>> ObservableMemoryArray
     {
-        get
+        get => _observableMemoryArray;
+        set
         {
-            int bank;
-            int address = 0;
-            ObservableCollection<ObservableCollection<Register>> observableMemoryArray = new ObservableCollection<ObservableCollection<Register>>();
-            
-            for (int i = 0; i < 32; i++)
-            {
-                if (i == 16)
-                {
-                    address = 0;
-                }
-                if (i < 16)
-                {
-                    bank = 0;
-                }
-                else
-                {
-                    bank = 1;
-                }
-            
-                var row = new ObservableCollection<Register>();
-                for (int j = 0; j < 8; j++)
-                {
-                    row.Add(_memory.MemoryArray[bank, address]);
-                    address++;
-                }
-                observableMemoryArray.Add(row);
-            }
-            return observableMemoryArray;
-        }
-        set 
-        {
-            if (value != null)
-            {
-                for (int i = 0; i < value.Count; i++)
-                {
-                    int bank = i < 16 ? 0 : 1; 
-                    int address = (i % 16) * 8; 
-
-                    for (int j = 0; j < value[i].Count; j++)
-                    {
-                        _memory.MemoryArray[bank, address + j] = value[i][j];
-                    }
-                }
-                OnPropertyChanged();
-            }
+            _observableMemoryArray = value;
+            OnPropertyChanged(nameof(ObservableMemoryArray));
         }
     }
+
+    // public ObservableCollection<ObservableCollection<Register>> ObservableMemoryArray
+    // {
+    //     get
+    //     {
+    //         int bank;
+    //         int address = 0;
+    //         ObservableCollection<ObservableCollection<Register>> observableMemoryArray = new ObservableCollection<ObservableCollection<Register>>();
+    //         
+    //         for (int i = 0; i < 32; i++)
+    //         {
+    //             if (i == 16)
+    //             {
+    //                 address = 0;
+    //             }
+    //             if (i < 16)
+    //             {
+    //                 bank = 0;
+    //             }
+    //             else
+    //             {
+    //                 bank = 1;
+    //             }
+    //         
+    //             var row = new ObservableCollection<Register>();
+    //             for (int j = 0; j < 8; j++)
+    //             {
+    //                 row.Add(_memory.MemoryArray[bank, address]);
+    //                 address++;
+    //             }
+    //             observableMemoryArray.Add(row);
+    //         }
+    //         return observableMemoryArray;
+    //     }
+    //     set 
+    //     {
+    //         if (value != null)
+    //         {
+    //             for (int i = 0; i < value.Count; i++)
+    //             {
+    //                 int bank = i < 16 ? 0 : 1; 
+    //                 int address = (i % 16) * 8; 
+    //
+    //                 for (int j = 0; j < value[i].Count; j++)
+    //                 {
+    //                     _memory.MemoryArray[bank, address + j] = value[i][j];
+    //                 }
+    //             }
+    //             OnPropertyChanged();
+    //         }
+    //     }
+    // }
     
     public ObservableCollection<IOPin> IOPins { get; set; } = new ObservableCollection<IOPin>();
     
@@ -238,6 +251,8 @@ public class MainWindowViewModel : ViewModelBase
 
     private async void Load(object parameter)
     {
+        _memory.ResetMemory();
+        _memory.PowerOnReset();
         var openFileDialog = new OpenFileDialog
         {
             Title = "Select a file",
@@ -287,14 +302,11 @@ public class MainWindowViewModel : ViewModelBase
         }
         Console.WriteLine("Start command executed");
         // Start the Simulator in a new thread
-        Thread aluThread = new Thread(() =>
+        Task.Run(() =>
         {
             _alu.IsActive = true;
-            _alu.Start(); 
+            _alu.Start();
         });
-
-        aluThread.IsBackground = true;
-        aluThread.Start();
     }
     
     private void Pause(object parameter)

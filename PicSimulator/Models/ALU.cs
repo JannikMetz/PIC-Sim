@@ -62,7 +62,7 @@ public class ALU
                 _watchdog.Increment(); // increment watchdog timer
                 GetOperation(opcode);
             }
-            Thread.Sleep(100);
+            Thread.Sleep(1000);
         }
         // Stopped 
         Console.WriteLine("Execution Stopped");
@@ -604,7 +604,13 @@ public class ALU
 
     private bool CLRWDT()
     {
-        // TODO: implement CLRWDT (clear watchdog timer)
+        _watchdog.Reset();
+        
+        _memory.MemoryArray[0,3].SetBitValue(3, 1);
+        _memory.MemoryArray[1,3].SetBitValue(3, 1);
+        _memory.MemoryArray[0,3].SetBitValue(4, 1);
+        _memory.MemoryArray[1,3].SetBitValue(4, 1);
+        
         return true;
     }
     
