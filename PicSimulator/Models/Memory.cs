@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Tmds.DBus.Protocol;
 
 namespace PicSimulator.Models;
 
@@ -256,13 +257,13 @@ public class Memory : ObservableObject
         value = value & 0xFF;
         int bankBit = GetBank();
         Console.WriteLine($"Setting Memory in Bank {bankBit} at address {address} to {value}");
-        MemoryArray[bankBit, address].Value = value;
+        MemoryArray[bankBit, address].WriteValueFromUiThread(value);
 
         // these addresses are mirrored in the other bank
         if (address == 0x02 || address == 0x03 || address == 0x04 || address == 0x0A || address == 0x0B)
         {
             // Update the other bank as well
-            MemoryArray[1 - bankBit, address].Value = value;
+            MemoryArray[1 - bankBit, address].WriteValueFromUiThread(value);
         }
         
         // update the program counter

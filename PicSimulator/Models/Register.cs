@@ -21,6 +21,14 @@ public class Register : INotifyPropertyChanged
         }
     }
     
+    public void WriteValueFromUiThread(int value)
+    {
+        Dispatcher.UIThread.Invoke(() =>
+        {
+            Value = value;
+        });
+    }
+    
     
     public int GetBitValue(int bitNumber)
     {
@@ -34,9 +42,9 @@ public class Register : INotifyPropertyChanged
         if (bitNumber < 0 || bitNumber > 7)
             throw new ArgumentOutOfRangeException(nameof(bitNumber), "Bit number must be between 0 and 7.");
         if (value != 0)
-            Value |= (1 << bitNumber);
+            WriteValueFromUiThread(Value | (1 << bitNumber));
         else
-            Value &= ~(1 << bitNumber);
+            WriteValueFromUiThread(Value & ~(1 << bitNumber));
     }
 
     public Register()
