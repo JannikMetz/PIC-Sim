@@ -109,39 +109,28 @@
 
                     <!-- Der Hauptspeicherbereich -->
                     <ItemsControl Grid.Row="1" Grid.Column="1" ItemsSource="{Binding ObservableMemoryArray}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Vertical" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
+                       <ItemsControl.ItemsPanel>
+                           <ItemsPanelTemplate>
+                               <UniformGrid Columns="8" />
+                           </ItemsPanelTemplate>
+                       </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <ItemsControl ItemsSource="{Binding}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <UniformGrid Columns="8" />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBox
-                                                Text="{Binding Value, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}"
-                                                HorizontalAlignment="Stretch"
-                                                VerticalAlignment="Center"
-                                                TextAlignment="Center"
-                                                FontFamily="Consolas"
-                                                Padding="0,10,0,10"
-                                                Background="Transparent"
-                                                BorderBrush="Transparent"
-                                                Foreground="White"
-                                                MaxLength="2"
-                                                TextInput="HexTextBox_TextInput"
-                                                GotFocus="HexTextBox_GotFocus"
-                                                LostFocus="HexTextBox_LostFocus"
-                                                KeyDown="HexTextBox_KeyDown" />
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
+                                <TextBox
+                                    Text="{Binding Value, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Center"
+                                    TextAlignment="Center"
+                                    FontFamily="Consolas"
+                                    Padding="0,10,0,10"
+                                    Background="Transparent"
+                                    BorderBrush="Transparent"
+                                    Foreground="White"
+                                    MaxLength="2"
+                                    TextInput="HexTextBox_TextInput"
+                                    GotFocus="HexTextBox_GotFocus"
+                                    LostFocus="HexTextBox_LostFocus"
+                                    KeyDown="HexTextBox_KeyDown" />
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>

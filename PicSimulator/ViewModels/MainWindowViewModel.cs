@@ -9,7 +9,9 @@ using PicSimulator.Models;
 using PicSimulator.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using PicSimulator.Views;
+using Avalonia.Threading;
 
 namespace PicSimulator.ViewModels;
 
@@ -23,7 +25,10 @@ public class MainWindowViewModel : ViewModelBase
     private string _fileContent;
     private ObservableCollection<ProgramLine> _programLines;
     private ObservableCollection<Breakpoint> _breakpoints;
+    private ObservableCollection<IOPin> _IOPins;
     private MainWindow _mainWindow;
+    private Watchdog _watchdog;
+    private Timer0 _timer;
 
     #endregion
 
@@ -69,15 +74,7 @@ public class MainWindowViewModel : ViewModelBase
     }
     public int ProgramCounter
     {
-        get { return _memory.ProgramCounter; }
-        set
-        {
-            if (_memory.ProgramCounter != value)
-            {
-                _memory.ProgramCounter = value;
-                OnPropertyChanged();
-            }
-        }
+        get { return _memory.ProgramCounter2; }
     }
     
     // This is the content of the file as a string
@@ -108,55 +105,16 @@ public class MainWindowViewModel : ViewModelBase
     {
         "0", "1", "2", "3", "4", "5", "6", "7"
     };
-    public ObservableCollection<ObservableCollection<Register>> ObservableMemoryArray
+    
+    private ObservableCollection<Register>_observableMemoryArray;
+    
+    public ObservableCollection<Register> ObservableMemoryArray
     {
-        get
+        get => _observableMemoryArray;
+        set
         {
-            int bank;
-            int address = 0;
-            ObservableCollection<ObservableCollection<Register>> observableMemoryArray = new ObservableCollection<ObservableCollection<Register>>();
-            
-            for (int i = 0; i < 32; i++)
-            {
-                if (i == 16)
-                {
-                    address = 0;
-                }
-                if (i < 16)
-                {
-                    bank = 0;
-                }
-                else
-                {
-                    bank = 1;
-                }
-            
-                var row = new ObservableCollection<Register>();
-                for (int j = 0; j < 8; j++)
-                {
-                    row.Add(_memory.MemoryArray[bank, address]);
-                    address++;
-                }
-                observableMemoryArray.Add(row);
-            }
-            return observableMemoryArray;
-        }
-        set 
-        {
-            if (value != null)
-            {
-                for (int i = 0; i < value.Count; i++)
-                {
-                    int bank = i < 16 ? 0 : 1; 
-                    int address = (i % 16) * 8; 
-
-                    for (int j = 0; j < value[i].Count; j++)
-                    {
-                        _memory.MemoryArray[bank, address + j] = value[i][j];
-                    }
-                }
-                OnPropertyChanged();
-            }
+            _observableMemoryArray = value;
+            OnPropertyChanged(nameof(ObservableMemoryArray));
         }
     }
     
@@ -184,13 +142,14 @@ public class MainWindowViewModel : ViewModelBase
         _mainWindow = new MainWindow();
         _memory = new Memory();
         _memory.ProgramCounterChanged += OnProgramCounterChanged;
-
-        // Initialisiere die ObservableCollection
-        ObservableMemoryArray = new ObservableCollection<ObservableCollection<Register>>();
+        _memory.ResetedMemory += OnResetedMemory;
+        
         InitializeObservableMemoryArray();
+        _watchdog = new Watchdog(_memory);
+        _timer = new Timer0(_memory);
+        _alu = new ALU(_memory, _watchdog, _timer);
+        _encode = new Encode(_memory, _alu);
         InitializeIOPins();
-        _encode = new Encode(_memory);
-        _alu = new ALU(_memory);
         LoadCommand = new RelayCommand(Load);
         SaveCommand = new RelayCommand(Save);
         SaveAsCommand = new RelayCommand(SaveAs);
@@ -210,42 +169,26 @@ public class MainWindowViewModel : ViewModelBase
                 IOPins.Add(new IOPin( _memory, i, j));
             }
         }
-        
-        
     }
     
     private void InitializeObservableMemoryArray()
     {
-        int bank;
-        int address = 0;
-        
-        for (int i = 0; i < 32; i++)
+        ObservableMemoryArray = new ObservableCollection<Register>();
+
+        for (int bank = 0; bank < 2; bank++)
         {
-            if (i == 16)
+            for (int addr = 0; addr < 128; addr++)
             {
-                address = 0;
+                ObservableMemoryArray.Add(_memory.MemoryArray[bank, addr]);
             }
-            if (i < 16)
-            {
-                bank = 0;
-            }
-            else
-            {
-                bank = 1;
-            }
-            
-            var row = new ObservableCollection<Register>();
-            for (int j = 0; j < 8; j++)
-            {
-                row.Add(_memory.MemoryArray[bank, address]);
-                address++;
-            }
-            ObservableMemoryArray.Add(row);
         }
     }
 
     private async void Load(object parameter)
     {
+        _memory.ResetMemory();
+        _memory.PowerOnReset();
+        
         var openFileDialog = new OpenFileDialog
         {
             Title = "Select a file",
@@ -295,29 +238,25 @@ public class MainWindowViewModel : ViewModelBase
         }
         Console.WriteLine("Start command executed");
         // Start the Simulator in a new thread
-        Thread aluThread = new Thread(() =>
+        Task.Run(() =>
         {
             _alu.IsActive = true;
-            _alu.Start(); 
+            _alu.Start();
         });
-
-        aluThread.IsBackground = true;
-        aluThread.Start();
     }
     
     private void Pause(object parameter)
     {
         Console.WriteLine("Pause command executed");
-        _alu.IsActive = false;
+        _alu.IsStopped = false;
     }
-    
     
     private void Reset(object parameter)
     {
         Console.WriteLine("Reset command executed");
         _alu.IsActive = false;
         _alu.BreakpointSecs = 0;
-        _memory.InitializeMemory();
+        _memory.PowerOnReset();
     }
     
 
@@ -330,13 +269,17 @@ public class MainWindowViewModel : ViewModelBase
     {
         HighlightCurrentLine();
     }
+
+    private void OnResetedMemory()
+    {
+        InitializeObservableMemoryArray();
+    }
     
     private void HighlightCurrentLine()
     {
         foreach (var line in ProgramLines)
         {
-            line.IsHighlighted = (line.LineNumber == _encode.OpcodeLines[_memory.ProgramCounter]);
+            line.IsHighlighted = (line.LineNumber == _encode.OpcodeLines[_memory.ProgramCounter2]);
         }
     }
-    
 }

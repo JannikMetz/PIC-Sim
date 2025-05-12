@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using Avalonia.Threading;
 
 namespace PicSimulator.Models;
 
@@ -20,6 +22,14 @@ public class Register : INotifyPropertyChanged
         }
     }
     
+    public void WriteValueFromUiThread(int value)
+    {
+        Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            Value = value;
+        });
+    }
+    
     
     public int GetBitValue(int bitNumber)
     {
@@ -33,20 +43,17 @@ public class Register : INotifyPropertyChanged
         if (bitNumber < 0 || bitNumber > 7)
             throw new ArgumentOutOfRangeException(nameof(bitNumber), "Bit number must be between 0 and 7.");
         if (value != 0)
-            Value |= (1 << bitNumber);
+            WriteValueFromUiThread(Value | (1 << bitNumber));
         else
-            Value &= ~(1 << bitNumber);
+            WriteValueFromUiThread(Value & ~(1 << bitNumber));
     }
 
     public Register()
     {
-        _value = 0;
+        Value = 0;
     }
     
     public event PropertyChangedEventHandler PropertyChanged;
-
-    protected virtual void OnPropertyChanged(string propertyName)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
+    protected void OnPropertyChanged([CallerMemberName] string propName = null)
+        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
 }

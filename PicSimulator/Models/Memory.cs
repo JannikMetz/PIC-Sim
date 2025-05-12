@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Tmds.DBus.Protocol;
 
 namespace PicSimulator.Models;
 
@@ -11,7 +12,7 @@ using System;
 public class Memory : ObservableObject
 {
     public event Action ProgramCounterChanged;
-    public event Action MemoryArrayChanged;
+    public event Action ResetedMemory;
 
     // This class represents the memory of the PIC microcontroller.
     // It contains a 2D array to represent the memory banks.
@@ -38,7 +39,7 @@ public class Memory : ObservableObject
         set
         {
             _memoryArray = value;
-            MemoryArrayChanged?.Invoke();
+            OnPropertyChanged();
         }
     }
     
@@ -60,43 +61,63 @@ public class Memory : ObservableObject
     
     public Stack<int> CallStack { get; set; } // Call stack for function calls 
     
-    /// <summary>
-    /// This property is used to push the program counter to the call stack.
-    /// </summary>
-    public int ProgramCounter {
-        get
+    
+
+    public int ProgramCounter2;
+    
+    public void IncrementProgramCounter()
+    {
+        int pc = ProgramCounter2;
+        if (pc == 0x3FF)
         {
-            Console.WriteLine("Getting Program Counter:");
-            var pcLath = GetPcLath();
-            var pc = GetProgramCounter();
-            pcLath = pcLath << 8;
-            Console.WriteLine("Program Counter is: " + pc + " and pcLath is: " + pcLath);
-            return (pc + pcLath); // combine pcl and pclath to get the full program counter
+            pc = 0;
         }
-        set
+        else
         {
-            int pc = value & 0xFF; // Lower 8 bits
-            int pcLath = (value >> 8) & 0x07; // Upper 3 bits
-            
-            // add the upper 2 Bits of pcLath to the value
-            pcLath = pcLath + (GetPcLath() & 0x18);
-            
-            // write the values back to the memory
-            SetProgramCounter(pc);
-            SetPcLath(pcLath);
-            Console.WriteLine("Program Counter set");  
-            ProgramCounterChanged?.Invoke();
+            pc++;
         }
+        SetRegister(0x02, pc & 0xFF); // Only lower 8 bits are represented in the register
+        ProgramCounter2 = pc;
+    }
+    
+    public void SetProgramCounterForJump(int address)
+    {
+        int pcLath = GetRegister(0x0A);
+        
+        // mask for bit 3 and 4
+        pcLath = pcLath & 0x18;
+        
+        // add the upper 2 Bits of pcLath to the address
+        int pc = address + (pcLath << 8);
+        
+        SetRegister(0x02, pc & 0xFF); // Only lower 8 bits are represented in the register
+        ProgramCounter2 = pc;
+    }
+    
+    public void SetProgramCounterForReturn(int value)
+    {
+        SetRegister(0x02, value & 0xFF); // Only lower 8 bits are represented in the register
+        ProgramCounter2 = value;
+    }
+    
+    public void SetProgramCounterAfterManipulation()
+    {
+        int pc = GetRegister(0x02);
+        int pcLath = GetRegister(0x0A);
+        
+        ProgramCounter2 = pc + ((pcLath & 0x1F) << 8);
     }
     
     
     // Constructor to initialize the memory with default values.
     public Memory()
     {
-        InitializeMemory();
+        ResetMemory();
+        PowerOnReset();
         CallStack = new Stack<int>();
     }
 
+    // set everything to 0
     public void ResetMemory()
     {
         Console.WriteLine("Resetting Memory");
@@ -105,17 +126,20 @@ public class Memory : ObservableObject
         {
             for (int register = 0; register < 128; register++)
             {
-                MemoryArray[bank, register] = new Register();
+                Register reg = new Register();
+                MemoryArray[bank, register] = reg;
             }
         }
         
         Console.WriteLine("Resetting W-Register");
         WReg = 0; // Reset W register
+        ProgramCounter2 = 0;
+        
+        ResetedMemory?.Invoke();
     }
-
-    public void InitializeMemory()
+    
+    public void PowerOnReset()
     {
-        ResetMemory();
         Console.WriteLine("Initializing Memory");
         
         Console.WriteLine("Setting Registers to Reset Values");
@@ -124,16 +148,91 @@ public class Memory : ObservableObject
         // DO NOT USE SetRegister() HERE BECAUSE IT ONLY SETS ADDRESSES ON CURRENT BANK
         
         // Set Status Bank 1 & 2 to 0001 1XXX
-        MemoryArray[0,3].Value = 24;
-        MemoryArray[1,3].Value = 24;
+        MemoryArray[0,3].Value = 0x18;
+        MemoryArray[1,3].Value = 0x18;
         
         // Set OPTION_REG to 1111 1111
-        MemoryArray[1,1].Value = 255;
+        MemoryArray[1,1].Value = 0xFF;
         
         // Set TRISA to ---1 1111 and TRISB to 1111 1111
-        MemoryArray[1,5].Value = 31;
-        MemoryArray[1,6].Value = 255;
+        MemoryArray[1,5].Value = 0x1F;
+        MemoryArray[1,6].Value = 0xFF;
         
+    }
+    public void MLCRReset(int status)
+    {
+        ProgramCounter2 = 0;
+        MemoryArray[0, 0x02].Value = 0x00;
+        MemoryArray[1, 0x02].Value = 0x00;
+        
+        // manipulate the status register
+        int value;
+        switch (status)
+        {
+            // MLCR during normal operation
+            case 0:
+                value = MemoryArray[0, 0x03].Value & 0x1F;
+                MemoryArray[0, 0x03].Value = value;
+                MemoryArray[1, 0x03].Value = value;
+                break;
+            // MLCR during sleep
+            case 1:
+                value = MemoryArray[0, 0x03].Value & 0x07;
+                MemoryArray[0, 0x03].Value = value + 0x10;
+                MemoryArray[1, 0x03].Value = value + 0x10;
+                break;
+            // WDT during normal operation
+            case 2:
+                value = MemoryArray[0, 0x03].Value & 0x07;
+                MemoryArray[0, 0x03].Value = value + 0x08;
+                MemoryArray[1, 0x03].Value = value + 0x08;  
+                break;
+            default:
+                throw new Exception("Unknown memory status");
+        }
+        
+        // Clear PcLath
+        MemoryArray[0, 0x0A].Value = 0x00;
+        MemoryArray[1, 0x0A].Value = 0x00;
+        
+        // INTCON
+        MemoryArray[0, 0x0B].Value = _memoryArray[0, 0x0B].Value & 0x01;
+        MemoryArray[1, 0x0B].Value = _memoryArray[1, 0x0B].Value & 0x01;
+        
+        // OPTION_REG
+        MemoryArray[1, 0x01].Value = 0xFF;
+        
+        // TRISA
+        MemoryArray[1, 0x05].Value = 0x1F;
+        // TRISB
+        MemoryArray[1, 0x06].Value = 0xFF;
+        
+        // EECON (there is a q)
+        MemoryArray[1, 0x08].Value = 0x00;
+    }
+
+    public void WakeUpFromSleepReset(bool isInterrupt)
+    {
+        IncrementProgramCounter();
+
+        if (isInterrupt)
+        {
+            MemoryArray[0, 0x03].SetBitValue(3,0);
+            MemoryArray[1, 0x03].SetBitValue(3,0);
+            
+            MemoryArray[0, 0x03].SetBitValue(4,1);
+            MemoryArray[1, 0x03].SetBitValue(4,1);
+        }
+        else
+        {
+            MemoryArray[0, 0x03].SetBitValue(3,0);
+            MemoryArray[1, 0x03].SetBitValue(3,0);
+            
+            MemoryArray[0, 0x03].SetBitValue(4,0);
+            MemoryArray[1, 0x03].SetBitValue(4,0);
+        }
+        
+        MemoryArray[1, 0x08].SetBitValue(4,0);
     }
 
     public int GetBank()
@@ -159,16 +258,22 @@ public class Memory : ObservableObject
         value = value & 0xFF;
         int bankBit = GetBank();
         Console.WriteLine($"Setting Memory in Bank {bankBit} at address {address} to {value}");
-        MemoryArray[bankBit, address].Value = value;
+        MemoryArray[bankBit, address].WriteValueFromUiThread(value);
 
         // these addresses are mirrored in the other bank
         if (address == 0x02 || address == 0x03 || address == 0x04 || address == 0x0A || address == 0x0B)
         {
             // Update the other bank as well
-            MemoryArray[1 - bankBit, address].Value = value;
+            MemoryArray[1 - bankBit, address].WriteValueFromUiThread(value);
         }
         
-        MemoryArrayChanged?.Invoke();
+        // update the program counter
+        if (address == 0x02)
+        {
+            SetProgramCounterAfterManipulation();
+            ProgramCounterChanged?.Invoke();
+        }
+        
     }
 
     public int GetBit(int address, int bitNumber)
@@ -190,121 +295,63 @@ public class Memory : ObservableObject
             // Update the other bank as well
             MemoryArray[1 - bankBit, address].SetBitValue(bitNumber, value);
         }
-        
-        MemoryArrayChanged?.Invoke();
-    }
-    
-    public int GetProgramCounter()
-    {
-        // Get the program counter from the memory.
-        return MemoryArray[0, 0x02].Value; 
-    }
-    
-    public void SetProgramCounter(int value)
-    {
-        // Set the program counter in the memory.
-        // TODO: nur 1 mal setten
-        MemoryArray[0, 0x02].Value = value;
-        MemoryArray[1, 0x02].Value = value;
-        
-        MemoryArrayChanged?.Invoke();
-    }
-    
-    public void IncrementProgramCounter()
-    {
-        int pc = ProgramCounter;
-        ProgramCounter = pc + 1;
-        
-        MemoryArrayChanged?.Invoke();
-        // Maybe we need to revert this
-        // int pc = GetProgramCounter();
-        // if (pc == 0xFF)
-        // {
-        //     pc = 0;
-        //     IncrementPcLath();
-        // }
-        // else
-        // {
-        //     pc++;
-        // }
-        // SetProgramCounter(pc);
-    }
-    
-    public int GetPcLath()
-    {
-        // this value is the same on both banks
-        return MemoryArray[0, 0x0A].Value; 
-    }
-    
-    public void SetPcLath(int value)
-    {
-        // Set the program counter latch in the memory.
-        MemoryArray[0, 0x0A].Value = value;
-        MemoryArray[1, 0x0A].Value = value;
-        
-        MemoryArrayChanged?.Invoke();
-    }
-
-    public void IncrementPcLath()
-    {
-        int pcLath = GetPcLath();
-        if (pcLath == 0x07)
-        {
-            pcLath = 0;
-        }
-        else
-        {
-            pcLath++;
-        }
-        SetPcLath(pcLath);
-        
-        MemoryArrayChanged?.Invoke();
     }
 
     public void SetCarryFlag()
     {
         MemoryArray[0, 0x03].SetBitValue(0, 1); // Set the carry flag (bit 0 of the status register)
         MemoryArray[1, 0x03].SetBitValue(0, 1); 
-        
-        MemoryArrayChanged?.Invoke();
     }
     public void ClearCarryFlag()
     {
         MemoryArray[0, 0x03].SetBitValue(0, 0); // Clear the carry flag (bit 0 of the status register)
         MemoryArray[1, 0x03].SetBitValue(0, 0); 
-        
-        MemoryArrayChanged?.Invoke();
     }
     
     public void SetZeroFlag()
     {
         MemoryArray[0, 0x03].SetBitValue(2, 1); // Set the zero flag (bit 2 of the status register)
         MemoryArray[1, 0x03].SetBitValue(2, 1); 
-        
-        MemoryArrayChanged?.Invoke();
     }
     public void ClearZeroFlag()
     {
         MemoryArray[0, 0x03].SetBitValue(2, 0); // Clear the zero flag (bit 2 of the status register)
         MemoryArray[1, 0x03].SetBitValue(2, 0);
-        
-        MemoryArrayChanged?.Invoke();
     }
     
     public void SetDigitCarryFlag()
     {
         MemoryArray[0, 0x03].SetBitValue(1, 1); // Set the digit flag (bit 3 of the status register)
         MemoryArray[1, 0x03].SetBitValue(1, 1); 
-        
-        MemoryArrayChanged?.Invoke();
     }
-    
+
     public void ClearDigitCarryFlag()
     {
         MemoryArray[0, 0x03].SetBitValue(1, 0); // Clear the digit flag (bit 3 of the status register)
-        MemoryArray[1, 0x03].SetBitValue(1, 0); 
-        
-        MemoryArrayChanged?.Invoke();
+        MemoryArray[1, 0x03].SetBitValue(1, 0);
+    }
+
+    public void PushToCallStack(int value)
+    {
+        if (CallStack.Count >= 8)
+        {
+            // reverse Stack and remove the top element 
+            Stack<int> tempStack = new Stack<int>();
+
+            while (CallStack.Count > 0)
+            {
+                tempStack.Push(CallStack.Pop());
+            }
+
+            tempStack.Pop();
+
+            while (tempStack.Count > 0)
+            {
+                CallStack.Push(tempStack.Pop());
+            }
+        }
+
+        CallStack.Push(value);
     }
 }
 
