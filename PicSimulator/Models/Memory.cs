@@ -12,7 +12,7 @@ using System;
 public class Memory : ObservableObject
 {
     public event Action ProgramCounterChanged;
-    public event Action MemoryArrayChanged;
+    public event Action ResetedMemory;
 
     // This class represents the memory of the PIC microcontroller.
     // It contains a 2D array to represent the memory banks.
@@ -39,7 +39,6 @@ public class Memory : ObservableObject
         set
         {
             _memoryArray = value;
-            MemoryArrayChanged?.Invoke();
             OnPropertyChanged();
         }
     }
@@ -135,6 +134,8 @@ public class Memory : ObservableObject
         Console.WriteLine("Resetting W-Register");
         WReg = 0; // Reset W register
         ProgramCounter2 = 0;
+        
+        ResetedMemory?.Invoke();
     }
     
     public void PowerOnReset()
@@ -273,7 +274,6 @@ public class Memory : ObservableObject
             ProgramCounterChanged?.Invoke();
         }
         
-        MemoryArrayChanged?.Invoke();
     }
 
     public int GetBit(int address, int bitNumber)
@@ -295,54 +295,40 @@ public class Memory : ObservableObject
             // Update the other bank as well
             MemoryArray[1 - bankBit, address].SetBitValue(bitNumber, value);
         }
-        
-        MemoryArrayChanged?.Invoke();
     }
 
     public void SetCarryFlag()
     {
         MemoryArray[0, 0x03].SetBitValue(0, 1); // Set the carry flag (bit 0 of the status register)
         MemoryArray[1, 0x03].SetBitValue(0, 1); 
-        
-        MemoryArrayChanged?.Invoke();
     }
     public void ClearCarryFlag()
     {
         MemoryArray[0, 0x03].SetBitValue(0, 0); // Clear the carry flag (bit 0 of the status register)
         MemoryArray[1, 0x03].SetBitValue(0, 0); 
-        
-        MemoryArrayChanged?.Invoke();
     }
     
     public void SetZeroFlag()
     {
         MemoryArray[0, 0x03].SetBitValue(2, 1); // Set the zero flag (bit 2 of the status register)
         MemoryArray[1, 0x03].SetBitValue(2, 1); 
-        
-        MemoryArrayChanged?.Invoke();
     }
     public void ClearZeroFlag()
     {
         MemoryArray[0, 0x03].SetBitValue(2, 0); // Clear the zero flag (bit 2 of the status register)
         MemoryArray[1, 0x03].SetBitValue(2, 0);
-        
-        MemoryArrayChanged?.Invoke();
     }
     
     public void SetDigitCarryFlag()
     {
         MemoryArray[0, 0x03].SetBitValue(1, 1); // Set the digit flag (bit 3 of the status register)
         MemoryArray[1, 0x03].SetBitValue(1, 1); 
-        
-        MemoryArrayChanged?.Invoke();
     }
 
     public void ClearDigitCarryFlag()
     {
         MemoryArray[0, 0x03].SetBitValue(1, 0); // Clear the digit flag (bit 3 of the status register)
         MemoryArray[1, 0x03].SetBitValue(1, 0);
-
-        MemoryArrayChanged?.Invoke();
     }
 
     public void PushToCallStack(int value)

@@ -137,9 +137,8 @@ public class MainWindowViewModel : ViewModelBase
         _mainWindow = new MainWindow();
         _memory = new Memory();
         _memory.ProgramCounterChanged += OnProgramCounterChanged;
+        _memory.ResetedMemory += OnResetedMemory;
 
-        // Initialisiere die ObservableCollection
-        ObservableMemoryArray = new ObservableCollection<Register>();
         InitializeObservableMemoryArray();
         _watchdog = new Watchdog(_memory);
         _timer = new Timer0(_memory);
@@ -184,6 +183,7 @@ public class MainWindowViewModel : ViewModelBase
     {
         _memory.ResetMemory();
         _memory.PowerOnReset();
+        
         var openFileDialog = new OpenFileDialog
         {
             Title = "Select a file",
@@ -263,6 +263,11 @@ public class MainWindowViewModel : ViewModelBase
     private void OnProgramCounterChanged()
     {
         HighlightCurrentLine();
+    }
+
+    private void OnResetedMemory()
+    {
+        InitializeObservableMemoryArray();
     }
     
     private void HighlightCurrentLine()
