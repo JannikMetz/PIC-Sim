@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using Avalonia.Threading;
 
 namespace PicSimulator.Models;
@@ -23,7 +24,7 @@ public class Register : INotifyPropertyChanged
     
     public void WriteValueFromUiThread(int value)
     {
-        Dispatcher.UIThread.Invoke(() =>
+        Dispatcher.UIThread.InvokeAsync(() =>
         {
             Value = value;
         });
@@ -53,9 +54,6 @@ public class Register : INotifyPropertyChanged
     }
     
     public event PropertyChangedEventHandler PropertyChanged;
-
-    protected virtual void OnPropertyChanged(string propertyName)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
+    protected void OnPropertyChanged([CallerMemberName] string propName = null)
+        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
 }

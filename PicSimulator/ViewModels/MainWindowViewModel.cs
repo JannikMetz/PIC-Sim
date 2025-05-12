@@ -102,8 +102,8 @@ public class MainWindowViewModel : ViewModelBase
         "00", "08", "10", "18", "20", "28", "30", "38", "40", "48", "50", "58", "60", "68", "70", "78", "80", "88", "90", "98", "A0", "A8", "B0", "B8", "C0", "C8", "D0", "D8", "E0", "E8", "F0", "F8"
     };
 
-    private ObservableCollection<ObservableCollection<Register>> _observableMemoryArray;
-    public ObservableCollection<ObservableCollection<Register>> ObservableMemoryArray
+    private ObservableCollection<Register>_observableMemoryArray;
+    public ObservableCollection<Register> ObservableMemoryArray
     {
         get => _observableMemoryArray;
         set
@@ -112,58 +112,6 @@ public class MainWindowViewModel : ViewModelBase
             OnPropertyChanged(nameof(ObservableMemoryArray));
         }
     }
-
-    // public ObservableCollection<ObservableCollection<Register>> ObservableMemoryArray
-    // {
-    //     get
-    //     {
-    //         int bank;
-    //         int address = 0;
-    //         ObservableCollection<ObservableCollection<Register>> observableMemoryArray = new ObservableCollection<ObservableCollection<Register>>();
-    //         
-    //         for (int i = 0; i < 32; i++)
-    //         {
-    //             if (i == 16)
-    //             {
-    //                 address = 0;
-    //             }
-    //             if (i < 16)
-    //             {
-    //                 bank = 0;
-    //             }
-    //             else
-    //             {
-    //                 bank = 1;
-    //             }
-    //         
-    //             var row = new ObservableCollection<Register>();
-    //             for (int j = 0; j < 8; j++)
-    //             {
-    //                 row.Add(_memory.MemoryArray[bank, address]);
-    //                 address++;
-    //             }
-    //             observableMemoryArray.Add(row);
-    //         }
-    //         return observableMemoryArray;
-    //     }
-    //     set 
-    //     {
-    //         if (value != null)
-    //         {
-    //             for (int i = 0; i < value.Count; i++)
-    //             {
-    //                 int bank = i < 16 ? 0 : 1; 
-    //                 int address = (i % 16) * 8; 
-    //
-    //                 for (int j = 0; j < value[i].Count; j++)
-    //                 {
-    //                     _memory.MemoryArray[bank, address + j] = value[i][j];
-    //                 }
-    //             }
-    //             OnPropertyChanged();
-    //         }
-    //     }
-    // }
     
     public ObservableCollection<IOPin> IOPins { get; set; } = new ObservableCollection<IOPin>();
     
@@ -191,7 +139,7 @@ public class MainWindowViewModel : ViewModelBase
         _memory.ProgramCounterChanged += OnProgramCounterChanged;
 
         // Initialisiere die ObservableCollection
-        ObservableMemoryArray = new ObservableCollection<ObservableCollection<Register>>();
+        ObservableMemoryArray = new ObservableCollection<Register>();
         InitializeObservableMemoryArray();
         _watchdog = new Watchdog(_memory);
         _timer = new Timer0(_memory);
@@ -221,31 +169,14 @@ public class MainWindowViewModel : ViewModelBase
     
     private void InitializeObservableMemoryArray()
     {
-        int bank;
-        int address = 0;
-        
-        for (int i = 0; i < 32; i++)
+        ObservableMemoryArray = new ObservableCollection<Register>();
+
+        for (int bank = 0; bank < 2; bank++)
         {
-            if (i == 16)
+            for (int addr = 0; addr < 128; addr++)
             {
-                address = 0;
+                ObservableMemoryArray.Add(_memory.MemoryArray[bank, addr]);
             }
-            if (i < 16)
-            {
-                bank = 0;
-            }
-            else
-            {
-                bank = 1;
-            }
-            
-            var row = new ObservableCollection<Register>();
-            for (int j = 0; j < 8; j++)
-            {
-                row.Add(_memory.MemoryArray[bank, address]);
-                address++;
-            }
-            ObservableMemoryArray.Add(row);
         }
     }
 
