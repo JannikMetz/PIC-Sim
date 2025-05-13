@@ -19,7 +19,7 @@ public class ALU
     
     public int BreakpointSecs = 0;
     
-    private static bool[] breakpoints = new bool[1024]; // Max of 1024 Opcodes
+    private static bool[] _breakpoints = new bool[1024]; // Max of 1024 Opcodes
     
     public bool IsActive = true;
     public bool IsStopped = false;
@@ -48,7 +48,7 @@ public class ALU
             }
             
             // Check if Breakpoints are active
-            if(breakpoints[_memory.ProgramCounter2])
+            if(_breakpoints[_memory.ProgramCounter2])
             {
                 Console.WriteLine("Breakpoint active at: " + _memory.ProgramCounter2.ToString("X4") +  " for " + BreakpointSecs + " Secs");
                 BreakpointSecs++;
@@ -76,7 +76,7 @@ public class ALU
         if (ProgramCounterIndex <= 1024 && ProgramCounterIndex >= 0)
         {
             Console.WriteLine("Updating Breakpoint at Program counter: " + ProgramCounterIndex.ToString("X4"));
-            breakpoints[ProgramCounterIndex] = active;
+            _breakpoints[ProgramCounterIndex] = active;
         }
         else
         {
