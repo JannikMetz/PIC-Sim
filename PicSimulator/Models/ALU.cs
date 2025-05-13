@@ -38,13 +38,16 @@ public class ALU
     
     public void Start()
     {
-        
+        // This is the main loop of the ALU if Execution is stopped by PowerOnReset
         while (IsActive)
         {
+            // Check if the ALU is stopped by Pausing by User
             while (IsStopped)
             {
                 Thread.Sleep(1000);
             }
+            
+            // Check if Breakpoints are active
             if(breakpoints[_memory.ProgramCounter2])
             {
                 Console.WriteLine("Breakpoint active at: " + _memory.ProgramCounter2.ToString("X4") +  " for " + BreakpointSecs + " Secs");
