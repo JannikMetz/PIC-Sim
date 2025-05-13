@@ -328,7 +328,9 @@
                 <ItemsControl ItemsSource="{Binding CombinedList}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
+                            <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="5" >
                             <StackPanel Orientation="Horizontal"><!--Content="{Binding Breakpoint.LineNumberPlusOne}"-->
+                                
                                 <CheckBox IsChecked="{Binding Breakpoint.IsActive}" 
                                           IsEnabled="{Binding Breakpoint.IsOpcode}" Margin="10,0,10,0" VerticalAlignment="Center"/>
                                 <TextBlock Text="{Binding Line.Content}" 
@@ -338,6 +340,7 @@
                                            Background="{Binding Line.IsHighlighted, 
                                        Converter={StaticResource BooleanToBrushConverter}}" />
                             </StackPanel>
+                            </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
