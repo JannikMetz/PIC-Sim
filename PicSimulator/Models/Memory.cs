@@ -13,6 +13,7 @@ public class Memory : ObservableObject
 {
     public event Action ProgramCounterChanged;
     public event Action ResetedMemory;
+    public event Action StackChanged;
 
     // This class represents the memory of the PIC microcontroller.
     // It contains a 2D array to represent the memory banks.
@@ -59,7 +60,17 @@ public class Memory : ObservableObject
         
     } 
     
-    public Stack<int> CallStack { get; set; } // Call stack for function calls 
+    private Stack<int> _callStack;
+
+    public Stack<int> CallStack
+    {
+        get { return _callStack; }
+        set
+        {
+            _callStack = value;
+            OnPropertyChanged();
+        }
+    }
     
     
 

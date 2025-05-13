@@ -60,7 +60,7 @@
         
         <!-- Registers -->
         <Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" BorderBrush="#FF000000" BorderThickness="1" CornerRadius="10" Margin="10,10,10,10" ClipToBounds="True">
-            <ScrollViewer Background="#1b1b1b" Padding="0, 20, 20, 20">
+            <ScrollViewer Background="#1b1b1b" Padding="0">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" /> <!-- Spaltenüberschriften -->
@@ -322,8 +322,177 @@
         
             <!-- Specialfunctionregister -->
         <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Background="Blue">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
             
+            <!--visible registers-->
+            <Border Grid.Column="0" Grid.Row="0" BorderBrush="#FF000000" BorderThickness="3" CornerRadius="10" Margin="5" ClipToBounds="True" >
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Grid.Column="0" Text="W-Reg" TextAlignment="Left" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center"/>
+                    </Grid>       
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Grid.Column="0" Text="FSR" TextAlignment="Left" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center"/>
+                    </Grid>       
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Grid.Column="0" Text="PCL" TextAlignment="Left" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center"/>
+                    </Grid>       
+                    <Grid Grid.Row="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Grid.Column="0" Text="PCLATH" TextAlignment="Left" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center"/>
+                    </Grid>       
+                    <Grid Grid.Row="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Grid.Column="0" Text="Status" TextAlignment="Left" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center"/>
+                    </Grid>  
+                </Grid>
+            </Border>
+            
+            <!--hidden registers-->
+            <Border Grid.Column="1" Grid.Row="0" BorderBrush="#FF000000" BorderThickness="3" CornerRadius="10" Margin="5" ClipToBounds="True" >
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Grid.Column="0" Text="PC" TextAlignment="Left" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center"/>
+                    </Grid>       
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Grid.Column="0" Text="Stackptr" TextAlignment="Left" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center"/>
+                    </Grid>       
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Grid.Column="0" Text="Prescaler" TextAlignment="Left" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center"/>
+                    </Grid>       
+                    <Grid Grid.Row="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Grid.Column="0" Text="WDT active" TextAlignment="Left" VerticalAlignment="Center"/>
+                        <CheckBox Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    </Grid>       
+                    <Grid Grid.Row="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Grid.Column="0" Text="WDT" TextAlignment="Left" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center"/>
+                    </Grid>  
+                </Grid>
+            </Border>
+            
+            <!--Stack-->
+            <Border Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" BorderBrush="#FF000000" BorderThickness="3" CornerRadius="10" Margin="5" ClipToBounds="True" >
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="CallStack"/>
+                <ItemsControl Grid.Row="1" ItemsSource="{Binding StackItems}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Rows="8"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock
+                                Text="{Binding}"
+                                Margin="0"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                </Grid>
+            </Border>
+            
+            <!--Status Reg-->
+            <Border Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" BorderBrush="#FF000000" BorderThickness="3" CornerRadius="10" Margin="5" ClipToBounds="True" >
+                <TextBox Text="a"/>
+            </Border>
+            
+            <!--Option Reg-->
+            <Border Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3" BorderBrush="#FF000000" BorderThickness="3" CornerRadius="10" Margin="5" ClipToBounds="True" >
+                <TextBox Text="a"/>
+            </Border>
+            
+            <!--INTCON Reg-->
+            <Border Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3" BorderBrush="#FF000000" BorderThickness="3" CornerRadius="10" Margin="5" ClipToBounds="True" >
+                <TextBox Text="a"/>
+            </Border>
         </Grid>
+        
         <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Background="Red">
            
         </Grid>

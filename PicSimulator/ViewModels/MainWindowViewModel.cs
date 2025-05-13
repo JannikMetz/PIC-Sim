@@ -141,6 +141,11 @@ public class MainWindowViewModel : ViewModelBase
 
     #endregion
 
+    #region SpecialFunctionRegisters
+    
+    public ObservableCollection<int> StackItems { get; set; } = new ObservableCollection<int>();
+    
+    #endregion
 
     public MainWindowViewModel()
     {
@@ -148,7 +153,9 @@ public class MainWindowViewModel : ViewModelBase
         _memory = new Memory();
         _memory.ProgramCounterChanged += OnProgramCounterChanged;
         _memory.ResetedMemory += OnResetedMemory;
+        _memory.StackChanged += UpdateStackItems;
         
+        UpdateStackItems();
         InitializeObservableMemoryArray();
         _watchdog = new Watchdog(_memory);
         _timer = new Timer0(_memory);
@@ -294,6 +301,21 @@ public class MainWindowViewModel : ViewModelBase
     {
         InitializeObservableMemoryArray();
     }
+    
+    private void UpdateStackItems()
+    {
+        StackItems.Clear();
+        foreach (var item in _memory.CallStack)
+        {
+            StackItems.Add(item);
+        }
+
+        while (StackItems.Count < 8)
+        {
+            StackItems.Add(0);
+        }
+    }
+    
     
     private void HighlightCurrentLine()
     {
