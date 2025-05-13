@@ -43,6 +43,7 @@ public class MainWindowViewModel : ViewModelBase
             {
                 _programLines = value;
                 OnPropertyChanged();
+                UpdateCombinedList();
             }
         }
     }
@@ -56,9 +57,13 @@ public class MainWindowViewModel : ViewModelBase
             {
                 _breakpoints = value;
                 OnPropertyChanged();
+                UpdateCombinedList();
             }
         }
     }
+    
+    public ObservableCollection<ProgramLineWithBreakpoint> CombinedList { get; } = new();
+
     
     public int WReg
     {
@@ -214,8 +219,23 @@ public class MainWindowViewModel : ViewModelBase
             {
                 FileContent = _encode.ReadFile(result[0]);
                 ProgramLines= _encode.ExtractOpcodes(_fileContent);
-                Breakpoints = _encode.CreateBreakpoints(_fileContent); 
+                Breakpoints = _encode.CreateBreakpoints(_fileContent);
             }
+        }
+    }
+    
+    private void UpdateCombinedList()
+    {
+        CombinedList.Clear();
+        
+        int count = Math.Min(ProgramLines?.Count ?? 0, Breakpoints?.Count ?? 0);
+        for (int i = 0; i < count; i++)
+        {
+            CombinedList.Add(new ProgramLineWithBreakpoint
+            {
+                Line = ProgramLines[i],
+                Breakpoint = Breakpoints[i]
+            });
         }
     }
 

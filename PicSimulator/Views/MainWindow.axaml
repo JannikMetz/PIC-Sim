@@ -325,39 +325,22 @@
         <!-- Codeview with Breakpoints -->
         <Border Grid.Row="2" Grid.Column="1" BorderBrush="#FF000000" BorderThickness="1" CornerRadius="10" Margin="0,10,10,10" ClipToBounds="True">
             <ScrollViewer  Background="#1b1b1b">
-
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                                
-                                <!-- Breakpoints -->
-                                <ItemsControl Grid.Column="0" ItemsSource="{Binding Breakpoints}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <CheckBox IsChecked="{Binding IsActive}" Content="{Binding LineNumberPlusOne}"
-                                                      Margin="5,0,10,0" IsEnabled="{Binding IsOpcode}"
-                                            />
-                                            <!-- IsVisible="{Binding IsOpcode}"  -->
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl> 
-                                
-                                <!-- Codeview -->
-                                <ItemsControl Grid.Column="1" ItemsSource="{Binding ProgramLines}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                        <TextBlock Text="{Binding Content}" 
-                                       TextWrapping="Wrap" 
-                                       FontFamily="Consolas" 
-                                       Background="{Binding IsHighlighted, 
+                <ItemsControl ItemsSource="{Binding CombinedList}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal"><!--Content="{Binding Breakpoint.LineNumberPlusOne}"-->
+                                <CheckBox IsChecked="{Binding Breakpoint.IsActive}" 
+                                          IsEnabled="{Binding Breakpoint.IsOpcode}" Margin="10,0,10,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding Line.Content}" 
+                                           VerticalAlignment="Center"
+                                           TextWrapping="Wrap" 
+                                           FontFamily="Consolas" 
+                                           Background="{Binding Line.IsHighlighted, 
                                        Converter={StaticResource BooleanToBrushConverter}}" />
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl> 
-                    </Grid>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </ScrollViewer>
         </Border>
     </Grid>
