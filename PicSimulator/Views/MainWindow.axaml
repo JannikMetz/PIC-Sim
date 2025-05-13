@@ -150,7 +150,8 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" /> <!-- PORTS -->
-            <ColumnDefinition Width="Auto" /> <!-- OTHERS -->
+            <ColumnDefinition Width="*" /> <!-- Specialfunktionregister -->
+            <ColumnDefinition Width="*" /> <!-- OTHERS -->
         </Grid.ColumnDefinitions>
         
         
@@ -318,7 +319,15 @@
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>
             </Grid>
-    </Grid>
+        
+            <!-- Specialfunctionregister -->
+        <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Background="Blue">
+            
+        </Grid>
+        <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Background="Red">
+           
+        </Grid>
+        </Grid>
 </Border>
 
         
