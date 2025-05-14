@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:converters="clr-namespace:PicSimulator.Converters"
+        xmlns:BoolConverters="clr-namespace:PicSimulator.Converters"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="PicSimulator.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
@@ -13,6 +14,8 @@
     <Window.Resources>
         <converters:BooleanToBrushConverter x:Key="BooleanToBrushConverter" />
         <converters:IntToHexConverter x:Key="IntToHexConverter" />
+        <BoolConverters:AndConverter x:Key="And" />
+
     </Window.Resources>
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
@@ -289,13 +292,14 @@
                     </ItemsControl>
                 </Grid>
 
-                <!-- PORTB PINS -->
+                <!-- PORTB PINS AND LEDS -->
                 <Grid Grid.Row="1" Background="#1b1b1b">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" /> <!-- PORT Description -->
                         <RowDefinition Height="Auto" /> <!-- PIN Number -->
                         <RowDefinition Height="*" />    <!-- TRISB -->
                         <RowDefinition Height="*" />    <!-- PORTB -->
+                        <RowDefinition Height="*" />    <!-- LEDS -->
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" /> <!-- PIN0 -->
@@ -369,8 +373,46 @@
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                     </ItemsControl>
+                
+                
+
+                    
+                    <ItemsControl Grid.Row="4" ItemsSource="{Binding IOPins}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <!-- Image displayed when IsSet is True -->
+                                    <Image Source="/Assets/FontAwesome/png/yellow-lightbulb-solid.png" Width="16" Height="16">
+                                        <Image.IsVisible>
+                                            <MultiBinding Converter="{StaticResource And}">
+                                                <Binding Path="IsSet" />
+                                                <Binding Path="IsPORTB" />
+                                            </MultiBinding>
+                                        </Image.IsVisible>
+                                    </Image>
+
+                                    <!-- Image displayed when IsSet is False -->
+                                    <Image Source="/Assets/FontAwesome/png/red-lightbulb-regular.png" Width="16" Height="16">
+                                        <Image.IsVisible>
+                                            <MultiBinding Converter="{StaticResource And}">
+                                                <Binding Path="!IsSet" />
+                                                <Binding Path="IsPORTB" />
+                                            </MultiBinding>
+                                        </Image.IsVisible>
+                                    </Image>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="8" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                    
                 </Grid>
 
+                
                 <!-- Specialfunctionregister -->
                 <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Background="Blue">
                     <Grid.ColumnDefinitions>
