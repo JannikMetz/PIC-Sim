@@ -21,6 +21,8 @@ public class ALU
     private static bool[] _breakpoints = new bool[1024]; // Max of 1024 Opcodes
     
     public bool IsActive = false;
+
+    public int ExecutionSpeed = 1000;
     
     public void Start()
     {
@@ -46,7 +48,7 @@ public class ALU
                 _watchdog.Increment(); // increment watchdog timer
                 GetOperation(opcode);
             }
-            Thread.Sleep(1000);
+            Thread.Sleep(ExecutionSpeed);
         }
         // Stopped 
         Console.WriteLine("Execution Stopped");

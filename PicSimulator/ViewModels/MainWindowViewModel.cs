@@ -211,6 +211,7 @@ public class MainWindowViewModel : ViewModelBase
         SkipCommand = new RelayCommand(Skip);
         ResetCommand = new RelayCommand(Reset);
         PauseCommand = new RelayCommand(Pause);
+        
     }
     
     private void InitializeIOPins()
@@ -391,6 +392,19 @@ public class MainWindowViewModel : ViewModelBase
             if (_alu.IsActive != value)
             {
                 _alu.IsActive = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+    
+    public int SetExecutionSpeed
+    {
+        get => _alu.ExecutionSpeed;
+        set
+        {
+            if (_alu.ExecutionSpeed != value)
+            {
+                _alu.ExecutionSpeed = value;
                 OnPropertyChanged();
             }
         }
