@@ -294,8 +294,8 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" /> <!-- PORT Description -->
                         <RowDefinition Height="Auto" /> <!-- PIN Number -->
-                        <RowDefinition Height="*" />    <!-- PORTB -->
                         <RowDefinition Height="*" />    <!-- TRISB -->
+                        <RowDefinition Height="*" />    <!-- PORTB -->
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" /> <!-- PIN0 -->
