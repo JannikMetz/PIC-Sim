@@ -118,11 +118,15 @@ public class MainWindowViewModel : ViewModelBase
     public ICommand SaveCommand { get; }
     public ICommand SaveAsCommand { get; }
     public ICommand StartCommand { get; }
-    public ICommand TestCommand { get; }
     
     public ICommand ResetCommand { get; }
     
     public ICommand PauseCommand { get; }
+    
+    public ICommand StepCommand { get; }
+    
+    public ICommand SkipCommand { get; }
+
 
     #endregion
 
@@ -195,11 +199,16 @@ public class MainWindowViewModel : ViewModelBase
         _alu = new ALU(_memory, _watchdog, _timer);
         _encode = new Encode(_memory, _alu);
         InitializeIOPins();
+        
+        // Loading and Saving File Commands
         LoadCommand = new RelayCommand(Load);
         SaveCommand = new RelayCommand(Save);
         SaveAsCommand = new RelayCommand(SaveAs);
+        
+        // Execution Commands
         StartCommand = new RelayCommand(Start);
-        TestCommand = new RelayCommand(Test);
+        StepCommand = new RelayCommand(Step);
+        SkipCommand = new RelayCommand(Skip);
         ResetCommand = new RelayCommand(Reset);
         PauseCommand = new RelayCommand(Pause);
     }
@@ -300,29 +309,48 @@ public class MainWindowViewModel : ViewModelBase
         // Start the Simulator in a new thread
         Task.Run(() =>
         {
-            _alu.IsActive = true;
+            IsExecuting = true;
             _alu.Start();
         });
+    }
+    
+    private void Step(object parameter)
+    {
+        if (_fileContent == null || _fileContent == string.Empty)
+        {
+            _mainWindow.ErrorMessageBox(0);
+            Console.WriteLine("No file loaded");
+            return;
+        }
+        Console.WriteLine("Step command executed");
+        _alu.Step();
+    }
+    
+    private void Skip(object parameter)
+    {
+        if (_fileContent == null || _fileContent == string.Empty)
+        {
+            _mainWindow.ErrorMessageBox(0);
+            Console.WriteLine("No file loaded");
+            return;
+        }
+        Console.WriteLine("Skip command executed");
+        _alu.Skip();
     }
     
     private void Pause(object parameter)
     {
         Console.WriteLine("Pause command executed");
-        _alu.IsStopped = false;
+        IsExecuting = false;
+        OnPropertyChanged();
     }
     
     private void Reset(object parameter)
     {
         Console.WriteLine("Reset command executed");
-        _alu.IsActive = false;
+        IsExecuting = false;
         _alu.BreakpointSecs = 0;
         _memory.PowerOnReset();
-    }
-    
-
-    private void Test(object parameter)
-    {
-        _encode.ExtractOpcodes(_fileContent);
     }
 
     private void OnResetedMemory()
@@ -354,4 +382,19 @@ public class MainWindowViewModel : ViewModelBase
             line.IsHighlighted = (line.LineNumber == _encode.OpcodeLines[_memory.ProgramCounter2]);
         }
     }
+    
+    public bool IsExecuting
+    {
+        get => _alu.IsActive;
+        set
+        {
+            if (_alu.IsActive != value)
+            {
+                _alu.IsActive = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+    
+    
 }

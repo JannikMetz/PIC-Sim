@@ -33,19 +33,69 @@
 
         <!-- Navbar for Loading, Saving, Running Code -->
         <Menu Grid.Row="0" Grid.ColumnSpan="3" Background="#1b1b1b">
+
+            <!-- ~1~ Quick Access to Run etc. Commands  @1@ -->
+            <!-- <MenuItem Command="{Binding StartCommand}" MinWidth="32"> -->
+            <!--     <MenuItem.Icon> -->
+            <!--         <Image Source="/Assets/FontAwesome/png/red-play-solid.png" Width="16" Height="16"  /> -->
+            <!--     </MenuItem.Icon> -->
+            <!-- </MenuItem> -->
+            <!-- <MenuItem Command="{Binding StepCommand}"> -->
+            <!--     <MenuItem.Icon> -->
+            <!--         <Image Source="/Assets/FontAwesome/png/red-forward-solid.png" Width="16" Height="16" /> -->
+            <!--     </MenuItem.Icon> -->
+            <!-- </MenuItem> -->
+            <!-- <MenuItem Command="{Binding PauseCommand}"> -->
+            <!--     <MenuItem.Icon> -->
+            <!--         <Image Source="/Assets/FontAwesome/png/red-pause-solid.png" Width="16" Height="16" /> -->
+            <!--     </MenuItem.Icon> -->
+            <!-- </MenuItem> -->
+            <!-- <MenuItem Command="{Binding ResetCommand}"> -->
+            <!--     <MenuItem.Icon> -->
+            <!--         <Image Source="/Assets/FontAwesome/png/red-stop-solid.png" Width="16" Height="16" /> -->
+            <!--     </MenuItem.Icon> -->
+            <!-- </MenuItem> -->
+            <!-- -->
+            <!-- <Separator/> -->
+
+
+            <!-- Loading Saving Files -->
             <MenuItem Header="File">
                 <MenuItem Header="Load" Command="{Binding LoadCommand}" />
                 <Separator />
                 <MenuItem Header="Save" Command="{Binding SaveCommand}" />
                 <MenuItem Header="Save As" Command="{Binding SaveAsCommand}" />
-                <MenuItem Header="Test-Opcodes" Command="{Binding TestCommand}" />
             </MenuItem>
 
+            <!-- Code Execution and Pausing Commands -->
             <MenuItem Header="Code Execution">
-                <MenuItem Header="Run" Command="{Binding StartCommand}" />
+                <MenuItem Header="Run" Command="{Binding StartCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="/Assets/FontAwesome/png/red-play-solid.png" Width="16" Height="16" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Step Forward" Command="{Binding StepCommand }" IsEnabled="{Binding !IsExecuting}">
+                    <MenuItem.Icon>
+                        <Image Source="/Assets/FontAwesome/png/red-forward-step-solid.png" Width="16" Height="16" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Skip To Next" Command="{Binding SkipCommand}" IsEnabled="{Binding !IsExecuting}">
+                    <MenuItem.Icon>
+                        <Image Source="/Assets/FontAwesome/png/red-forward-solid.png" Width="16" Height="16" />
+                    </MenuItem.Icon>
+                </MenuItem>
                 <Separator />
-                <MenuItem Header="Pause" Command="{Binding PauseCommand}" />
-                <MenuItem Header="Reset" Command="{Binding ResetCommand}" />
+
+                <MenuItem Header="Pause" Command="{Binding PauseCommand}" IsEnabled="{Binding IsExecuting}">
+                    <MenuItem.Icon>
+                        <Image Source="/Assets/FontAwesome/png/red-pause-solid.png" Width="16" Height="16" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Reset" Command="{Binding ResetCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="/Assets/FontAwesome/png/red-stop-solid.png" Width="16" Height="16" />
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="Settings">
             </MenuItem>
@@ -348,8 +398,11 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" Text="W-Reg" TextAlignment="Left" VerticalAlignment="Center" FontSize="11" />
-                                <TextBlock Grid.Column="1" Text="{Binding WReg, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}" TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
+                                <TextBlock Grid.Column="0" Text="W-Reg" TextAlignment="Left" VerticalAlignment="Center"
+                                           FontSize="11" />
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding WReg, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}"
+                                           TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
                             </Grid>
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
@@ -357,8 +410,11 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" Text="FSR" TextAlignment="Left" VerticalAlignment="Center" FontSize="11" />
-                                <TextBlock Grid.Column="1" Text="{Binding FSR, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}" TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
+                                <TextBlock Grid.Column="0" Text="FSR" TextAlignment="Left" VerticalAlignment="Center"
+                                           FontSize="11" />
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding FSR, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}"
+                                           TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
                             </Grid>
                             <Grid Grid.Row="2">
                                 <Grid.ColumnDefinitions>
@@ -366,8 +422,11 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" Text="PCL" TextAlignment="Left" VerticalAlignment="Center" FontSize="11" />
-                                <TextBlock Grid.Column="1" Text="{Binding PCL, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}" TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
+                                <TextBlock Grid.Column="0" Text="PCL" TextAlignment="Left" VerticalAlignment="Center"
+                                           FontSize="11" />
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding PCL, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}"
+                                           TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
                             </Grid>
                             <Grid Grid.Row="3">
                                 <Grid.ColumnDefinitions>
@@ -377,7 +436,9 @@
 
                                 <TextBlock Grid.Column="0" Text="PCLATH" TextAlignment="Left"
                                            VerticalAlignment="Center" FontSize="11" />
-                                <TextBlock Grid.Column="1" Text="{Binding PCLATH, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}" TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding PCLATH, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}"
+                                           TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
                             </Grid>
                             <Grid Grid.Row="4">
                                 <Grid.ColumnDefinitions>
@@ -386,8 +447,10 @@
                                 </Grid.ColumnDefinitions>
 
                                 <TextBlock Grid.Column="0" Text="Status" TextAlignment="Left"
-                                           VerticalAlignment="Center"  FontSize="11"/>
-                                <TextBlock Grid.Column="1" Text="{Binding StatusReg, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}" TextAlignment="Right" VerticalAlignment="Center"  FontSize="11"/>
+                                           VerticalAlignment="Center" FontSize="11" />
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding StatusReg, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}"
+                                           TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
                             </Grid>
                         </Grid>
                     </Border>
@@ -409,8 +472,11 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" Text="PC" TextAlignment="Left" VerticalAlignment="Center" FontSize="11" />
-                                <TextBlock Grid.Column="1" Text="{Binding ProgramCounter, Converter={StaticResource IntToHexConverter}, ConverterParameter=X4, Mode=TwoWay}" TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
+                                <TextBlock Grid.Column="0" Text="PC" TextAlignment="Left" VerticalAlignment="Center"
+                                           FontSize="11" />
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding ProgramCounter, Converter={StaticResource IntToHexConverter}, ConverterParameter=X4, Mode=TwoWay}"
+                                           TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
                             </Grid>
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
@@ -420,7 +486,8 @@
 
                                 <TextBlock Grid.Column="0" Text="Stackptr" TextAlignment="Left"
                                            VerticalAlignment="Center" FontSize="11" />
-                                <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
+                                <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center"
+                                           FontSize="11" />
                             </Grid>
                             <Grid Grid.Row="2">
                                 <Grid.ColumnDefinitions>
@@ -430,7 +497,8 @@
 
                                 <TextBlock Grid.Column="0" Text="Prescaler" TextAlignment="Left"
                                            VerticalAlignment="Center" FontSize="11" />
-                                <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
+                                <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center"
+                                           FontSize="11" />
                             </Grid>
                             <Grid Grid.Row="3">
                                 <Grid.ColumnDefinitions>
@@ -440,7 +508,8 @@
 
                                 <TextBlock Grid.Column="0" Text="WDT active" TextAlignment="Left"
                                            VerticalAlignment="Center" FontSize="11" />
-                                <CheckBox Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="11" Padding="0" />
+                                <CheckBox Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                          FontSize="11" Padding="0" />
                             </Grid>
                             <Grid Grid.Row="4">
                                 <Grid.ColumnDefinitions>
@@ -448,8 +517,10 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" Text="WDT" TextAlignment="Left" VerticalAlignment="Center" FontSize="11" />
-                                <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
+                                <TextBlock Grid.Column="0" Text="WDT" TextAlignment="Left" VerticalAlignment="Center"
+                                           FontSize="11" />
+                                <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center"
+                                           FontSize="11" />
                             </Grid>
                         </Grid>
                     </Border>
@@ -475,7 +546,7 @@
                                             Text="{Binding}"
                                             Margin="0"
                                             VerticalAlignment="Center"
-                                            HorizontalAlignment="Center" 
+                                            HorizontalAlignment="Center"
                                             FontSize="11" />
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
@@ -516,8 +587,9 @@
                 <ItemsControl ItemsSource="{Binding CombinedList}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="5"                                                Background="{Binding Line.IsHighlighted, 
-                                       Converter={StaticResource BooleanToBrushConverter}}" >
+                            <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="5"
+                                    Background="{Binding Line.IsHighlighted, 
+                                       Converter={StaticResource BooleanToBrushConverter}}">
                                 <StackPanel Orientation="Horizontal"><!--Content="{Binding Breakpoint.LineNumberPlusOne}"-->
 
                                     <CheckBox IsChecked="{Binding Breakpoint.IsActive}"
@@ -526,7 +598,7 @@
                                     <TextBlock Text="{Binding Line.Content}"
                                                VerticalAlignment="Center"
                                                TextWrapping="Wrap"
-                                               FontFamily="Consolas"/>
+                                               FontFamily="Consolas" />
                                 </StackPanel>
                             </Border>
                         </DataTemplate>

@@ -9,7 +9,6 @@ public class ALU
     private Memory _memory;
     private Watchdog _watchdog;
     private Timer0 _timer;
-    private bool _isSleeping;
     public ALU(Memory memory, Watchdog watchdog, Timer0 timer)
     {
         _memory = memory;
@@ -21,31 +20,13 @@ public class ALU
     
     private static bool[] _breakpoints = new bool[1024]; // Max of 1024 Opcodes
     
-    public bool IsActive = true;
-    public bool IsStopped = false;
-
-    public bool IsSleeping
-    {
-        get {return _isSleeping;}
-        set
-        {
-            if (_isSleeping != value)
-            {
-                _isSleeping = value;
-            }
-        }
-    }
+    public bool IsActive = false;
     
     public void Start()
     {
-        // This is the main loop of the ALU if Execution is stopped by PowerOnReset
-        while (IsActive)
+
+        while (IsActive)  // false if Execution is stopped by Reset or Pausing
         {
-            // Check if the ALU is stopped by Pausing by User
-            while (IsStopped)
-            {
-                Thread.Sleep(1000);
-            }
             
             // Check if Breakpoints are active
             if(_breakpoints[_memory.ProgramCounter2])
@@ -70,6 +51,31 @@ public class ALU
         // Stopped 
         Console.WriteLine("Execution Stopped");
     }
+    
+    public void Step()
+    {
+        // Read the opcode from the program memory
+        int opcode = _memory.ProgramMemory[_memory.ProgramCounter2];
+
+        // Execute the operation
+        Console.WriteLine("Executing Opcode: " + opcode.ToString("X4") + " at PC: " +
+                          _memory.ProgramCounter2.ToString("X4"));
+        _watchdog.Increment(); // increment watchdog timer
+        GetOperation(opcode);
+    }
+    
+    public void Skip()
+    {
+        // Read the opcode from the program memory
+        int opcode = _memory.ProgramMemory[_memory.ProgramCounter2];
+
+        // Execute the operation
+        Console.WriteLine("Skipping Opcode: " + opcode.ToString("X4") + " at PC: " +
+                          _memory.ProgramCounter2.ToString("X4"));
+        _watchdog.Increment(); // increment watchdog timer
+        _memory.IncrementProgramCounter();
+    }
+    
     
     public void UpdateBreakpoints(int ProgramCounterIndex, bool active)
     {

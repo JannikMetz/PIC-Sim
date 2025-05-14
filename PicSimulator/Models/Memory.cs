@@ -171,8 +171,12 @@ public class Memory : ObservableObject
     {
         Console.WriteLine("Initializing Memory");
         
-        Console.WriteLine("Setting Registers to Reset Values");
+        Console.WriteLine("Resetting Program Counter");
+
+        ProgramCounter2 = 0;
         
+        Console.WriteLine("Setting Registers to Reset Values");
+           
 
         // DO NOT USE SetRegister() HERE BECAUSE IT ONLY SETS ADDRESSES ON CURRENT BANK
         
