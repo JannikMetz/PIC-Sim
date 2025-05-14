@@ -1,3 +1,5 @@
+using System;
+
 namespace PicSimulator.Models;
 
 public class Timer0
@@ -16,7 +18,7 @@ public class Timer0
         int preScaler = 1;
         if (_memory.MemoryArray[1,1].GetBitValue(3) == 0)
         {
-            preScaler = ((_memory.MemoryArray[1, 1].Value & 0x07) + 1) << 1; // Get the prescaler value from the register
+            preScaler = Convert.ToInt32(Math.Pow(2,(_memory.MemoryArray[1, 1].Value & 0x07) + 1)); // Get the prescaler value from the register
         }
         
         _timer0Value++;

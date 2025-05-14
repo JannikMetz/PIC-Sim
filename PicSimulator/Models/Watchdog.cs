@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -53,9 +54,9 @@ public class Watchdog : INotifyPropertyChanged
     public void Increment()
     {
         int preScaler = 1;
-        if (_memory.MemoryArray[1,1].GetBitValue(3) == 0)
+        if (_memory.MemoryArray[1,1].GetBitValue(3) == 1)
         {
-            preScaler = ((_memory.MemoryArray[1, 1].Value & 0x07) + 1); // Get the prescaler value from the register
+            preScaler = Convert.ToInt32(Math.Pow(2,_memory.MemoryArray[1, 1].Value & 0x07)); // Get the prescaler value from the register
         }
 
         _watchdogValue++;

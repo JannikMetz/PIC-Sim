@@ -420,7 +420,7 @@
 
                                 <TextBlock Grid.Column="0" Text="Stackptr" TextAlignment="Left"
                                            VerticalAlignment="Center" FontSize="11" />
-                                <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
+                                <TextBlock Grid.Column="1" Text="{Binding StackPointer, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}" TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
                             </Grid>
                             <Grid Grid.Row="2">
                                 <Grid.ColumnDefinitions>
@@ -430,7 +430,7 @@
 
                                 <TextBlock Grid.Column="0" Text="Prescaler" TextAlignment="Left"
                                            VerticalAlignment="Center" FontSize="11" />
-                                <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
+                                <TextBlock Grid.Column="1" Text="{Binding Prescaler, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}" TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
                             </Grid>
                             <Grid Grid.Row="3">
                                 <Grid.ColumnDefinitions>
@@ -449,7 +449,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <TextBlock Grid.Column="0" Text="WDT" TextAlignment="Left" VerticalAlignment="Center" FontSize="11" />
-                                <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
+                                <TextBlock Grid.Column="1" Text="{Binding WDT, Mode=TwoWay}" TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
                             </Grid>
                         </Grid>
                     </Border>
