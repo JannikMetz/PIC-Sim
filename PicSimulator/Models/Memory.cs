@@ -14,6 +14,14 @@ public class Memory : ObservableObject
     public event Action ProgramCounterChanged;
     public event Action ResetedMemory;
     public event Action StackChanged;
+    
+    // Constructor to initialize the memory with default values.
+    public Memory()
+    {
+        ResetMemory();
+        PowerOnReset();
+        CallStack = new Stack<int>();
+    }
 
     // This class represents the memory of the PIC microcontroller.
     // It contains a 2D array to represent the memory banks.
@@ -56,6 +64,7 @@ public class Memory : ObservableObject
         set
         {
             _wReg = value & 0xFF; // Set W register (only lower 8 bits)
+            OnPropertyChanged();
         }
         
     } 
@@ -72,9 +81,17 @@ public class Memory : ObservableObject
         }
     }
     
-    
+    private int _programCounter2;
 
-    public int ProgramCounter2;
+    public int ProgramCounter2
+    {
+        get {return _programCounter2;}
+        set
+        {
+            _programCounter2 = value; 
+            OnPropertyChanged();
+        }
+    }
     
     public void IncrementProgramCounter()
     {
@@ -118,15 +135,6 @@ public class Memory : ObservableObject
         
         ProgramCounter2 = pc + ((pcLath & 0x1F) << 8);
     }
-    
-    
-    // Constructor to initialize the memory with default values.
-    public Memory()
-    {
-        ResetMemory();
-        PowerOnReset();
-        CallStack = new Stack<int>();
-    }
 
     // set everything to 0
     public void ResetMemory()
@@ -138,6 +146,16 @@ public class Memory : ObservableObject
             for (int register = 0; register < 128; register++)
             {
                 Register reg = new Register();
+                
+                // MemoryArray changed when the value of the register changes
+                reg.PropertyChanged += (s, e) =>
+                {
+                    if (e.PropertyName == nameof(Register.Value))
+                    {
+                        OnPropertyChanged(nameof(MemoryArray));
+                    }
+                };
+                
                 MemoryArray[bank, register] = reg;
             }
         }

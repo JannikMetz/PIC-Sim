@@ -65,22 +65,7 @@ public class MainWindowViewModel : ViewModelBase
     public ObservableCollection<ProgramLineWithBreakpoint> CombinedList { get; } = new();
 
     
-    public int WReg
-    {
-        get { return _memory.WReg; }
-        set
-        {
-            if (_memory.WReg != value)
-            {
-                _memory.WReg = value;
-                OnPropertyChanged();
-            }
-        }
-    }
-    public int ProgramCounter
-    {
-        get { return _memory.ProgramCounter2; }
-    }
+    
     
     // This is the content of the file as a string
     public string FileContent
@@ -145,15 +130,63 @@ public class MainWindowViewModel : ViewModelBase
     
     public ObservableCollection<int> StackItems { get; set; } = new ObservableCollection<int>();
     
+    public int WReg
+    {
+        get { return _memory.WReg; }
+    }
+    public int ProgramCounter
+    {
+        get { return _memory.ProgramCounter2; }
+    }
+    
+    public int FSR
+    {
+        get { return _memory.MemoryArray[0,4].Value; ; }
+    }
+    
+    public int PCL
+    {
+        get { return _memory.MemoryArray[0,2].Value; ; }
+    }
+    
+    public int PCLATH
+    {
+        get { return _memory.MemoryArray[0,0x0A].Value; ; }
+    }
+    
+    public int StatusReg
+    {
+        get { return _memory.MemoryArray[0,3].Value; ; }
+    }
+    
     #endregion
 
     public MainWindowViewModel()
     {
         _mainWindow = new MainWindow();
         _memory = new Memory();
-        _memory.ProgramCounterChanged += OnProgramCounterChanged;
         _memory.ResetedMemory += OnResetedMemory;
         _memory.StackChanged += UpdateStackItems;
+        _memory.PropertyChanged += (s, e) =>
+        {
+            if (e.PropertyName == nameof(_memory.WReg))
+            {
+                OnPropertyChanged(nameof(WReg));
+            }
+            if (e.PropertyName == nameof(_memory.ProgramCounter2))
+            {
+                OnPropertyChanged(nameof(ProgramCounter));
+                HighlightCurrentLine();
+            }
+
+            if (e.PropertyName == nameof(_memory.MemoryArray))
+            {
+                OnPropertyChanged(nameof(StatusReg));
+                OnPropertyChanged(nameof(FSR));
+                OnPropertyChanged(nameof(PCL));
+                OnPropertyChanged(nameof(PCLATH));
+            }
+        };
         
         UpdateStackItems();
         InitializeObservableMemoryArray();
@@ -291,11 +324,6 @@ public class MainWindowViewModel : ViewModelBase
     {
         _encode.ExtractOpcodes(_fileContent);
     }
-    
-    private void OnProgramCounterChanged()
-    {
-        HighlightCurrentLine();
-    }
 
     private void OnResetedMemory()
     {
@@ -319,6 +347,8 @@ public class MainWindowViewModel : ViewModelBase
     
     private void HighlightCurrentLine()
     {
+        if (ProgramLines == null) return;
+        
         foreach (var line in ProgramLines)
         {
             line.IsHighlighted = (line.LineNumber == _encode.OpcodeLines[_memory.ProgramCounter2]);

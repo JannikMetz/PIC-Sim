@@ -348,8 +348,8 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" Text="W-Reg" TextAlignment="Left" VerticalAlignment="Center" />
-                                <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="0" Text="W-Reg" TextAlignment="Left" VerticalAlignment="Center" FontSize="11" />
+                                <TextBlock Grid.Column="1" Text="{Binding WReg, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}" TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
                             </Grid>
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
@@ -357,8 +357,8 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" Text="FSR" TextAlignment="Left" VerticalAlignment="Center" />
-                                <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="0" Text="FSR" TextAlignment="Left" VerticalAlignment="Center" FontSize="11" />
+                                <TextBlock Grid.Column="1" Text="{Binding FSR, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}" TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
                             </Grid>
                             <Grid Grid.Row="2">
                                 <Grid.ColumnDefinitions>
@@ -366,8 +366,8 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" Text="PCL" TextAlignment="Left" VerticalAlignment="Center" />
-                                <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="0" Text="PCL" TextAlignment="Left" VerticalAlignment="Center" FontSize="11" />
+                                <TextBlock Grid.Column="1" Text="{Binding PCL, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}" TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
                             </Grid>
                             <Grid Grid.Row="3">
                                 <Grid.ColumnDefinitions>
@@ -376,8 +376,8 @@
                                 </Grid.ColumnDefinitions>
 
                                 <TextBlock Grid.Column="0" Text="PCLATH" TextAlignment="Left"
-                                           VerticalAlignment="Center" />
-                                <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center" />
+                                           VerticalAlignment="Center" FontSize="11" />
+                                <TextBlock Grid.Column="1" Text="{Binding PCLATH, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}" TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
                             </Grid>
                             <Grid Grid.Row="4">
                                 <Grid.ColumnDefinitions>
@@ -386,8 +386,8 @@
                                 </Grid.ColumnDefinitions>
 
                                 <TextBlock Grid.Column="0" Text="Status" TextAlignment="Left"
-                                           VerticalAlignment="Center" />
-                                <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center" />
+                                           VerticalAlignment="Center"  FontSize="11"/>
+                                <TextBlock Grid.Column="1" Text="{Binding StatusReg, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}" TextAlignment="Right" VerticalAlignment="Center"  FontSize="11"/>
                             </Grid>
                         </Grid>
                     </Border>
@@ -409,8 +409,8 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" Text="PC" TextAlignment="Left" VerticalAlignment="Center" />
-                                <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="0" Text="PC" TextAlignment="Left" VerticalAlignment="Center" FontSize="11" />
+                                <TextBlock Grid.Column="1" Text="{Binding ProgramCounter, Converter={StaticResource IntToHexConverter}, ConverterParameter=X4, Mode=TwoWay}" TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
                             </Grid>
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
@@ -419,8 +419,8 @@
                                 </Grid.ColumnDefinitions>
 
                                 <TextBlock Grid.Column="0" Text="Stackptr" TextAlignment="Left"
-                                           VerticalAlignment="Center" />
-                                <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center" />
+                                           VerticalAlignment="Center" FontSize="11" />
+                                <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
                             </Grid>
                             <Grid Grid.Row="2">
                                 <Grid.ColumnDefinitions>
@@ -429,8 +429,8 @@
                                 </Grid.ColumnDefinitions>
 
                                 <TextBlock Grid.Column="0" Text="Prescaler" TextAlignment="Left"
-                                           VerticalAlignment="Center" />
-                                <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center" />
+                                           VerticalAlignment="Center" FontSize="11" />
+                                <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
                             </Grid>
                             <Grid Grid.Row="3">
                                 <Grid.ColumnDefinitions>
@@ -439,8 +439,8 @@
                                 </Grid.ColumnDefinitions>
 
                                 <TextBlock Grid.Column="0" Text="WDT active" TextAlignment="Left"
-                                           VerticalAlignment="Center" />
-                                <CheckBox Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                           VerticalAlignment="Center" FontSize="11" />
+                                <CheckBox Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="11" Padding="0" />
                             </Grid>
                             <Grid Grid.Row="4">
                                 <Grid.ColumnDefinitions>
@@ -448,8 +448,8 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" Text="WDT" TextAlignment="Left" VerticalAlignment="Center" />
-                                <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="0" Text="WDT" TextAlignment="Left" VerticalAlignment="Center" FontSize="11" />
+                                <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
                             </Grid>
                         </Grid>
                     </Border>
@@ -462,7 +462,7 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="CallStack" />
+                            <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="Stack" FontSize="11" />
                             <ItemsControl Grid.Row="1" ItemsSource="{Binding StackItems}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -475,7 +475,8 @@
                                             Text="{Binding}"
                                             Margin="0"
                                             VerticalAlignment="Center"
-                                            HorizontalAlignment="Center" />
+                                            HorizontalAlignment="Center" 
+                                            FontSize="11" />
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
