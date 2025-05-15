@@ -145,22 +145,66 @@ public class MainWindowViewModel : ViewModelBase
     
     public int FSR
     {
-        get { return _memory.MemoryArray[0,4].Value; ; }
+        get { return _memory.MemoryArray[0,4].Value; }
     }
     
     public int PCL
     {
-        get { return _memory.MemoryArray[0,2].Value; ; }
+        get { return _memory.MemoryArray[0,2].Value; }
     }
     
     public int PCLATH
     {
-        get { return _memory.MemoryArray[0,0x0A].Value; ; }
+        get { return _memory.MemoryArray[0,0x0A].Value; }
     }
     
     public int StatusReg
     {
-        get { return _memory.MemoryArray[0,3].Value; ; }
+        get { return _memory.MemoryArray[0,3].Value; }
+    }
+    
+    // TODO: Implement the stack pointer
+    public int StackPointer
+    {
+        get { return 0; }
+    }
+    
+    
+    // TODO: wich prescaler is used?
+    public int Prescaler
+    {
+        get
+        {
+            if (_memory.MemoryArray[1,1].GetBitValue(3) == 1)
+            {
+                // prescaler watchdog
+                return Convert.ToInt32(Math.Pow(2,_memory.MemoryArray[1, 1].Value & 0x07)); // Get the prescaler value from the register
+            }
+            else
+            {
+                // prescaler timer0
+                return Convert.ToInt32(Math.Pow(2,(_memory.MemoryArray[1, 1].Value & 0x07) + 1));
+            }
+        }
+    }
+
+    // TODO: Implement the WDT enable/disable
+    public bool IsWDTEnabled
+    {
+        get { return _watchdog.WatchdogEnabled; }
+        set
+        {
+            if (_watchdog.WatchdogEnabled != value)
+            {
+                _watchdog.WatchdogEnabled = value;
+                OnPropertyChanged(nameof(IsWDTEnabled));
+            }
+        }
+    }
+    
+    public int WDT
+    {
+        get { return _watchdog.WatchdogTimerValue; }
     }
     
     #endregion
@@ -177,6 +221,7 @@ public class MainWindowViewModel : ViewModelBase
             {
                 OnPropertyChanged(nameof(WReg));
             }
+            
             if (e.PropertyName == nameof(_memory.ProgramCounter2))
             {
                 OnPropertyChanged(nameof(ProgramCounter));
@@ -189,12 +234,27 @@ public class MainWindowViewModel : ViewModelBase
                 OnPropertyChanged(nameof(FSR));
                 OnPropertyChanged(nameof(PCL));
                 OnPropertyChanged(nameof(PCLATH));
+                OnPropertyChanged(nameof(Prescaler));
             }
         };
+
+        
         
         UpdateStackItems();
         InitializeObservableMemoryArray();
         _watchdog = new Watchdog(_memory);
+        _watchdog.PropertyChanged += (s, e) =>
+        {
+            if (e.PropertyName == nameof(_watchdog.WatchdogTimerValue))
+            {
+                OnPropertyChanged(nameof(WDT));
+            }
+            
+            if (e.PropertyName == nameof(_watchdog.WatchdogEnabled))
+            {
+                OnPropertyChanged(nameof(IsWDTEnabled));
+            }
+        };
         _timer = new Timer0(_memory);
         _alu = new ALU(_memory, _watchdog, _timer);
         _encode = new Encode(_memory, _alu);

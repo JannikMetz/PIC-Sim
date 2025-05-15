@@ -532,8 +532,9 @@
 
                                 <TextBlock Grid.Column="0" Text="Stackptr" TextAlignment="Left"
                                            VerticalAlignment="Center" FontSize="11" />
-                                <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center"
-                                           FontSize="11" />
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding StackPointer, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}"
+                                           TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
                             </Grid>
                             <Grid Grid.Row="2">
                                 <Grid.ColumnDefinitions>
@@ -543,8 +544,9 @@
 
                                 <TextBlock Grid.Column="0" Text="Prescaler" TextAlignment="Left"
                                            VerticalAlignment="Center" FontSize="11" />
-                                <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center"
-                                           FontSize="11" />
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding Prescaler, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}"
+                                           TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
                             </Grid>
                             <Grid Grid.Row="3">
                                 <Grid.ColumnDefinitions>
@@ -565,8 +567,8 @@
 
                                 <TextBlock Grid.Column="0" Text="WDT" TextAlignment="Left" VerticalAlignment="Center"
                                            FontSize="11" />
-                                <TextBlock Grid.Column="1" Text="0000" TextAlignment="Right" VerticalAlignment="Center"
-                                           FontSize="11" />
+                                <TextBlock Grid.Column="1" Text="{Binding WDT, Mode=TwoWay}" TextAlignment="Right"
+                                           VerticalAlignment="Center" FontSize="11" />
                             </Grid>
                         </Grid>
                     </Border>
@@ -579,7 +581,7 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="Stack" FontSize="11" />
+                            <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="Stack" FontSize="11" HorizontalAlignment="Center"/>
                             <ItemsControl Grid.Row="1" ItemsSource="{Binding StackItems}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>

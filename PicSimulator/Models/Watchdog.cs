@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -10,6 +11,7 @@ public class Watchdog : INotifyPropertyChanged
     private int _watchdogValue; // this is only used for the prescaler
     private int _watchdogTimerValue; // this is the actual watchdog timer value
     private bool _aluIsSleeping = false;
+    private bool _watchdogEnabled = false;
     
     public int WatchdogTimerValue
     {
@@ -19,6 +21,19 @@ public class Watchdog : INotifyPropertyChanged
             if (_watchdogTimerValue != value)
             {
                 _watchdogTimerValue = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+    
+    public bool WatchdogEnabled
+    {
+        get { return _watchdogEnabled; }
+        set
+        {
+            if (_watchdogEnabled != value)
+            {
+                _watchdogEnabled = value;
                 OnPropertyChanged();
             }
         }
@@ -52,10 +67,15 @@ public class Watchdog : INotifyPropertyChanged
 
     public void Increment()
     {
-        int preScaler = 1;
-        if (_memory.MemoryArray[1,1].GetBitValue(3) == 0)
+        if (!_watchdogEnabled)
         {
-            preScaler = ((_memory.MemoryArray[1, 1].Value & 0x07) + 1); // Get the prescaler value from the register
+            return;
+        }
+        
+        int preScaler = 1;
+        if (_memory.MemoryArray[1,1].GetBitValue(3) == 1)
+        {
+            preScaler = Convert.ToInt32(Math.Pow(2,_memory.MemoryArray[1, 1].Value & 0x07)); // Get the prescaler value from the register
         }
 
         _watchdogValue++;
