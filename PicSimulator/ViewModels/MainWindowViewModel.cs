@@ -191,7 +191,15 @@ public class MainWindowViewModel : ViewModelBase
     // TODO: Implement the WDT enable/disable
     public bool IsWDTEnabled
     {
-        get { return true; }
+        get { return _watchdog.WatchdogEnabled; }
+        set
+        {
+            if (_watchdog.WatchdogEnabled != value)
+            {
+                _watchdog.WatchdogEnabled = value;
+                OnPropertyChanged(nameof(IsWDTEnabled));
+            }
+        }
     }
     
     public int WDT
@@ -240,6 +248,11 @@ public class MainWindowViewModel : ViewModelBase
             if (e.PropertyName == nameof(_watchdog.WatchdogTimerValue))
             {
                 OnPropertyChanged(nameof(WDT));
+            }
+            
+            if (e.PropertyName == nameof(_watchdog.WatchdogEnabled))
+            {
+                OnPropertyChanged(nameof(IsWDTEnabled));
             }
         };
         _timer = new Timer0(_memory);
