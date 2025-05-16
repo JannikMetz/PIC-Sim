@@ -28,6 +28,8 @@ public class Memory : ObservableObject
     private Register[,] _memoryArray = new Register[2, 128]; // 2 banks of 128 bytes each
 
     private int[] _programMemory = new int[1024]; // Program memory (ROM) - 2kB
+    
+    public bool OnReset { get; set; } = false;
 
     public int[] ProgramMemory
     {
@@ -138,6 +140,7 @@ public class Memory : ObservableObject
     // set everything to 0
     public void ResetMemory()
     {
+        OnReset = true;
         Console.WriteLine("Resetting Memory");
         // Reset the memory to default values.
         for (int bank = 0; bank < 2; bank++)
@@ -162,12 +165,14 @@ public class Memory : ObservableObject
         Console.WriteLine("Resetting W-Register");
         WReg = 0; // Reset W register
         ProgramCounter2 = 0;
+        OnReset = false;
 
         ResetedMemory?.Invoke();
     }
 
     public void PowerOnReset()
     {
+        OnReset = true;
         Console.WriteLine("Initializing Memory");
 
         Console.WriteLine("Resetting Program Counter");
@@ -189,11 +194,12 @@ public class Memory : ObservableObject
         // Set TRISA to ---1 1111 and TRISB to 1111 1111
         MemoryArray[1, 5].Value = 0x1F;
         MemoryArray[1, 6].Value = 0xFF;
-
+        OnReset = false;
     }
 
     public void MLCRReset(int status)
     {
+        OnReset = true;
         ProgramCounter2 = 0;
         MemoryArray[0, 0x02].Value = 0x00;
         MemoryArray[1, 0x02].Value = 0x00;
@@ -242,10 +248,14 @@ public class Memory : ObservableObject
 
         // EECON (there is a q)
         MemoryArray[1, 0x08].Value = 0x00;
+        
+        OnReset = false;
+
     }
 
     public void WakeUpFromSleepReset(bool isInterrupt)
     {
+        OnReset = true;
         IncrementProgramCounter();
 
         if (isInterrupt)
@@ -266,6 +276,7 @@ public class Memory : ObservableObject
         }
 
         MemoryArray[1, 0x08].SetBitValue(4, 0);
+        OnReset = false;
     }
 
     public int GetBank()

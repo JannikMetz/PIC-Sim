@@ -702,7 +702,10 @@ public class MainWindowViewModel : ViewModelBase
                 OnPropertyChanged(nameof(IntconBit7));
                 
                 // Update I/O pins
-                UpdateIOPins();
+                if (_memory.OnReset == false)
+                {
+                    UpdateIOPins();
+                }
             }
 
             if (e.PropertyName == nameof(_memory.CallStack))
