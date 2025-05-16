@@ -103,7 +103,7 @@
             <MenuItem Header="Settings">
                 <MenuItem Header="Execution Speed" IsEnabled="{Binding !IsExecuting}">
                     <TextBlock Text="{Binding #SpeedValue.Value}" />
-                    <Slider x:Name="SpeedValue" MinWidth="100" Width="100" Minimum="1" Maximum="10000"
+                    <Slider x:Name="SpeedValue" MinWidth="150" Width="200" Minimum="1" Maximum="10000"
                             Value="{Binding SetExecutionSpeed}" />
                 </MenuItem>
             </MenuItem>

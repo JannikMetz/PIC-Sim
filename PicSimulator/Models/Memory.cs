@@ -404,17 +404,17 @@ public class Memory : ObservableObject
 
     }
 
-    public async Task<int> PopFromCallStackAsync()
+    public int PopFromCallStack()
     {
         if (CallStack.Count == 0)
-            throw new InvalidOperationException("CallStack ist leer.");
+            throw new InvalidOperationException("CallStack is empty.");
 
         int value = 0;
-        await Dispatcher.UIThread.InvokeAsync(() =>
-        {
+        // Dispatcher.UIThread.InvokeAsync(() =>
+        // {
             value = CallStack.Pop();
             OnPropertyChanged(nameof(CallStack));
-        });
+        //});
         return value;
     }
 }

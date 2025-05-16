@@ -503,7 +503,7 @@ public class ALU
         _memory.WReg = value;
 
         // get the last program counter from the top of the call stack
-        int pc = _memory.PopFromCallStackAsync().Result;
+        int pc = _memory.PopFromCallStack();
         
         // set program counter
         _memory.SetProgramCounterForReturn(pc);
@@ -642,7 +642,7 @@ public class ALU
     private bool RETURN()
     {
         // get the last program counter from the top of the call stack
-        int pc = _memory.PopFromCallStackAsync().Result;
+        int pc = _memory.PopFromCallStack();
         
         // set program counter
         _memory.SetProgramCounterForReturn(pc);
@@ -653,7 +653,7 @@ public class ALU
             _timer.IncrementTimer();
         }
         
-        // prgramm counter is not incremented here because we did it in the CALL instruction
+        // program counter is not incremented here because we did it in the CALL instruction
         
         return true;
     }
@@ -661,7 +661,7 @@ public class ALU
     private bool RETFIE()
     {
         // get the last program counter from the top of the call stack
-        int pc = _memory.PopFromCallStackAsync().Result;
+        int pc = _memory.PopFromCallStack();
         
         // set program counter
         _memory.SetProgramCounterForReturn(pc);

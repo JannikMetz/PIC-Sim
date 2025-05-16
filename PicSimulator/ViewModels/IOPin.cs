@@ -125,7 +125,7 @@ public class IOPin : ViewModelBase
             {
                 return true;
             }
-                return false;
+            return false;
         }
     }
     
@@ -137,7 +137,7 @@ public class IOPin : ViewModelBase
             {
                 return true;
             }
-                return false;
+            return false;
         }
     }
     
@@ -149,7 +149,7 @@ public class IOPin : ViewModelBase
             {
                 return true;
             }
-                return false;
+            return false;
         }
     }
     
@@ -161,7 +161,7 @@ public class IOPin : ViewModelBase
             {
                 return true;
             }
-                return false;
+            return false;
         }
     }
     public bool IsSet
@@ -171,6 +171,8 @@ public class IOPin : ViewModelBase
         {
             if (_isSet != value)
             {
+                IntInterrupt(value);
+                PortBInterrupt();
                 if (value)
                 {
                     _memory.MemoryArray[_bank, _address].SetBitValue(_index, 1);
@@ -209,6 +211,27 @@ public class IOPin : ViewModelBase
                 _address = value;
                 OnPropertyChanged();
             }
+        }
+    }
+    private void IntInterrupt(bool value)
+    {
+        if (IsPORTB && _index == 0)
+        {
+            bool INTEDG = Convert.ToBoolean(_memory.MemoryArray[1, 1].GetBitValue(6));
+            if (INTEDG == value)
+            {
+                _memory.MemoryArray[0, 0xB].SetBitValue(1, 1);
+                _memory.MemoryArray[1, 0xB].SetBitValue(1, 1);
+            }
+        }
+    }
+
+    private void PortBInterrupt()
+    {
+        if(_index > 4 && _index < 8)
+        {
+            _memory.MemoryArray[0, 0xB].SetBitValue(0, 1);
+            _memory.MemoryArray[1, 0xB].SetBitValue(0, 1);
         }
     }
 }
