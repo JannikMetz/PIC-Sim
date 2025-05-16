@@ -509,10 +509,12 @@ public class MainWindowViewModel : ViewModelBase
         {
             if (value)
             {
+                _memory.MemoryArray[0,0x0B].SetBitValue(0, 1);
                 _memory.MemoryArray[1,0x0B].SetBitValue(0, 1);
             }
             else
             {
+                _memory.MemoryArray[0,0x0B].SetBitValue(0, 0);
                 _memory.MemoryArray[1,0x0B].SetBitValue(0, 0);
             }
             OnPropertyChanged();
@@ -526,113 +528,127 @@ public class MainWindowViewModel : ViewModelBase
         {
             if (value)
             {
+                _memory.MemoryArray[0,0x0B].SetBitValue(1, 1);
                 _memory.MemoryArray[1,0x0B].SetBitValue(1, 1);
             }
             else
             {
+                _memory.MemoryArray[0,0x0B].SetBitValue(1, 0);
                 _memory.MemoryArray[1,0x0B].SetBitValue(1, 0);
             }
             OnPropertyChanged();
         }
     }
-    
+
     public bool IntconBit2
     {
-        get { return _memory.MemoryArray[1,0x0B].GetBitValue(2) == 1; }
-        set 
+        get { return _memory.MemoryArray[1, 0x0B].GetBitValue(2) == 1; }
+        set
         {
             if (value)
             {
-                _memory.MemoryArray[1,0x0B].SetBitValue(2, 1);
+                _memory.MemoryArray[0, 0x0B].SetBitValue(2, 1);
+                _memory.MemoryArray[1, 0x0B].SetBitValue(2, 1);
             }
             else
             {
-                _memory.MemoryArray[1,0x0B].SetBitValue(2, 0);
+                _memory.MemoryArray[0, 0x0B].SetBitValue(2, 0);
+                _memory.MemoryArray[1, 0x0B].SetBitValue(2, 0);
             }
             OnPropertyChanged();
         }
     }
-    
+
     public bool IntconBit3
     {
-        get { return _memory.MemoryArray[1,0x0B].GetBitValue(3) == 1; }
-        set 
+        get { return _memory.MemoryArray[1, 0x0B].GetBitValue(3) == 1; }
+        set
         {
             if (value)
             {
-                _memory.MemoryArray[1,0x0B].SetBitValue(3, 1);
+                _memory.MemoryArray[0, 0x0B].SetBitValue(3, 1);
+                _memory.MemoryArray[1, 0x0B].SetBitValue(3, 1);
             }
             else
             {
-                _memory.MemoryArray[1,0x0B].SetBitValue(3, 0);
+                _memory.MemoryArray[0, 0x0B].SetBitValue(3, 0);
+                _memory.MemoryArray[1, 0x0B].SetBitValue(3, 0);
             }
             OnPropertyChanged();
         }
     }
-    
+
     public bool IntconBit4
     {
-        get { return _memory.MemoryArray[1,0x0B].GetBitValue(4) == 1; }
-        set 
+        get { return _memory.MemoryArray[1, 0x0B].GetBitValue(4) == 1; }
+        set
         {
             if (value)
             {
-                _memory.MemoryArray[1,0x0B].SetBitValue(4, 1);
+                _memory.MemoryArray[0, 0x0B].SetBitValue(4, 1);
+                _memory.MemoryArray[1, 0x0B].SetBitValue(4, 1);
             }
             else
             {
-                _memory.MemoryArray[1,0x0B].SetBitValue(4, 0);
+                _memory.MemoryArray[0, 0x0B].SetBitValue(4, 0);
+                _memory.MemoryArray[1, 0x0B].SetBitValue(4, 0);
             }
             OnPropertyChanged();
         }
     }
-    
+
     public bool IntconBit5
     {
-        get { return _memory.MemoryArray[1,0x0B].GetBitValue(5) == 1; }
-        set 
+        get { return _memory.MemoryArray[1, 0x0B].GetBitValue(5) == 1; }
+        set
         {
             if (value)
             {
-                _memory.MemoryArray[1,0x0B].SetBitValue(5, 1);
+                _memory.MemoryArray[0, 0x0B].SetBitValue(5, 1);
+                _memory.MemoryArray[1, 0x0B].SetBitValue(5, 1);
             }
             else
             {
-                _memory.MemoryArray[1,0x0B].SetBitValue(5, 0);
+                _memory.MemoryArray[0, 0x0B].SetBitValue(5, 0);
+                _memory.MemoryArray[1, 0x0B].SetBitValue(5, 0);
             }
             OnPropertyChanged();
         }
     }
-    
+
     public bool IntconBit6
     {
-        get { return _memory.MemoryArray[1,0x0B].GetBitValue(6) == 1; }
-        set 
+        get { return _memory.MemoryArray[1, 0x0B].GetBitValue(6) == 1; }
+        set
         {
             if (value)
             {
-                _memory.MemoryArray[1,0x0B].SetBitValue(6, 1);
+                _memory.MemoryArray[0, 0x0B].SetBitValue(6, 1);
+                _memory.MemoryArray[1, 0x0B].SetBitValue(6, 1);
             }
             else
             {
-                _memory.MemoryArray[1,0x0B].SetBitValue(6, 0);
+                _memory.MemoryArray[0, 0x0B].SetBitValue(6, 0);
+                _memory.MemoryArray[1, 0x0B].SetBitValue(6, 0);
             }
             OnPropertyChanged();
         }
     }
-    
+
     public bool IntconBit7
     {
-        get { return _memory.MemoryArray[1,0x0B].GetBitValue(7) == 1; }
-        set 
+        get { return _memory.MemoryArray[1, 0x0B].GetBitValue(7) == 1; }
+        set
         {
             if (value)
             {
-                _memory.MemoryArray[1,0x0B].SetBitValue(7, 1);
+                _memory.MemoryArray[0, 0x0B].SetBitValue(7, 1);
+                _memory.MemoryArray[1, 0x0B].SetBitValue(7, 1);
             }
             else
             {
-                _memory.MemoryArray[1,0x0B].SetBitValue(7, 0);
+                _memory.MemoryArray[0, 0x0B].SetBitValue(7, 0);
+                _memory.MemoryArray[1, 0x0B].SetBitValue(7, 0);
             }
             OnPropertyChanged();
         }
