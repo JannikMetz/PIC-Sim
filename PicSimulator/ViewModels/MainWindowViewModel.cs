@@ -163,14 +163,12 @@ public class MainWindowViewModel : ViewModelBase
         get { return _memory.MemoryArray[0,3].Value; }
     }
     
-    // TODO: Implement the stack pointer
     public int StackPointer
     {
-        get { return 0; }
+        get { return _memory.CallStack.Count; }
     }
     
     
-    // TODO: wich prescaler is used?
     public int Prescaler
     {
         get
@@ -214,7 +212,6 @@ public class MainWindowViewModel : ViewModelBase
         _mainWindow = new MainWindow();
         _memory = new Memory();
         _memory.ResetedMemory += OnResetedMemory;
-        _memory.StackChanged += UpdateStackItems;
         _memory.PropertyChanged += (s, e) =>
         {
             if (e.PropertyName == nameof(_memory.WReg))
@@ -235,6 +232,12 @@ public class MainWindowViewModel : ViewModelBase
                 OnPropertyChanged(nameof(PCL));
                 OnPropertyChanged(nameof(PCLATH));
                 OnPropertyChanged(nameof(Prescaler));
+            }
+
+            if (e.PropertyName == nameof(_memory.CallStack))
+            {
+                UpdateStackItems();
+                OnPropertyChanged(nameof(StackPointer));
             }
         };
 
@@ -431,6 +434,8 @@ public class MainWindowViewModel : ViewModelBase
         {
             StackItems.Add(0);
         }
+        OnPropertyChanged(nameof(StackItems));
+        OnPropertyChanged(nameof(StackPointer));
     }
     
     

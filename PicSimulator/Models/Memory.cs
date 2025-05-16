@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Tmds.DBus.Protocol;
 
@@ -11,10 +13,8 @@ using System;
 
 public class Memory : ObservableObject
 {
-    public event Action ProgramCounterChanged;
     public event Action ResetedMemory;
-    public event Action StackChanged;
-    
+
     // Constructor to initialize the memory with default values.
     public Memory()
     {
@@ -27,7 +27,7 @@ public class Memory : ObservableObject
     // It contains a 2D array to represent the memory banks.
     private Register[,] _memoryArray = new Register[2, 128]; // 2 banks of 128 bytes each
 
-    private int [] _programMemory = new int[1024]; // Program memory (ROM) - 2kB
+    private int[] _programMemory = new int[1024]; // Program memory (ROM) - 2kB
 
     public int[] ProgramMemory
     {
@@ -35,7 +35,7 @@ public class Memory : ObservableObject
 
         set
         {
-           // value.CopyTo(_programMemory, 0); Could also work 
+            // value.CopyTo(_programMemory, 0); Could also work 
             _programMemory = value;
             Console.WriteLine("Program Memory Set");
             OnPropertyChanged(nameof(ProgramMemory));
@@ -51,24 +51,22 @@ public class Memory : ObservableObject
             OnPropertyChanged();
         }
     }
-    
+
     public int Timer { get; set; } // Timer in microseconds
 
     int _wReg; // W register (accumulator)
+
     public int WReg // W register
     {
-        get
-        {
-            return _wReg & 0xFF;
-        } // W register (only lower 8 bits)
+        get { return _wReg & 0xFF; } // W register (only lower 8 bits)
         set
         {
             _wReg = value & 0xFF; // Set W register (only lower 8 bits)
             OnPropertyChanged();
         }
-        
-    } 
-    
+
+    }
+
     private Stack<int> _callStack;
 
     public Stack<int> CallStack
@@ -77,22 +75,22 @@ public class Memory : ObservableObject
         set
         {
             _callStack = value;
-            OnPropertyChanged();
+            OnPropertyChanged(nameof(CallStack));
         }
     }
-    
+
     private int _programCounter2;
 
     public int ProgramCounter2
     {
-        get {return _programCounter2;}
+        get { return _programCounter2; }
         set
         {
-            _programCounter2 = value; 
+            _programCounter2 = value;
             OnPropertyChanged();
         }
     }
-    
+
     public void IncrementProgramCounter()
     {
         int pc = ProgramCounter2;
@@ -104,35 +102,36 @@ public class Memory : ObservableObject
         {
             pc++;
         }
+
         SetRegister(0x02, pc & 0xFF); // Only lower 8 bits are represented in the register
         ProgramCounter2 = pc;
     }
-    
+
     public void SetProgramCounterForJump(int address)
     {
         int pcLath = GetRegister(0x0A);
-        
+
         // mask for bit 3 and 4
         pcLath = pcLath & 0x18;
-        
+
         // add the upper 2 Bits of pcLath to the address
         int pc = address + (pcLath << 8);
-        
+
         SetRegister(0x02, pc & 0xFF); // Only lower 8 bits are represented in the register
         ProgramCounter2 = pc;
     }
-    
+
     public void SetProgramCounterForReturn(int value)
     {
         SetRegister(0x02, value & 0xFF); // Only lower 8 bits are represented in the register
         ProgramCounter2 = value;
     }
-    
+
     public void SetProgramCounterAfterManipulation()
     {
         int pc = GetRegister(0x02);
         int pcLath = GetRegister(0x0A);
-        
+
         ProgramCounter2 = pc + ((pcLath & 0x1F) << 8);
     }
 
@@ -146,7 +145,7 @@ public class Memory : ObservableObject
             for (int register = 0; register < 128; register++)
             {
                 Register reg = new Register();
-                
+
                 // MemoryArray changed when the value of the register changes
                 reg.PropertyChanged += (s, e) =>
                 {
@@ -155,49 +154,50 @@ public class Memory : ObservableObject
                         OnPropertyChanged(nameof(MemoryArray));
                     }
                 };
-                
+
                 MemoryArray[bank, register] = reg;
             }
         }
-        
+
         Console.WriteLine("Resetting W-Register");
         WReg = 0; // Reset W register
         ProgramCounter2 = 0;
-        
+
         ResetedMemory?.Invoke();
     }
-    
+
     public void PowerOnReset()
     {
         Console.WriteLine("Initializing Memory");
-        
+
         Console.WriteLine("Resetting Program Counter");
 
         ProgramCounter2 = 0;
-        
+
         Console.WriteLine("Setting Registers to Reset Values");
-           
+
 
         // DO NOT USE SetRegister() HERE BECAUSE IT ONLY SETS ADDRESSES ON CURRENT BANK
-        
+
         // Set Status Bank 1 & 2 to 0001 1XXX
-        MemoryArray[0,3].Value = 0x18;
-        MemoryArray[1,3].Value = 0x18;
-        
+        MemoryArray[0, 3].Value = 0x18;
+        MemoryArray[1, 3].Value = 0x18;
+
         // Set OPTION_REG to 1111 1111
-        MemoryArray[1,1].Value = 0xFF;
-        
+        MemoryArray[1, 1].Value = 0xFF;
+
         // Set TRISA to ---1 1111 and TRISB to 1111 1111
-        MemoryArray[1,5].Value = 0x1F;
-        MemoryArray[1,6].Value = 0xFF;
-        
+        MemoryArray[1, 5].Value = 0x1F;
+        MemoryArray[1, 6].Value = 0xFF;
+
     }
+
     public void MLCRReset(int status)
     {
         ProgramCounter2 = 0;
         MemoryArray[0, 0x02].Value = 0x00;
         MemoryArray[1, 0x02].Value = 0x00;
-        
+
         // manipulate the status register
         int value;
         switch (status)
@@ -218,28 +218,28 @@ public class Memory : ObservableObject
             case 2:
                 value = MemoryArray[0, 0x03].Value & 0x07;
                 MemoryArray[0, 0x03].Value = value + 0x08;
-                MemoryArray[1, 0x03].Value = value + 0x08;  
+                MemoryArray[1, 0x03].Value = value + 0x08;
                 break;
             default:
                 throw new Exception("Unknown memory status");
         }
-        
+
         // Clear PcLath
         MemoryArray[0, 0x0A].Value = 0x00;
         MemoryArray[1, 0x0A].Value = 0x00;
-        
+
         // INTCON
         MemoryArray[0, 0x0B].Value = _memoryArray[0, 0x0B].Value & 0x01;
         MemoryArray[1, 0x0B].Value = _memoryArray[1, 0x0B].Value & 0x01;
-        
+
         // OPTION_REG
         MemoryArray[1, 0x01].Value = 0xFF;
-        
+
         // TRISA
         MemoryArray[1, 0x05].Value = 0x1F;
         // TRISB
         MemoryArray[1, 0x06].Value = 0xFF;
-        
+
         // EECON (there is a q)
         MemoryArray[1, 0x08].Value = 0x00;
     }
@@ -250,42 +250,42 @@ public class Memory : ObservableObject
 
         if (isInterrupt)
         {
-            MemoryArray[0, 0x03].SetBitValue(3,0);
-            MemoryArray[1, 0x03].SetBitValue(3,0);
-            
-            MemoryArray[0, 0x03].SetBitValue(4,1);
-            MemoryArray[1, 0x03].SetBitValue(4,1);
+            MemoryArray[0, 0x03].SetBitValue(3, 0);
+            MemoryArray[1, 0x03].SetBitValue(3, 0);
+
+            MemoryArray[0, 0x03].SetBitValue(4, 1);
+            MemoryArray[1, 0x03].SetBitValue(4, 1);
         }
         else
         {
-            MemoryArray[0, 0x03].SetBitValue(3,0);
-            MemoryArray[1, 0x03].SetBitValue(3,0);
-            
-            MemoryArray[0, 0x03].SetBitValue(4,0);
-            MemoryArray[1, 0x03].SetBitValue(4,0);
+            MemoryArray[0, 0x03].SetBitValue(3, 0);
+            MemoryArray[1, 0x03].SetBitValue(3, 0);
+
+            MemoryArray[0, 0x03].SetBitValue(4, 0);
+            MemoryArray[1, 0x03].SetBitValue(4, 0);
         }
-        
-        MemoryArray[1, 0x08].SetBitValue(4,0);
+
+        MemoryArray[1, 0x08].SetBitValue(4, 0);
     }
 
     public int GetBank()
     {
         Console.WriteLine("Getting the Bank Status");
-        
+
         int bankBit = MemoryArray[0, 0x03].GetBitValue(5); // Bit 5 of the status register
 
         Console.WriteLine("Bank Status: " + bankBit);
-        
+
         return bankBit;
     }
-    
+
     public int GetRegister(int address)
-    { 
+    {
         int bankBit = GetBank();
         Console.WriteLine($"Getting Memory in Bank {bankBit} at address {address}");
         return MemoryArray[bankBit, address].Value;
     }
-    
+
     public void SetRegister(int address, int value)
     {
         value = value & 0xFF;
@@ -299,14 +299,13 @@ public class Memory : ObservableObject
             // Update the other bank as well
             MemoryArray[1 - bankBit, address].WriteValueFromUiThread(value);
         }
-        
+
         // update the program counter
         if (address == 0x02)
         {
             SetProgramCounterAfterManipulation();
-            ProgramCounterChanged?.Invoke();
         }
-        
+
     }
 
     public int GetBit(int address, int bitNumber)
@@ -316,7 +315,7 @@ public class Memory : ObservableObject
         int value = MemoryArray[bankBit, address].GetBitValue(bitNumber);
         return value;
     }
-    
+
     public void SetBit(int address, int bitNumber, int value)
     {
         int bankBit = GetBank();
@@ -333,29 +332,31 @@ public class Memory : ObservableObject
     public void SetCarryFlag()
     {
         MemoryArray[0, 0x03].SetBitValue(0, 1); // Set the carry flag (bit 0 of the status register)
-        MemoryArray[1, 0x03].SetBitValue(0, 1); 
+        MemoryArray[1, 0x03].SetBitValue(0, 1);
     }
+
     public void ClearCarryFlag()
     {
         MemoryArray[0, 0x03].SetBitValue(0, 0); // Clear the carry flag (bit 0 of the status register)
-        MemoryArray[1, 0x03].SetBitValue(0, 0); 
+        MemoryArray[1, 0x03].SetBitValue(0, 0);
     }
-    
+
     public void SetZeroFlag()
     {
         MemoryArray[0, 0x03].SetBitValue(2, 1); // Set the zero flag (bit 2 of the status register)
-        MemoryArray[1, 0x03].SetBitValue(2, 1); 
+        MemoryArray[1, 0x03].SetBitValue(2, 1);
     }
+
     public void ClearZeroFlag()
     {
         MemoryArray[0, 0x03].SetBitValue(2, 0); // Clear the zero flag (bit 2 of the status register)
         MemoryArray[1, 0x03].SetBitValue(2, 0);
     }
-    
+
     public void SetDigitCarryFlag()
     {
         MemoryArray[0, 0x03].SetBitValue(1, 1); // Set the digit flag (bit 3 of the status register)
-        MemoryArray[1, 0x03].SetBitValue(1, 1); 
+        MemoryArray[1, 0x03].SetBitValue(1, 1);
     }
 
     public void ClearDigitCarryFlag()
@@ -384,7 +385,26 @@ public class Memory : ObservableObject
             }
         }
 
-        CallStack.Push(value);
+        Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            CallStack.Push(value);
+            OnPropertyChanged(nameof(CallStack));
+        });
+
+    }
+
+    public async Task<int> PopFromCallStackAsync()
+    {
+        if (CallStack.Count == 0)
+            throw new InvalidOperationException("CallStack ist leer.");
+
+        int value = 0;
+        await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            value = CallStack.Pop();
+            OnPropertyChanged(nameof(CallStack));
+        });
+        return value;
     }
 }
 

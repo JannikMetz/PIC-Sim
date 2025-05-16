@@ -22,7 +22,7 @@ public class ALU
     
     public bool IsActive = false;
 
-    public int ExecutionSpeed = 1000;
+    public int ExecutionSpeed = 100;
     
     public void Start()
     {
@@ -448,7 +448,7 @@ public class ALU
         _memory.WReg = value;
 
         // get the last program counter from the top of the call stack
-        int pc = _memory.CallStack.Pop();
+        int pc = _memory.PopFromCallStackAsync().Result;
         
         // set program counter
         _memory.SetProgramCounterForReturn(pc);
@@ -587,7 +587,7 @@ public class ALU
     private bool RETURN()
     {
         // get the last program counter from the top of the call stack
-        int pc = _memory.CallStack.Pop();
+        int pc = _memory.PopFromCallStackAsync().Result;
         
         // set program counter
         _memory.SetProgramCounterForReturn(pc);

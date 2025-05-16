@@ -533,7 +533,7 @@
                                 <TextBlock Grid.Column="0" Text="Stackptr" TextAlignment="Left"
                                            VerticalAlignment="Center" FontSize="11" />
                                 <TextBlock Grid.Column="1"
-                                           Text="{Binding StackPointer, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}"
+                                           Text="{Binding StackPointer, Mode=TwoWay}"
                                            TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
                             </Grid>
                             <Grid Grid.Row="2">
@@ -545,7 +545,7 @@
                                 <TextBlock Grid.Column="0" Text="Prescaler" TextAlignment="Left"
                                            VerticalAlignment="Center" FontSize="11" />
                                 <TextBlock Grid.Column="1"
-                                           Text="{Binding Prescaler, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}"
+                                           Text="{Binding Prescaler, Converter={StaticResource IntToHexConverter}, ConverterParameter=X2, Mode=TwoWay}"
                                            TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
                             </Grid>
                             <Grid Grid.Row="3">
@@ -557,7 +557,7 @@
                                 <TextBlock Grid.Column="0" Text="WDT active" TextAlignment="Left"
                                            VerticalAlignment="Center" FontSize="11" />
                                 <CheckBox Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center"
-                                          FontSize="11" Padding="0" />
+                                          FontSize="11" Padding="0" IsChecked="{Binding IsWDTEnabled, Mode=TwoWay}"/>
                             </Grid>
                             <Grid Grid.Row="4">
                                 <Grid.ColumnDefinitions>
@@ -645,6 +645,7 @@
                                               VerticalAlignment="Center" />
                                     <TextBlock Text="{Binding Line.Content}"
                                                VerticalAlignment="Center"
+                                               HorizontalAlignment="Center"
                                                TextWrapping="Wrap"
                                                FontFamily="Consolas" />
                                 </StackPanel>
