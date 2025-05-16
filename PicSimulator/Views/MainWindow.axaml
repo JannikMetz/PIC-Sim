@@ -102,8 +102,9 @@
             </MenuItem>
             <MenuItem Header="Settings">
                 <MenuItem Header="Execution Speed" IsEnabled="{Binding !IsExecuting}">
-                    <TextBlock Text="{Binding #SpeedValue.Value}"/>
-                    <Slider x:Name="SpeedValue" MinWidth="100" Width="100" Minimum="1" Maximum="10000" Value="{Binding SetExecutionSpeed}" /> 
+                    <TextBlock Text="{Binding #SpeedValue.Value}" />
+                    <Slider x:Name="SpeedValue" MinWidth="100" Width="100" Minimum="1" Maximum="10000"
+                            Value="{Binding SetExecutionSpeed}" />
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="Documentation" Click="OnOpenWebsiteClick">
@@ -373,16 +374,15 @@
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                     </ItemsControl>
-                
-                
 
-                    
+
                     <ItemsControl Grid.Row="4" ItemsSource="{Binding IOPins}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Grid>
                                     <!-- Image displayed when IsSet is True -->
-                                    <Image Source="/Assets/FontAwesome/png/yellow-lightbulb-solid.png" Width="16" Height="16">
+                                    <Image Source="/Assets/FontAwesome/png/yellow-lightbulb-solid.png" Width="16"
+                                           Height="16">
                                         <Image.IsVisible>
                                             <MultiBinding Converter="{StaticResource And}">
                                                 <Binding Path="IsSet" />
@@ -392,7 +392,8 @@
                                     </Image>
 
                                     <!-- Image displayed when IsSet is False -->
-                                    <Image Source="/Assets/FontAwesome/png/red-lightbulb-regular.png" Width="16" Height="16">
+                                    <Image Source="/Assets/FontAwesome/png/red-lightbulb-regular.png" Width="16"
+                                           Height="16">
                                         <Image.IsVisible>
                                             <MultiBinding Converter="{StaticResource And}">
                                                 <Binding Path="!IsSet" />
@@ -409,10 +410,10 @@
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                     </ItemsControl>
-                    
+
                 </Grid>
 
-                
+
                 <!-- Specialfunctionregister -->
                 <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Background="Blue">
                     <Grid.ColumnDefinitions>
@@ -557,7 +558,7 @@
                                 <TextBlock Grid.Column="0" Text="WDT active" TextAlignment="Left"
                                            VerticalAlignment="Center" FontSize="11" />
                                 <CheckBox Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center"
-                                          FontSize="11" Padding="0" IsChecked="{Binding IsWDTEnabled, Mode=TwoWay}"/>
+                                          FontSize="11" Padding="0" IsChecked="{Binding IsWDTEnabled, Mode=TwoWay}" />
                             </Grid>
                             <Grid Grid.Row="4">
                                 <Grid.ColumnDefinitions>
@@ -581,7 +582,8 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="Stack" FontSize="11" HorizontalAlignment="Center"/>
+                            <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="Stack" FontSize="11"
+                                       HorizontalAlignment="Center" />
                             <ItemsControl Grid.Row="1" ItemsSource="{Binding StackItems}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -620,24 +622,40 @@
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            
-                            <TextBlock Grid.Column="0" Grid.Row="0" Text="IRF" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
-                            <TextBlock Grid.Column="1" Grid.Row="0" Text="RP1" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
-                            <TextBlock Grid.Column="2" Grid.Row="0" Text="RPO" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
-                            <TextBlock Grid.Column="3" Grid.Row="0" Text="TO" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
-                            <TextBlock Grid.Column="4" Grid.Row="0" Text="PD" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
-                            <TextBlock Grid.Column="5" Grid.Row="0" Text="Z" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
-                            <TextBlock Grid.Column="6" Grid.Row="0" Text="DC" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
-                            <TextBlock Grid.Column="7" Grid.Row="0" Text="C" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
-                            
-                            <CheckBox Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding StatusBit7, Mode=TwoWay}"/>
-                            <CheckBox Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding StatusBit6, Mode=TwoWay}"/>
-                            <CheckBox Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding StatusBit5, Mode=TwoWay}"/>
-                            <CheckBox Grid.Column="3" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding StatusBit4, Mode=TwoWay}"/>
-                            <CheckBox Grid.Column="4" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding StatusBit3, Mode=TwoWay}"/>
-                            <CheckBox Grid.Column="5" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding StatusBit2, Mode=TwoWay}"/>
-                            <CheckBox Grid.Column="6" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding StatusBit1, Mode=TwoWay}"/>
-                            <CheckBox Grid.Column="7" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding StatusBit0, Mode=TwoWay}"/>
+
+                            <TextBlock Grid.Column="0" Grid.Row="0" Text="IRF" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="1" Grid.Row="0" Text="RP1" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="2" Grid.Row="0" Text="RPO" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="3" Grid.Row="0" Text="TO" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="4" Grid.Row="0" Text="PD" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="5" Grid.Row="0" Text="Z" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="6" Grid.Row="0" Text="DC" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="7" Grid.Row="0" Text="C" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+
+                            <CheckBox Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding StatusBit7, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding StatusBit6, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding StatusBit5, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="3" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding StatusBit4, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="4" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding StatusBit3, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="5" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding StatusBit2, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="6" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding StatusBit1, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="7" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding StatusBit0, Mode=TwoWay}" />
                         </Grid>
                     </Border>
 
@@ -659,24 +677,40 @@
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            
-                            <TextBlock Grid.Column="0" Grid.Row="0" Text="RBPU" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
-                            <TextBlock Grid.Column="1" Grid.Row="0" Text="INTEDG" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
-                            <TextBlock Grid.Column="2" Grid.Row="0" Text="T0CS" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
-                            <TextBlock Grid.Column="3" Grid.Row="0" Text="T0SE" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
-                            <TextBlock Grid.Column="4" Grid.Row="0" Text="PSA" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
-                            <TextBlock Grid.Column="5" Grid.Row="0" Text="PS2" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
-                            <TextBlock Grid.Column="6" Grid.Row="0" Text="PS1" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
-                            <TextBlock Grid.Column="7" Grid.Row="0" Text="PS0" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
-                            
-                            <CheckBox Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding OptionBit7, Mode=TwoWay}"/>
-                            <CheckBox Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding OptionBit6, Mode=TwoWay}"/>
-                            <CheckBox Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding OptionBit5, Mode=TwoWay}"/>
-                            <CheckBox Grid.Column="3" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding OptionBit4, Mode=TwoWay}"/>
-                            <CheckBox Grid.Column="4" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding OptionBit3, Mode=TwoWay}"/>
-                            <CheckBox Grid.Column="5" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding OptionBit2, Mode=TwoWay}"/>
-                            <CheckBox Grid.Column="6" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding OptionBit1, Mode=TwoWay}"/>
-                            <CheckBox Grid.Column="7" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding OptionBit0, Mode=TwoWay}"/>
+
+                            <TextBlock Grid.Column="0" Grid.Row="0" Text="RBPU" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="1" Grid.Row="0" Text="INTEDG" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="2" Grid.Row="0" Text="T0CS" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="3" Grid.Row="0" Text="T0SE" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="4" Grid.Row="0" Text="PSA" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="5" Grid.Row="0" Text="PS2" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="6" Grid.Row="0" Text="PS1" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="7" Grid.Row="0" Text="PS0" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+
+                            <CheckBox Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding OptionBit7, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding OptionBit6, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding OptionBit5, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="3" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding OptionBit4, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="4" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding OptionBit3, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="5" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding OptionBit2, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="6" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding OptionBit1, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="7" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding OptionBit0, Mode=TwoWay}" />
                         </Grid>
                     </Border>
 
@@ -698,24 +732,40 @@
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            
-                            <TextBlock Grid.Column="0" Grid.Row="0" Text="GIE" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
-                            <TextBlock Grid.Column="1" Grid.Row="0" Text="EEIE" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
-                            <TextBlock Grid.Column="3" Grid.Row="0" Text="T0IE" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
-                            <TextBlock Grid.Column="4" Grid.Row="0" Text="INTE" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
-                            <TextBlock Grid.Column="5" Grid.Row="0" Text="RBIE" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
-                            <TextBlock Grid.Column="6" Grid.Row="0" Text="T0IF" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
-                            <TextBlock Grid.Column="2" Grid.Row="0" Text="INTF" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
-                            <TextBlock Grid.Column="7" Grid.Row="0" Text="RBIF" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
-                            
-                            <CheckBox Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IntconBit7, Mode=TwoWay}"/>
-                            <CheckBox Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IntconBit6, Mode=TwoWay}"/>
-                            <CheckBox Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IntconBit5, Mode=TwoWay}"/>
-                            <CheckBox Grid.Column="3" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IntconBit4, Mode=TwoWay}"/>
-                            <CheckBox Grid.Column="4" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IntconBit3, Mode=TwoWay}"/>
-                            <CheckBox Grid.Column="5" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IntconBit2, Mode=TwoWay}"/>
-                            <CheckBox Grid.Column="6" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IntconBit1, Mode=TwoWay}"/>
-                            <CheckBox Grid.Column="7" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IntconBit0, Mode=TwoWay}"/>
+
+                            <TextBlock Grid.Column="0" Grid.Row="0" Text="GIE" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="1" Grid.Row="0" Text="EEIE" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="3" Grid.Row="0" Text="T0IE" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="4" Grid.Row="0" Text="INTE" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="5" Grid.Row="0" Text="RBIE" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="6" Grid.Row="0" Text="T0IF" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="2" Grid.Row="0" Text="INTF" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="7" Grid.Row="0" Text="RBIF" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+
+                            <CheckBox Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding IntconBit7, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding IntconBit6, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding IntconBit5, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="3" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding IntconBit4, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="4" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding IntconBit3, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="5" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding IntconBit2, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="6" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding IntconBit1, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="7" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding IntconBit0, Mode=TwoWay}" />
                         </Grid>
                     </Border>
                 </Grid>
@@ -747,7 +797,7 @@
                                                HorizontalAlignment="Center"
                                                TextWrapping="Wrap"
                                                FontFamily="Consolas"
-                                               Margin="0"/>
+                                               Margin="0" />
                                 </StackPanel>
                             </Border>
                         </DataTemplate>
