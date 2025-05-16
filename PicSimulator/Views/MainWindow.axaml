@@ -429,8 +429,8 @@
 
                     <!--visible registers-->
                     <Border Grid.Column="0" Grid.Row="0" BorderBrush="#FF000000" BorderThickness="3" CornerRadius="10"
-                            Margin="5" ClipToBounds="True">
-                        <Grid Margin="10">
+                            Margin="2" ClipToBounds="True">
+                        <Grid Margin="5">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
@@ -503,8 +503,8 @@
 
                     <!--hidden registers-->
                     <Border Grid.Column="1" Grid.Row="0" BorderBrush="#FF000000" BorderThickness="3" CornerRadius="10"
-                            Margin="5" ClipToBounds="True">
-                        <Grid Margin="10">
+                            Margin="2" ClipToBounds="True">
+                        <Grid Margin="5">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
@@ -575,8 +575,8 @@
 
                     <!--Stack-->
                     <Border Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" BorderBrush="#FF000000" BorderThickness="3"
-                            CornerRadius="10" Margin="5" ClipToBounds="True">
-                        <Grid Margin="10">
+                            CornerRadius="10" Margin="2" ClipToBounds="True">
+                        <Grid Margin="5">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
@@ -604,20 +604,119 @@
 
                     <!--Status Reg-->
                     <Border Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" BorderBrush="#FF000000"
-                            BorderThickness="3" CornerRadius="10" Margin="5" ClipToBounds="True">
-                        <TextBox Text="a" />
+                            BorderThickness="3" CornerRadius="10" Margin="2" ClipToBounds="True">
+                        <Grid Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            
+                            <TextBlock Grid.Column="0" Grid.Row="0" Text="IRF" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="1" Grid.Row="0" Text="RP1" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="2" Grid.Row="0" Text="RPO" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="3" Grid.Row="0" Text="TO" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="4" Grid.Row="0" Text="PD" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="5" Grid.Row="0" Text="Z" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="6" Grid.Row="0" Text="DC" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="7" Grid.Row="0" Text="C" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
+                            
+                            <CheckBox Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding StatusBit7, Mode=TwoWay}"/>
+                            <CheckBox Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding StatusBit6, Mode=TwoWay}"/>
+                            <CheckBox Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding StatusBit5, Mode=TwoWay}"/>
+                            <CheckBox Grid.Column="3" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding StatusBit4, Mode=TwoWay}"/>
+                            <CheckBox Grid.Column="4" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding StatusBit3, Mode=TwoWay}"/>
+                            <CheckBox Grid.Column="5" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding StatusBit2, Mode=TwoWay}"/>
+                            <CheckBox Grid.Column="6" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding StatusBit1, Mode=TwoWay}"/>
+                            <CheckBox Grid.Column="7" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding StatusBit0, Mode=TwoWay}"/>
+                        </Grid>
                     </Border>
 
                     <!--Option Reg-->
                     <Border Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3" BorderBrush="#FF000000"
                             BorderThickness="3" CornerRadius="10" Margin="5" ClipToBounds="True">
-                        <TextBox Text="a" />
+                        <Grid Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            
+                            <TextBlock Grid.Column="0" Grid.Row="0" Text="RBPU" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="1" Grid.Row="0" Text="INTEDG" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="2" Grid.Row="0" Text="T0CS" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="3" Grid.Row="0" Text="T0SE" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="4" Grid.Row="0" Text="PSA" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="5" Grid.Row="0" Text="PS2" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="6" Grid.Row="0" Text="PS1" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="7" Grid.Row="0" Text="PS0" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
+                            
+                            <CheckBox Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding OptionBit7, Mode=TwoWay}"/>
+                            <CheckBox Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding OptionBit6, Mode=TwoWay}"/>
+                            <CheckBox Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding OptionBit5, Mode=TwoWay}"/>
+                            <CheckBox Grid.Column="3" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding OptionBit4, Mode=TwoWay}"/>
+                            <CheckBox Grid.Column="4" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding OptionBit3, Mode=TwoWay}"/>
+                            <CheckBox Grid.Column="5" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding OptionBit2, Mode=TwoWay}"/>
+                            <CheckBox Grid.Column="6" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding OptionBit1, Mode=TwoWay}"/>
+                            <CheckBox Grid.Column="7" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding OptionBit0, Mode=TwoWay}"/>
+                        </Grid>
                     </Border>
 
                     <!--INTCON Reg-->
                     <Border Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3" BorderBrush="#FF000000"
                             BorderThickness="3" CornerRadius="10" Margin="5" ClipToBounds="True">
-                        <TextBox Text="a" />
+                        <Grid Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            
+                            <TextBlock Grid.Column="0" Grid.Row="0" Text="GIE" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="1" Grid.Row="0" Text="EEIE" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="3" Grid.Row="0" Text="T0IE" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="4" Grid.Row="0" Text="INTE" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="5" Grid.Row="0" Text="RBIE" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="6" Grid.Row="0" Text="T0IF" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="2" Grid.Row="0" Text="INTF" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="7" Grid.Row="0" Text="RBIF" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
+                            
+                            <CheckBox Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IntconBit7, Mode=TwoWay}"/>
+                            <CheckBox Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IntconBit6, Mode=TwoWay}"/>
+                            <CheckBox Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IntconBit5, Mode=TwoWay}"/>
+                            <CheckBox Grid.Column="3" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IntconBit4, Mode=TwoWay}"/>
+                            <CheckBox Grid.Column="4" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IntconBit3, Mode=TwoWay}"/>
+                            <CheckBox Grid.Column="5" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IntconBit2, Mode=TwoWay}"/>
+                            <CheckBox Grid.Column="6" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IntconBit1, Mode=TwoWay}"/>
+                            <CheckBox Grid.Column="7" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IntconBit0, Mode=TwoWay}"/>
+                        </Grid>
                     </Border>
                 </Grid>
 
@@ -647,7 +746,8 @@
                                                VerticalAlignment="Center"
                                                HorizontalAlignment="Center"
                                                TextWrapping="Wrap"
-                                               FontFamily="Consolas" />
+                                               FontFamily="Consolas"
+                                               Margin="0"/>
                                 </StackPanel>
                             </Border>
                         </DataTemplate>
