@@ -387,10 +387,11 @@
                                             <MultiBinding Converter="{StaticResource And}">
                                                 <Binding Path="IsSet" />
                                                 <Binding Path="IsPORTB" />
+                                                <Binding Path="!IsInput" />
                                             </MultiBinding>
                                         </Image.IsVisible>
                                     </Image>
-
+                                    
                                     <!-- Image displayed when IsSet is False -->
                                     <Image Source="/Assets/FontAwesome/png/red-lightbulb-regular.png" Width="16"
                                            Height="16">
@@ -401,6 +402,20 @@
                                             </MultiBinding>
                                         </Image.IsVisible>
                                     </Image>
+                                    
+                                    <!-- Image displayed when IsSet is False -->
+                                    <Image Source="/Assets/FontAwesome/png/red-lightbulb-regular.png" Width="16"
+                                           Height="16">
+                                        <Image.IsVisible>
+                                            <MultiBinding Converter="{StaticResource And}">
+                                                <Binding Path="IsSet" />
+                                                <Binding Path="IsPORTB" />
+                                                <Binding Path="IsInput" />
+                                            </MultiBinding>
+                                        </Image.IsVisible>
+                                    </Image>
+                                    
+                                    
                                 </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
