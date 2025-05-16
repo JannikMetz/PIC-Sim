@@ -663,6 +663,7 @@ public class MainWindowViewModel : ViewModelBase
 
             if (e.PropertyName == nameof(_memory.MemoryArray))
             {
+                
                 OnPropertyChanged(nameof(StatusReg));
                 OnPropertyChanged(nameof(FSR));
                 OnPropertyChanged(nameof(PCL));
@@ -699,6 +700,9 @@ public class MainWindowViewModel : ViewModelBase
                 OnPropertyChanged(nameof(IntconBit5));
                 OnPropertyChanged(nameof(IntconBit6));
                 OnPropertyChanged(nameof(IntconBit7));
+                
+                // Update I/O pins
+                UpdateIOPins();
             }
 
             if (e.PropertyName == nameof(_memory.CallStack))
@@ -753,6 +757,15 @@ public class MainWindowViewModel : ViewModelBase
             {
                 IOPins.Add(new IOPin( _memory, i, j));
             }
+        }
+    }
+    
+    private void UpdateIOPins()
+    {
+        foreach (var pin in IOPins)
+        {
+            pin.IsSet = _memory.MemoryArray[pin.Bank, pin.Address].GetBitValue(pin.Index) == 1;
+            pin.IsInput = _memory.MemoryArray[1, pin.Address].GetBitValue(pin.Index) == 1;
         }
     }
     

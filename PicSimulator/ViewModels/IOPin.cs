@@ -185,5 +185,31 @@ public class IOPin : ViewModelBase
             }
         }
     }
+    
+    public int Bank
+    {
+        get { return _bank; }
+        set
+        {
+            if (_bank != value)
+            {
+                _bank = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+    
+    public int Address
+    {
+        get { return _address; }
+        set
+        {
+            if (_address != value)
+            {
+                _address = value;
+                OnPropertyChanged();
+            }
+        }
+    }
 }
 
