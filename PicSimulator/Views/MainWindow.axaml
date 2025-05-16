@@ -415,7 +415,7 @@
 
 
                 <!-- Specialfunctionregister -->
-                <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Background="Blue">
+                <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Background="#1b1b1b">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*" />
                         <ColumnDefinition Width="2*" />
@@ -770,7 +770,7 @@
                     </Border>
                 </Grid>
 
-                <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Background="Red">
+                <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Background="#1b1b1b">
 
                 </Grid>
             </Grid>
