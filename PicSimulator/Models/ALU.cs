@@ -23,6 +23,46 @@ public class ALU
     public bool IsActive = false;
 
     public int ExecutionSpeed = 100;
+
+    #region Interrupts
+    public bool GIE
+    {
+        get => _memory.MemoryArray[1, 0x0B].GetBitValue(7) == 1;
+    }
+    public bool EEIE
+    {
+        get => _memory.MemoryArray[1, 0x0B].GetBitValue(6) == 1;
+    }
+    public bool T0IE
+    {
+        get => _memory.MemoryArray[1, 0x0B].GetBitValue(5) == 1;
+    }
+    public bool INTE
+    {
+        get => _memory.MemoryArray[1, 0x0B].GetBitValue(4) == 1;
+    }
+    public bool RBIE
+    {
+        get => _memory.MemoryArray[1, 0x0B].GetBitValue(3) == 1;
+    }
+    public bool T0IF
+    {
+        get => _memory.MemoryArray[1, 0x0B].GetBitValue(2) == 1;
+    }
+    public bool INTF
+    {
+        get => _memory.MemoryArray[1, 0x0B].GetBitValue(1) == 1;
+    }
+    public bool RBIF
+    {
+        get => _memory.MemoryArray[1, 0x0B].GetBitValue(0) == 1;
+    }
+    public bool EEIF
+    {
+        get => _memory.MemoryArray[1, 0x08].GetBitValue(4)== 1; 
+    }
+    
+    #endregion
     
     public void Start()
     {
@@ -35,6 +75,21 @@ public class ALU
             {
                 Console.WriteLine("Breakpoint active at: " + _memory.ProgramCounter2.ToString("X4") +  " for " + BreakpointSecs + " Secs");
                 BreakpointSecs++;
+            }
+            // Check if any interrupt is active
+            else if (GIE && ((T0IF && T0IE) || (INTF && INTE) || (RBIF && RBIE) || (EEIF && EEIE))) 
+            {
+                _memory.MemoryArray[1,0x0B].SetBitValue(7, 0); // clear GIE
+                
+                Console.WriteLine("Interrupt");
+                _memory.PushToCallStack(_memory.ProgramCounter2);
+                Console.WriteLine("Jump to interrupt service routine");
+                _memory.SetProgramCounterForJump(0x0004); // Jump to interrupt service routine
+        
+                if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+                {
+                    _timer.IncrementTimer();
+                }
             }
             else
             {
@@ -605,11 +660,20 @@ public class ALU
 
     private bool RETFIE()
     {
-        // TODO: implement RETFIE (return from interrupt)
+        // get the last program counter from the top of the call stack
+        int pc = _memory.PopFromCallStackAsync().Result;
+        
+        // set program counter
+        _memory.SetProgramCounterForReturn(pc);
+        
+        _memory.MemoryArray[1,0x0B].SetBitValue(7, 1); // set GIE to 1
+
+        // this instruction takes 2 microseconds
         if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
         {
             _timer.IncrementTimer();
         }
+
         return true;
     }
 

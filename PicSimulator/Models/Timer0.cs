@@ -29,7 +29,7 @@ public class Timer0
             {
                 timer = 0;
                 _memory.MemoryArray[0,1].Value = timer;
-                _memory.MemoryArray[1,1].SetBitValue(2, 1); // Set the Timer0 overflow flag
+                _memory.MemoryArray[1,0x0B].SetBitValue(2, 1); // Set the Timer0 overflow flag
             }
             else
             {
