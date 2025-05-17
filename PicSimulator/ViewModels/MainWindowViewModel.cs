@@ -25,7 +25,6 @@ public class MainWindowViewModel : ViewModelBase
     private string _fileContent;
     private ObservableCollection<ProgramLine> _programLines;
     private ObservableCollection<Breakpoint> _breakpoints;
-    private ObservableCollection<IOPin> _IOPins;
     private MainWindow _mainWindow;
     private Watchdog _watchdog;
     private Timer0 _timer;
@@ -107,8 +106,6 @@ public class MainWindowViewModel : ViewModelBase
             OnPropertyChanged(nameof(ObservableMemoryArray));
         }
     }
-    
-    public ObservableCollection<IOPin> IOPins { get; set; } = new ObservableCollection<IOPin>();
     
     #endregion
 
@@ -655,6 +652,578 @@ public class MainWindowViewModel : ViewModelBase
     }
     
     #endregion
+    
+    #region TrisA
+
+    public bool TrisAPin0
+    {
+        get { return _memory.MemoryArray[1,5].GetBitValue(0) == 1; }
+        set
+        {
+            if (value)
+            {
+                _memory.MemoryArray[1,5].SetBitValue(0, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[1,5].SetBitValue(0, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    public bool TrisAPin1
+    {
+        get { return _memory.MemoryArray[1,5].GetBitValue(1) == 1; }
+        set
+        {
+            if (value)
+            {
+                _memory.MemoryArray[1,5].SetBitValue(1, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[1,5].SetBitValue(1, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    public bool TrisAPin2
+    {
+        get { return _memory.MemoryArray[1,5].GetBitValue(2) == 1; }
+        set
+        {
+            if (value)
+            {
+                _memory.MemoryArray[1,5].SetBitValue(2, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[1,5].SetBitValue(2, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    public bool TrisAPin3
+    {
+        get { return _memory.MemoryArray[1,5].GetBitValue(3) == 1; }
+        set
+        {
+            if (value)
+            {
+                _memory.MemoryArray[1,5].SetBitValue(3, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[1,5].SetBitValue(3, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    public bool TrisAPin4
+    {
+        get { return _memory.MemoryArray[1,5].GetBitValue(4) == 1; }
+        set
+        {
+            if (value)
+            {
+                _memory.MemoryArray[1,5].SetBitValue(4, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[1,5].SetBitValue(4, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool TrisAPin5
+    {
+        get { return _memory.MemoryArray[1,5].GetBitValue(5) == 1; }
+        set
+        {
+            if (value)
+            {
+                _memory.MemoryArray[1,5].SetBitValue(5, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[1,5].SetBitValue(5, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool TrisAPin6
+    {
+        get { return _memory.MemoryArray[1,5].GetBitValue(6) == 1; }
+        set
+        {
+            if (value)
+            {
+                _memory.MemoryArray[1,5].SetBitValue(6, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[1,5].SetBitValue(6, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool TrisAPin7
+    {
+        get { return _memory.MemoryArray[1,5].GetBitValue(7) == 1; }
+        set
+        {
+            if (value)
+            {
+                _memory.MemoryArray[1,5].SetBitValue(7, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[1,5].SetBitValue(7, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    
+    #endregion
+    
+    #region PortA
+    
+    public bool PortAPin0
+    {
+        get { return _memory.MemoryArray[0,5].GetBitValue(0) == 1; }
+        set
+        {
+            if (value)
+            {
+                _memory.MemoryArray[0,5].SetBitValue(0, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[0,5].SetBitValue(0, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool PortAPin1
+    {
+        get { return _memory.MemoryArray[0,5].GetBitValue(1) == 1; }
+        set
+        {
+            if (value)
+            {
+                _memory.MemoryArray[0,5].SetBitValue(1, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[0,5].SetBitValue(1, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool PortAPin2
+    {
+        get { return _memory.MemoryArray[0,5].GetBitValue(2) == 1; }
+        set
+        {
+            if (value)
+            {
+                _memory.MemoryArray[0,5].SetBitValue(2, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[0,5].SetBitValue(2, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool PortAPin3
+    {
+        get { return _memory.MemoryArray[0,5].GetBitValue(3) == 1; }
+        set
+        {
+            if (value)
+            {
+                _memory.MemoryArray[0,5].SetBitValue(3, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[0,5].SetBitValue(3, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool PortAPin4
+    {
+        get { return _memory.MemoryArray[0,5].GetBitValue(4) == 1; }
+        set
+        {
+            if (value)
+            {
+                _memory.MemoryArray[0,5].SetBitValue(4, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[0,5].SetBitValue(4, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool PortAPin5
+    {
+        get { return _memory.MemoryArray[0,5].GetBitValue(5) == 1; }
+        set
+        {
+            if (value)
+            {
+                _memory.MemoryArray[0,5].SetBitValue(5, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[0,5].SetBitValue(5, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool PortAPin6
+    {
+        get { return _memory.MemoryArray[0,5].GetBitValue(6) == 1; }
+        set
+        {
+            if (value)
+            {
+                _memory.MemoryArray[0,5].SetBitValue(6, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[0,5].SetBitValue(6, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool PortAPin7
+    {
+        get { return _memory.MemoryArray[0,5].GetBitValue(7) == 1; }
+        set
+        {
+            if (value)
+            {
+                _memory.MemoryArray[0,5].SetBitValue(7, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[0,5].SetBitValue(7, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    
+    
+    
+    #endregion
+    
+    #region TrisB
+    
+    public bool TrisBPin0
+    {
+        get { return _memory.MemoryArray[1,6].GetBitValue(0) == 1; }
+        set
+        {
+            if (value)
+            {
+                _memory.MemoryArray[1,6].SetBitValue(0, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[1,6].SetBitValue(0, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool TrisBPin1
+    {
+        get { return _memory.MemoryArray[1,6].GetBitValue(1) == 1; }
+        set
+        {
+            if (value)
+            {
+                _memory.MemoryArray[1,6].SetBitValue(1, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[1,6].SetBitValue(1, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool TrisBPin2
+    {
+        get { return _memory.MemoryArray[1,6].GetBitValue(2) == 1; }
+        set
+        {
+            if (value)
+            {
+                _memory.MemoryArray[1,6].SetBitValue(2, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[1,6].SetBitValue(2, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool TrisBPin3
+    {
+        get { return _memory.MemoryArray[1,6].GetBitValue(3) == 1; }
+        set
+        {
+            if (value)
+            {
+                _memory.MemoryArray[1,6].SetBitValue(3, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[1,6].SetBitValue(3, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool TrisBPin4
+    {
+        get { return _memory.MemoryArray[1,6].GetBitValue(4) == 1; }
+        set
+        {
+            if (value)
+            {
+                _memory.MemoryArray[1,6].SetBitValue(4, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[1,6].SetBitValue(4, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool TrisBPin5
+    {
+        get { return _memory.MemoryArray[1,6].GetBitValue(5) == 1; }
+        set
+        {
+            if (value)
+            {
+                _memory.MemoryArray[1,6].SetBitValue(5, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[1,6].SetBitValue(5, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool TrisBPin6
+    {
+        get { return _memory.MemoryArray[1,6].GetBitValue(6) == 1; }
+        set
+        {
+            if (value)
+            {
+                _memory.MemoryArray[1,6].SetBitValue(6, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[1,6].SetBitValue(6, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool TrisBPin7
+    {
+        get { return _memory.MemoryArray[1,6].GetBitValue(7) == 1; }
+        set
+        {
+            if (value)
+            {
+                _memory.MemoryArray[1,6].SetBitValue(7, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[1,6].SetBitValue(7, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    
+    #endregion
+    
+    #region PortB
+    
+    private bool _portBPin0;
+    public bool PortBPin0
+    {
+        get
+        {
+            _portBPin0 = _memory.MemoryArray[0,6].GetBitValue(0) == 1;
+            return _portBPin0;
+        }
+        set
+        {
+            if (value != _portBPin0)
+            {
+                IntInterrupt(value);
+                if (value)
+                {
+                    _memory.MemoryArray[0, 6].SetBitValue(0, 1);
+                }
+                else
+                {
+                    _memory.MemoryArray[0, 6].SetBitValue(0, 0);
+                }
+
+                OnPropertyChanged();
+            }
+        }
+    }
+    
+    public bool PortBPin1
+    {
+        get { return _memory.MemoryArray[0,6].GetBitValue(1) == 1; }
+        set
+        {
+            if (value)
+            {
+                _memory.MemoryArray[0,6].SetBitValue(1, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[0,6].SetBitValue(1, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool PortBPin2
+    {
+        get { return _memory.MemoryArray[0,6].GetBitValue(2) == 1; }
+        set
+        {
+            if (value)
+            {
+                _memory.MemoryArray[0,6].SetBitValue(2, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[0,6].SetBitValue(2, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool PortBPin3
+    {
+        get { return _memory.MemoryArray[0,6].GetBitValue(3) == 1; }
+        set
+        {
+            if (value)
+            {
+                _memory.MemoryArray[0,6].SetBitValue(3, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[0,6].SetBitValue(3, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool PortBPin4
+    {
+        get { return _memory.MemoryArray[0,6].GetBitValue(4) == 1; }
+        set
+        {
+            PortBInterrupt();
+            if (value)
+            {
+                _memory.MemoryArray[0,6].SetBitValue(4, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[0,6].SetBitValue(4, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool PortBPin5
+    {
+        get { return _memory.MemoryArray[0,6].GetBitValue(5) == 1; }
+        set
+        {
+            PortBInterrupt();
+            if (value)
+            {
+                _memory.MemoryArray[0,6].SetBitValue(5, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[0,6].SetBitValue(5, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool PortBPin6
+    {
+        get { return _memory.MemoryArray[0,6].GetBitValue(6) == 1; }
+        set
+        {
+            PortBInterrupt();
+            if (value)
+            {
+                _memory.MemoryArray[0,6].SetBitValue(6, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[0,6].SetBitValue(6, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool PortBPin7
+    {
+        get { return _memory.MemoryArray[0,6].GetBitValue(7) == 1; }
+        set
+        {
+            PortBInterrupt();
+            if (value)
+            {
+                _memory.MemoryArray[0,6].SetBitValue(7, 1);
+            }
+            else
+            {
+                _memory.MemoryArray[0,6].SetBitValue(7, 0);
+            }
+            OnPropertyChanged();
+        }
+    }
+    
+    #endregion
 
     #endregion
     
@@ -717,11 +1286,45 @@ public class MainWindowViewModel : ViewModelBase
                 OnPropertyChanged(nameof(IntconBit6));
                 OnPropertyChanged(nameof(IntconBit7));
                 
-                // Update I/O pins
-                if (_memory.OnReset == false)
-                {
-                    UpdateIOPins();
-                }
+                // TrisA bits
+                OnPropertyChanged(nameof(TrisAPin0));
+                OnPropertyChanged(nameof(TrisAPin1));
+                OnPropertyChanged(nameof(TrisAPin2));
+                OnPropertyChanged(nameof(TrisAPin3));
+                OnPropertyChanged(nameof(TrisAPin4));
+                OnPropertyChanged(nameof(TrisAPin5));
+                OnPropertyChanged(nameof(TrisAPin6));
+                OnPropertyChanged(nameof(TrisAPin7));
+                
+                // PortA bits
+                OnPropertyChanged(nameof(PortAPin0));
+                OnPropertyChanged(nameof(PortAPin1));
+                OnPropertyChanged(nameof(PortAPin2));
+                OnPropertyChanged(nameof(PortAPin3));
+                OnPropertyChanged(nameof(PortAPin4));
+                OnPropertyChanged(nameof(PortAPin5));
+                OnPropertyChanged(nameof(PortAPin6));
+                OnPropertyChanged(nameof(PortAPin7));
+                
+                // TrisB bits
+                OnPropertyChanged(nameof(TrisBPin0));
+                OnPropertyChanged(nameof(TrisBPin1));
+                OnPropertyChanged(nameof(TrisBPin2));
+                OnPropertyChanged(nameof(TrisBPin3));
+                OnPropertyChanged(nameof(TrisBPin4));
+                OnPropertyChanged(nameof(TrisBPin5));
+                OnPropertyChanged(nameof(TrisBPin6));
+                OnPropertyChanged(nameof(TrisBPin7));
+                
+                // PortB bits
+                OnPropertyChanged(nameof(PortBPin0));
+                OnPropertyChanged(nameof(PortBPin1));
+                OnPropertyChanged(nameof(PortBPin2));
+                OnPropertyChanged(nameof(PortBPin3));
+                OnPropertyChanged(nameof(PortBPin4));
+                OnPropertyChanged(nameof(PortBPin5));
+                OnPropertyChanged(nameof(PortBPin6));
+                OnPropertyChanged(nameof(PortBPin7));
             }
 
             if (e.PropertyName == nameof(_memory.CallStack))
@@ -751,7 +1354,6 @@ public class MainWindowViewModel : ViewModelBase
         _timer = new Timer0(_memory);
         _alu = new ALU(_memory, _watchdog, _timer);
         _encode = new Encode(_memory, _alu);
-        InitializeIOPins();
         
         // Loading and Saving File Commands
         LoadCommand = new RelayCommand(Load);
@@ -765,27 +1367,6 @@ public class MainWindowViewModel : ViewModelBase
         ResetCommand = new RelayCommand(Reset);
         PauseCommand = new RelayCommand(Pause);
         
-    }
-    
-    private void InitializeIOPins()
-    {
-        // Initialize the I/O pins here
-        for (int j = 0; j < 4; j++)
-        {
-            for (int i = 0; i < 8; i++)
-            {
-                IOPins.Add(new IOPin( _memory, i, j));
-            }
-        }
-    }
-    
-    private void UpdateIOPins()
-    {
-        foreach (var pin in IOPins)
-        {
-            pin.IsSet = _memory.MemoryArray[pin.Bank, pin.Address].GetBitValue(pin.Index) == 1;
-            pin.IsInput = _memory.MemoryArray[1, pin.Address].GetBitValue(pin.Index) == 1;
-        }
     }
     
     private void InitializeObservableMemoryArray()
@@ -853,6 +1434,7 @@ public class MainWindowViewModel : ViewModelBase
 
     private void Save(object parameter)
     {
+        _memory.MemoryArray[0,5].SetBitValue(0, 1);
         Console.WriteLine("Save command executed");
     }
 
@@ -973,6 +1555,19 @@ public class MainWindowViewModel : ViewModelBase
             }
         }
     }
-    
-    
+    private void IntInterrupt(bool value)
+    {
+        bool INTEDG = Convert.ToBoolean(_memory.MemoryArray[1, 1].GetBitValue(6));
+        if (INTEDG == value)
+        {
+            _memory.MemoryArray[0, 0xB].SetBitValue(1, 1);
+            _memory.MemoryArray[1, 0xB].SetBitValue(1, 1);
+        }
+    }
+
+    private void PortBInterrupt()
+    {
+        _memory.MemoryArray[0, 0xB].SetBitValue(0, 1);
+        _memory.MemoryArray[1, 0xB].SetBitValue(0, 1);
+    }
 }

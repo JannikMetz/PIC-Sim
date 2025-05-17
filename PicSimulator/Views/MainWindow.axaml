@@ -15,6 +15,7 @@
         <converters:BooleanToBrushConverter x:Key="BooleanToBrushConverter" />
         <converters:IntToHexConverter x:Key="IntToHexConverter" />
         <BoolConverters:AndConverter x:Key="And" />
+        <BoolConverters:OrConverter x:Key="Or" />
 
     </Window.Resources>
     <Design.DataContext>
@@ -205,229 +206,394 @@
                     <RowDefinition Height="0.5*" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" /> <!-- PORTS -->
+                    <ColumnDefinition Width="*" /> <!-- PORTS -->
                     <ColumnDefinition Width="*" /> <!-- Specialfunktionregister -->
                     <ColumnDefinition Width="*" /> <!-- OTHERS -->
                 </Grid.ColumnDefinitions>
 
-
-                <!-- PORTA PINS -->
-                <Grid Grid.Row="0" Background="#1b1b1b">
+                
+                <Grid Grid.Row="0" Grid.RowSpan="2" Background="#1b1b1b">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" /> <!-- PORT Description -->
-                        <RowDefinition Height="Auto" /> <!-- PIN Number -->
-                        <RowDefinition Height="*" />    <!-- PORTA -->
-                        <RowDefinition Height="*" />    <!-- TRISA -->
+                        <RowDefinition Height="2*" /> <!-- PortA -->
+                        <RowDefinition Height="2*" /> <!-- PortB -->
+                        <RowDefinition Height="*" /> <!-- LEDs -->
                     </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" /> <!-- PIN0 -->
-                        <ColumnDefinition Width="*" /> <!-- PIN1 -->
-                        <ColumnDefinition Width="*" /> <!-- PIN2 -->
-                        <ColumnDefinition Width="*" /> <!-- PIN3 -->
-                        <ColumnDefinition Width="*" /> <!-- PIN4 -->
-                        <ColumnDefinition Width="*" /> <!-- PIN5 -->
-                        <ColumnDefinition Width="*" /> <!-- PIN6 -->
-                        <ColumnDefinition Width="*" /> <!-- PIN7 -->
-                    </Grid.ColumnDefinitions>
+                    
+                    <!-- PortA -->
+                    <Border Grid.Row="0" BorderBrush="#FF000000"
+                            BorderThickness="3" CornerRadius="10" Margin="2" ClipToBounds="True">
+                        <Grid Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
 
-                    <!-- PORTA Description -->
+                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="8" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="PortA" TextAlignment="Center" />
 
-                    <TextBlock Grid.Row="0" Text="PORTA"
-                               HorizontalAlignment="Center"
-                               Foreground="White"
-                               Margin="5" />
+                            <!-- Pin Numbers -->
+                            <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="7" TextAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="6" TextAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="5" TextAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="3" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="4" TextAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="4" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="3" TextAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="5" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="2" TextAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="6" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="1" TextAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="7" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="0" TextAlignment="Center" />
 
-                    <!-- 0 - 7 -->
-                    <ItemsControl Grid.Row="1" ItemsSource="{Binding PinNumbers}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding}"
-                                           HorizontalAlignment="Center"
-                                           Foreground="White"
-                                           Margin="5" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Columns="8" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
+                            <!-- TrisA -->
+                            <CheckBox Grid.Column="0" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisAPin7, Mode=TwoWay}"
+                                      IsEnabled="False" />
+                            <CheckBox Grid.Column="1" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisAPin6, Mode=TwoWay}"
+                                      IsEnabled="False" />
+                            <CheckBox Grid.Column="2" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisAPin5, Mode=TwoWay}"
+                                      IsEnabled="False" />
+                            <CheckBox Grid.Column="3" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisAPin4, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="4" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisAPin3, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="5" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisAPin2, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="6" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisAPin1, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="7" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisAPin0, Mode=TwoWay}" />
 
-                    <!-- TRISA -->
-                    <ItemsControl Grid.Row="2" ItemsSource="{Binding IOPins}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <CheckBox
-                                    IsEnabled="{Binding CheckTRISAEnabled}"
-                                    IsVisible="{Binding IsTRISA}"
-                                    IsChecked="{Binding IsSet}"
-                                    Foreground="White"
-                                    Margin="5" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Columns="8" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
+                            <!-- PortA -->
+                            <CheckBox Grid.Column="0" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortAPin7, Mode=TwoWay}"
+                                      IsEnabled="False" />
+                            <CheckBox Grid.Column="1" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortAPin6, Mode=TwoWay}"
+                                      IsEnabled="False" />
+                            <CheckBox Grid.Column="2" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortAPin5, Mode=TwoWay}"
+                                      IsEnabled="False" />
+                            <CheckBox Grid.Column="3" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortAPin4, Mode=TwoWay}"
+                                      IsEnabled="{Binding TrisAPin4}" />
+                            <CheckBox Grid.Column="4" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortAPin3, Mode=TwoWay}"
+                                      IsEnabled="{Binding TrisAPin3}" />
+                            <CheckBox Grid.Column="5" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortAPin2, Mode=TwoWay}"
+                                      IsEnabled="{Binding TrisAPin2}" />
+                            <CheckBox Grid.Column="6" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortAPin1, Mode=TwoWay}"
+                                      IsEnabled="{Binding TrisAPin1}" />
+                            <CheckBox Grid.Column="7" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortAPin0, Mode=TwoWay}"
+                                      IsEnabled="{Binding TrisAPin0}" />
+                        </Grid>
+                    </Border>
+                    
+                    <!-- PortB -->
+                    <Border Grid.Row="1" BorderBrush="#FF000000"
+                            BorderThickness="3" CornerRadius="10" Margin="2" ClipToBounds="True">
+                        <Grid Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
 
-                    <!-- PORTA -->
-                    <ItemsControl Grid.Row="3" ItemsSource="{Binding IOPins}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <CheckBox
-                                    IsEnabled="{Binding IsInput}"
-                                    IsVisible="{Binding IsPORTA}"
-                                    IsChecked="{Binding IsSet}"
-                                    Foreground="White"
-                                    Margin="5" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Columns="8" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
+                            <!-- PortB -->
+                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="8" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="PortB" TextAlignment="Center" />
+
+                            <!-- Pin Numbers -->
+                            <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="7" TextAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="6" TextAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="5" TextAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="3" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="4" TextAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="4" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="3" TextAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="5" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="2" TextAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="6" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="1" TextAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="7" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="0" TextAlignment="Center" />
+
+                            <!-- TrisB -->
+                            <CheckBox Grid.Column="0" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisBPin7, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="1" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisBPin6, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="2" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisBPin5, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="3" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisBPin4, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="4" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisBPin3, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="5" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisBPin2, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="6" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisBPin1, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="7" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisBPin0, Mode=TwoWay}" />
+
+                            <!-- PortB -->
+                            <CheckBox Grid.Column="0" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortBPin7, Mode=TwoWay}"
+                                      IsEnabled="{Binding TrisBPin7}" />
+                            <CheckBox Grid.Column="1" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortBPin6, Mode=TwoWay}"
+                                      IsEnabled="{Binding TrisBPin6}" />
+                            <CheckBox Grid.Column="2" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortBPin5, Mode=TwoWay}"
+                                      IsEnabled="{Binding TrisBPin5}" />
+                            <CheckBox Grid.Column="3" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortBPin4, Mode=TwoWay}"
+                                      IsEnabled="{Binding TrisBPin4}" />
+                            <CheckBox Grid.Column="4" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortBPin3, Mode=TwoWay}"
+                                      IsEnabled="{Binding TrisBPin3}" />
+                            <CheckBox Grid.Column="5" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortBPin2, Mode=TwoWay}"
+                                      IsEnabled="{Binding TrisBPin2}" />
+                            <CheckBox Grid.Column="6" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortBPin1, Mode=TwoWay}"
+                                      IsEnabled="{Binding TrisBPin1}" />
+                            <CheckBox Grid.Column="7" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortBPin0, Mode=TwoWay}"
+                                      IsEnabled="{Binding TrisBPin0}" />
+                        </Grid>
+                    </Border>
+                    
+                    <!-- LEDs -->
+                    <Border Grid.Row="2" BorderBrush="#FF000000"
+                            BorderThickness="3" CornerRadius="10" Margin="2" ClipToBounds="True">
+                        <Grid Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Led1 -->
+                            <Image Grid.Column="0" Source="/Assets/FontAwesome/png/yellow-lightbulb-solid.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource And}">
+                                        <Binding Path="!TrisBPin7" />
+                                        <Binding Path="PortBPin7" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+                            <Image Grid.Column="0" Source="/Assets/FontAwesome/png/red-lightbulb-regular.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource Or}">
+                                        <Binding Path="TrisBPin7" />
+                                        <Binding Path="!PortBPin7" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+                            
+                            <!-- Led2 -->
+                            <Image Grid.Column="1" Source="/Assets/FontAwesome/png/yellow-lightbulb-solid.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource And}">
+                                        <Binding Path="!TrisBPin6" />
+                                        <Binding Path="PortBPin6" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+                            <Image Grid.Column="1" Source="/Assets/FontAwesome/png/red-lightbulb-regular.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource Or}">
+                                        <Binding Path="TrisBPin6" />
+                                        <Binding Path="!PortBPin6" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+                            
+                            <!-- Led3 -->
+                            <Image Grid.Column="2" Source="/Assets/FontAwesome/png/yellow-lightbulb-solid.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource And}">
+                                        <Binding Path="!TrisBPin5" />
+                                        <Binding Path="PortBPin5" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+                            <Image Grid.Column="2" Source="/Assets/FontAwesome/png/red-lightbulb-regular.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource Or}">
+                                        <Binding Path="TrisBPin5" />
+                                        <Binding Path="!PortBPin5" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+                            
+                            <!-- Led4 -->
+                            <Image Grid.Column="3" Source="/Assets/FontAwesome/png/yellow-lightbulb-solid.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource And}">
+                                        <Binding Path="!TrisBPin4" />
+                                        <Binding Path="PortBPin4" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+                            <Image Grid.Column="3" Source="/Assets/FontAwesome/png/red-lightbulb-regular.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource Or}">
+                                        <Binding Path="TrisBPin4" />
+                                        <Binding Path="!PortBPin4" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+                            
+                            <!-- Led5 -->
+                            <Image Grid.Column="4" Source="/Assets/FontAwesome/png/yellow-lightbulb-solid.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource And}">
+                                        <Binding Path="!TrisBPin3" />
+                                        <Binding Path="PortBPin3" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+                            <Image Grid.Column="4" Source="/Assets/FontAwesome/png/red-lightbulb-regular.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource Or}">
+                                        <Binding Path="TrisBPin3" />
+                                        <Binding Path="!PortBPin3" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+                            
+                            <!-- Led6 -->
+                            <Image Grid.Column="5" Source="/Assets/FontAwesome/png/yellow-lightbulb-solid.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource And}">
+                                        <Binding Path="!TrisBPin2" />
+                                        <Binding Path="PortBPin2" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+                            <Image Grid.Column="5" Source="/Assets/FontAwesome/png/red-lightbulb-regular.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource Or}">
+                                        <Binding Path="TrisBPin2" />
+                                        <Binding Path="!PortBPin2" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+                            
+                            <!-- Led7 -->
+                            <Image Grid.Column="6" Source="/Assets/FontAwesome/png/yellow-lightbulb-solid.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource And}">
+                                        <Binding Path="!TrisBPin1" />
+                                        <Binding Path="PortBPin1" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+                            <Image Grid.Column="6" Source="/Assets/FontAwesome/png/red-lightbulb-regular.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource Or}">
+                                        <Binding Path="TrisBPin1" />
+                                        <Binding Path="!PortBPin1" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+                            
+                            <!-- Led8 -->
+                            <Image Grid.Column="7" Source="/Assets/FontAwesome/png/yellow-lightbulb-solid.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource And}">
+                                        <Binding Path="!TrisBPin0" />
+                                        <Binding Path="PortBPin0" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+                            <Image Grid.Column="7" Source="/Assets/FontAwesome/png/red-lightbulb-regular.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource Or}">
+                                        <Binding Path="TrisBPin0" />
+                                        <Binding Path="!PortBPin0" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+                            
+                        </Grid>
+                    </Border>
+                    
                 </Grid>
-
-                <!-- PORTB PINS AND LEDS -->
-                <Grid Grid.Row="1" Background="#1b1b1b">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" /> <!-- PORT Description -->
-                        <RowDefinition Height="Auto" /> <!-- PIN Number -->
-                        <RowDefinition Height="*" />    <!-- TRISB -->
-                        <RowDefinition Height="*" />    <!-- PORTB -->
-                        <RowDefinition Height="*" />    <!-- LEDS -->
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" /> <!-- PIN0 -->
-                        <ColumnDefinition Width="Auto" /> <!-- PIN1 -->
-                        <ColumnDefinition Width="Auto" /> <!-- PIN2 -->
-                        <ColumnDefinition Width="Auto" /> <!-- PIN3 -->
-                        <ColumnDefinition Width="Auto" /> <!-- PIN4 -->
-                        <ColumnDefinition Width="Auto" /> <!-- PIN5 -->
-                        <ColumnDefinition Width="Auto" /> <!-- PIN6 -->
-                        <ColumnDefinition Width="Auto" /> <!-- PIN7 -->
-                    </Grid.ColumnDefinitions>
-
-                    <!-- PORTB Description -->
-
-                    <TextBlock Grid.Row="0" Text="PORTB"
-                               HorizontalAlignment="Center"
-                               Foreground="White"
-                               Margin="5" />
-
-
-                    <!-- 0 - 7 -->
-                    <ItemsControl Grid.Row="1" ItemsSource="{Binding PinNumbers}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding}"
-                                           HorizontalAlignment="Center"
-                                           Foreground="White"
-                                           Margin="5" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Columns="8" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-
-                    <!-- TRISB -->
-                    <ItemsControl Grid.Row="2" ItemsSource="{Binding IOPins}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <CheckBox
-                                    IsVisible="{Binding IsTRISB}"
-                                    IsChecked="{Binding IsSet}"
-                                    Foreground="White"
-                                    Margin="5" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Columns="8" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-
-                    <!-- PORTB -->
-                    <ItemsControl Grid.Row="3" ItemsSource="{Binding IOPins}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <CheckBox
-                                    IsEnabled="{Binding IsInput}"
-                                    IsVisible="{Binding IsPORTB}"
-                                    IsChecked="{Binding IsSet}"
-                                    Foreground="White"
-                                    Margin="5" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Columns="8" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-
-
-                    <ItemsControl Grid.Row="4" ItemsSource="{Binding IOPins}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <!-- Image displayed when IsSet is True -->
-                                    <Image Source="/Assets/FontAwesome/png/yellow-lightbulb-solid.png" Width="16"
-                                           Height="16">
-                                        <Image.IsVisible>
-                                            <MultiBinding Converter="{StaticResource And}">
-                                                <Binding Path="IsSet" />
-                                                <Binding Path="IsPORTB" />
-                                                <Binding Path="!IsInput" />
-                                            </MultiBinding>
-                                        </Image.IsVisible>
-                                    </Image>
-                                    
-                                    <!-- Image displayed when IsSet is False -->
-                                    <Image Source="/Assets/FontAwesome/png/red-lightbulb-regular.png" Width="16"
-                                           Height="16">
-                                        <Image.IsVisible>
-                                            <MultiBinding Converter="{StaticResource And}">
-                                                <Binding Path="!IsSet" />
-                                                <Binding Path="IsPORTB" />
-                                            </MultiBinding>
-                                        </Image.IsVisible>
-                                    </Image>
-                                    
-                                    <!-- Image displayed when IsSet is False -->
-                                    <Image Source="/Assets/FontAwesome/png/red-lightbulb-regular.png" Width="16"
-                                           Height="16">
-                                        <Image.IsVisible>
-                                            <MultiBinding Converter="{StaticResource And}">
-                                                <Binding Path="IsSet" />
-                                                <Binding Path="IsPORTB" />
-                                                <Binding Path="IsInput" />
-                                            </MultiBinding>
-                                        </Image.IsVisible>
-                                    </Image>
-                                    
-                                    
-                                </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Columns="8" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-
-                </Grid>
-
 
                 <!-- Specialfunctionregister -->
                 <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Background="#1b1b1b">
