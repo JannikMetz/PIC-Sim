@@ -525,6 +525,43 @@ public class ALU
         int value = opcode & 0x00FF;
         // ADD to WReg
         int result = _memory.WReg + value;
+        
+        if (result == 0)
+        {
+            // Set Zero Flag
+            _memory.SetZeroFlag();
+        }
+        else
+        {
+            // Clear Zero Flag
+            _memory.ClearZeroFlag();
+        }
+        
+        // this is a mistake on the PIC hardware, but we implement it as it is
+        if (result >= 0xFF)
+        {
+            // Set Carry Flag
+            _memory.SetCarryFlag();
+        }
+        else
+        {
+            // Clear Carry Flag
+            _memory.ClearCarryFlag();
+        }
+        
+        int digitCarry = result & 0x000F;
+        
+        if (digitCarry >= 0x0F)
+        {
+            // Set Digit Carry Flag
+            _memory.SetDigitCarryFlag();
+        }
+        else
+        {
+            // Clear Digit Carry Flag
+            _memory.ClearDigitCarryFlag();
+        }
+        
         _memory.WReg = result;
         
         // increment program counter
@@ -1121,9 +1158,10 @@ public class ALU
             _memory.ClearCarryFlag();
         }
         
-        int digitCarry = result & 0x000F;
+        // this is a mistake on the PIC hardware, but we implement it as it is
+        bool digitCarryBug = ((_memory.WReg & 0x0F) - (_memory.GetRegister(address) & 0x0F)) < 0;
         
-        if (digitCarry >= 0)
+        if (digitCarryBug)
         {
             // Set Digit Carry Flag
             _memory.SetDigitCarryFlag();

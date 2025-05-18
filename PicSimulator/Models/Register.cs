@@ -24,10 +24,11 @@ public class Register : INotifyPropertyChanged
     
     public void WriteValueFromUiThread(int value)
     {
-        Dispatcher.UIThread.InvokeAsync(() =>
-        {
+        // this causes somehow issues 
+        //Dispatcher.UIThread.InvokeAsync(() =>
+        //{
             Value = value;
-        });
+       //});
     }
     
     

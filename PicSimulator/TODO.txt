@@ -1,6 +1,6 @@
 TPicSim1.LST    ✔
 TPicSim2.LST    ✔
-TPicSim3.LST
+TPicSim3.LST    ✔
 TPicSim4.LST
 TPicSim5.LST
 TPicSim6.LST

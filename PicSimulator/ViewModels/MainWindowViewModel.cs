@@ -1434,7 +1434,6 @@ public class MainWindowViewModel : ViewModelBase
 
     private void Save(object parameter)
     {
-        _memory.MemoryArray[0,5].SetBitValue(0, 1);
         Console.WriteLine("Save command executed");
     }
 
