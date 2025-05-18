@@ -109,7 +109,7 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="Documentation" Click="OnOpenWebsiteClick">
-            </MenuItem> 
+            </MenuItem>
         </Menu>
 
 
@@ -211,14 +211,14 @@
                     <ColumnDefinition Width="*" /> <!-- OTHERS -->
                 </Grid.ColumnDefinitions>
 
-                
+
                 <Grid Grid.Row="0" Grid.RowSpan="2" Background="#1b1b1b">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="2*" /> <!-- PortA -->
                         <RowDefinition Height="2*" /> <!-- PortB -->
                         <RowDefinition Height="*" /> <!-- LEDs -->
                     </Grid.RowDefinitions>
-                    
+
                     <!-- PortA -->
                     <Border Grid.Row="0" BorderBrush="#FF000000"
                             BorderThickness="3" CornerRadius="10" Margin="2" ClipToBounds="True">
@@ -309,7 +309,7 @@
                                       IsEnabled="{Binding TrisAPin0}" />
                         </Grid>
                     </Border>
-                    
+
                     <!-- PortB -->
                     <Border Grid.Row="1" BorderBrush="#FF000000"
                             BorderThickness="3" CornerRadius="10" Margin="2" ClipToBounds="True">
@@ -398,7 +398,7 @@
                                       IsEnabled="{Binding TrisBPin0}" />
                         </Grid>
                     </Border>
-                    
+
                     <!-- LEDs -->
                     <Border Grid.Row="2" BorderBrush="#FF000000"
                             BorderThickness="3" CornerRadius="10" Margin="2" ClipToBounds="True">
@@ -435,7 +435,7 @@
                                     </MultiBinding>
                                 </Image.IsVisible>
                             </Image>
-                            
+
                             <!-- Led2 -->
                             <Image Grid.Column="1" Source="/Assets/FontAwesome/png/yellow-lightbulb-solid.png"
                                    Width="16"
@@ -457,7 +457,7 @@
                                     </MultiBinding>
                                 </Image.IsVisible>
                             </Image>
-                            
+
                             <!-- Led3 -->
                             <Image Grid.Column="2" Source="/Assets/FontAwesome/png/yellow-lightbulb-solid.png"
                                    Width="16"
@@ -479,7 +479,7 @@
                                     </MultiBinding>
                                 </Image.IsVisible>
                             </Image>
-                            
+
                             <!-- Led4 -->
                             <Image Grid.Column="3" Source="/Assets/FontAwesome/png/yellow-lightbulb-solid.png"
                                    Width="16"
@@ -501,7 +501,7 @@
                                     </MultiBinding>
                                 </Image.IsVisible>
                             </Image>
-                            
+
                             <!-- Led5 -->
                             <Image Grid.Column="4" Source="/Assets/FontAwesome/png/yellow-lightbulb-solid.png"
                                    Width="16"
@@ -523,7 +523,7 @@
                                     </MultiBinding>
                                 </Image.IsVisible>
                             </Image>
-                            
+
                             <!-- Led6 -->
                             <Image Grid.Column="5" Source="/Assets/FontAwesome/png/yellow-lightbulb-solid.png"
                                    Width="16"
@@ -545,7 +545,7 @@
                                     </MultiBinding>
                                 </Image.IsVisible>
                             </Image>
-                            
+
                             <!-- Led7 -->
                             <Image Grid.Column="6" Source="/Assets/FontAwesome/png/yellow-lightbulb-solid.png"
                                    Width="16"
@@ -567,7 +567,7 @@
                                     </MultiBinding>
                                 </Image.IsVisible>
                             </Image>
-                            
+
                             <!-- Led8 -->
                             <Image Grid.Column="7" Source="/Assets/FontAwesome/png/yellow-lightbulb-solid.png"
                                    Width="16"
@@ -589,10 +589,10 @@
                                     </MultiBinding>
                                 </Image.IsVisible>
                             </Image>
-                            
+
                         </Grid>
                     </Border>
-                    
+
                 </Grid>
 
                 <!-- Specialfunctionregister -->
@@ -992,73 +992,88 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </ScrollViewer>
-                
+
                 <Grid Grid.Column="1" Background="#1b1b1b">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    
-                    <Button Grid.Row="0" Command="{Binding StartCommand}" ToolTip.Tip="Run"  HorizontalAlignment="Stretch" Margin="2">
+
+                    <Button Grid.Row="0" Command="{Binding StartCommand}" ToolTip.Tip="Run"
+                            HorizontalAlignment="Stretch" Margin="2">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            
-                            <Image Grid.Column="0" Source="/Assets/FontAwesome/png/red-play-solid.png" Width="24" Height="24" HorizontalAlignment="Left" VerticalAlignment="Center" />
-                            <TextBlock Grid.Column="1" Text="Run" Foreground="White" HorizontalAlignment="Stretch" VerticalAlignment="Center" TextAlignment="Center"/>
+
+                            <Image Grid.Column="0" Source="/Assets/FontAwesome/png/red-play-solid.png" Width="24"
+                                   Height="24" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="1" Text="Run" Foreground="White" HorizontalAlignment="Stretch"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
                         </Grid>
                     </Button>
-                    <Button Grid.Row="1" Command="{Binding StepCommand}" IsEnabled="{Binding !IsExecuting}" ToolTip.Tip="Step Forward" HorizontalAlignment="Stretch" Margin="2">
+                    <Button Grid.Row="1" Command="{Binding StepCommand}" IsEnabled="{Binding !IsExecuting}"
+                            ToolTip.Tip="Step Forward" HorizontalAlignment="Stretch" Margin="2">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            
-                        <Image Grid.Column="0" Source="/Assets/FontAwesome/png/red-forward-step-solid.png" Width="24" Height="24"/>
-                        <TextBlock Grid.Column="1" Text="Step Forward" Foreground="White" HorizontalAlignment="Stretch" VerticalAlignment="Center" TextAlignment="Center"/>
+
+                            <Image Grid.Column="0" Source="/Assets/FontAwesome/png/red-forward-step-solid.png"
+                                   Width="24" Height="24" />
+                            <TextBlock Grid.Column="1" Text="Step Forward" Foreground="White"
+                                       HorizontalAlignment="Stretch" VerticalAlignment="Center" TextAlignment="Center" />
                         </Grid>
                     </Button>
-                    <Button Grid.Row="2" Command="{Binding SkipCommand}" IsEnabled="{Binding !IsExecuting}" ToolTip.Tip="Skip To Next" HorizontalAlignment="Stretch" Margin="2">
+                    <Button Grid.Row="2" Command="{Binding SkipCommand}" IsEnabled="{Binding !IsExecuting}"
+                            ToolTip.Tip="Skip To Next" HorizontalAlignment="Stretch" Margin="2">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            
-                            <Image Grid.Column="0" Source="/Assets/FontAwesome/png/red-forward-solid.png" Width="24" Height="24"/>
-                            <TextBlock Grid.Column="1" Text="Skip To Next" Foreground="White" HorizontalAlignment="Stretch" VerticalAlignment="Center" TextAlignment="Center"/>
+
+                            <Image Grid.Column="0" Source="/Assets/FontAwesome/png/red-forward-solid.png" Width="24"
+                                   Height="24" />
+                            <TextBlock Grid.Column="1" Text="Skip To Next" Foreground="White"
+                                       HorizontalAlignment="Stretch" VerticalAlignment="Center" TextAlignment="Center" />
                         </Grid>
                     </Button>
-                    <Button Grid.Row="3" Command="{Binding PauseCommand}" IsEnabled="{Binding IsExecuting}" ToolTip.Tip="Pause" HorizontalAlignment="Stretch" Margin="2">
+                    <Button Grid.Row="3" Command="{Binding PauseCommand}" IsEnabled="{Binding IsExecuting}"
+                            ToolTip.Tip="Pause" HorizontalAlignment="Stretch" Margin="2">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            
-                            <Image Grid.Column="0" Source="/Assets/FontAwesome/png/red-pause-solid.png" Width="24" Height="24"/>
-                            <TextBlock Grid.Column="1" Text="Pause" Foreground="White" HorizontalAlignment="Stretch" VerticalAlignment="Center" TextAlignment="Center"/>
+
+                            <Image Grid.Column="0" Source="/Assets/FontAwesome/png/red-pause-solid.png" Width="24"
+                                   Height="24" />
+                            <TextBlock Grid.Column="1" Text="Pause" Foreground="White" HorizontalAlignment="Stretch"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
                         </Grid>
                     </Button>
-                    <Button Grid.Row="4" Command="{Binding ResetCommand}" ToolTip.Tip="Reset" HorizontalAlignment="Stretch" Margin="2">
+                    <Button Grid.Row="4" Command="{Binding ResetCommand}" ToolTip.Tip="Reset"
+                            HorizontalAlignment="Stretch" Margin="2">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            
-                            <Image Grid.Column="0" Source="/Assets/FontAwesome/png/red-stop-solid.png" Width="24" Height="24"/>
-                            <TextBlock Grid.Column="1" Text="Reset" Foreground="White" HorizontalAlignment="Stretch" VerticalAlignment="Center" TextAlignment="Center"/>
+
+                            <Image Grid.Column="0" Source="/Assets/FontAwesome/png/red-stop-solid.png" Width="24"
+                                   Height="24" />
+                            <TextBlock Grid.Column="1" Text="Reset" Foreground="White" HorizontalAlignment="Stretch"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
                         </Grid>
                     </Button>
-                </Grid> 
+                </Grid>
             </Grid>
         </Border>
     </Grid>
