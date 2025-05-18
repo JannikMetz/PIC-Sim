@@ -293,6 +293,15 @@ public class Memory : ObservableObject
     public int GetRegister(int address)
     {
         int bankBit = GetBank();
+        // indirect addressing
+        if (address == 0)
+        {
+            // FSR register strores the address of the register to be accessed
+            address = GetRegister(0x04);
+            bankBit = address & 0x80;
+            address = address & 0x7F;
+        }
+
         Console.WriteLine($"Getting Memory in Bank {bankBit} at address {address}");
         return MemoryArray[bankBit, address].Value;
     }
@@ -301,6 +310,15 @@ public class Memory : ObservableObject
     {
         value = value & 0xFF;
         int bankBit = GetBank();
+        
+        if (address == 0)
+        {
+            // FSR register strores the address of the register to be accessed
+            address = GetRegister(0x04);
+            bankBit = address & 0x80;
+            address = address & 0x7F;
+        }
+        
         Console.WriteLine($"Setting Memory in Bank {bankBit} at address {address} to {value}");
         MemoryArray[bankBit, address].WriteValueFromUiThread(value);
 
@@ -322,6 +340,15 @@ public class Memory : ObservableObject
     public int GetBit(int address, int bitNumber)
     {
         int bankBit = GetBank();
+        
+        if (address == 0)
+        {
+            // FSR register strores the address of the register to be accessed
+            address = GetRegister(0x04);
+            bankBit = address & 0x80;
+            address = address & 0x7F;
+        }
+        
         Console.WriteLine($"Getting Bit {bitNumber} in Bank {bankBit} at address {address}");
         int value = MemoryArray[bankBit, address].GetBitValue(bitNumber);
         return value;
@@ -330,6 +357,15 @@ public class Memory : ObservableObject
     public void SetBit(int address, int bitNumber, int value)
     {
         int bankBit = GetBank();
+        
+        if (address == 0)
+        {
+            // FSR register strores the address of the register to be accessed
+            address = GetRegister(0x04);
+            bankBit = address & 0x80;
+            address = address & 0x7F;
+        }
+        
         Console.WriteLine($"Setting Bit {bitNumber} in Bank {bankBit} at address {address} to {value}");
         MemoryArray[bankBit, address].SetBitValue(bitNumber, value);
         // these addresses are mirrored in the other bank

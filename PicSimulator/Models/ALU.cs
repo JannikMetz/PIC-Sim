@@ -549,9 +549,9 @@ public class ALU
             _memory.ClearCarryFlag();
         }
         
-        int digitCarry = result & 0x000F;
+        bool digitCarry = (_memory.WReg & 0x0F) + (value & 0x0F) > 0x0F;
         
-        if (digitCarry >= 0x0F)
+        if (digitCarry)
         {
             // Set Digit Carry Flag
             _memory.SetDigitCarryFlag();
@@ -600,9 +600,9 @@ public class ALU
             _memory.ClearCarryFlag();
         }
         
-        int digitCarry = result & 0x000F;
+        bool digitCarryBug = ((_memory.WReg & 0x0F) - (value & 0x0F)) <= 0;
         
-        if (digitCarry >= 0)
+        if (digitCarryBug)
         {
             // Set Digit Carry Flag
             _memory.SetDigitCarryFlag();
@@ -753,9 +753,9 @@ public class ALU
             _memory.ClearCarryFlag();
         }
         
-        int digitCarry = result & 0x000F;
+        bool digitCarry = (_memory.WReg & 0x0F) + (_memory.GetRegister(address) & 0x0F) > 0x0F;
         
-        if (digitCarry > 0x0F)
+        if (digitCarry)
         {
             // Set Digit Carry Flag
             _memory.SetDigitCarryFlag();
@@ -965,17 +965,8 @@ public class ALU
         int destinationBit = f & 0x0080;
         int result = _memory.GetRegister(address);
         result++;
-
-        if (result == 0x100)
-        {
-            // Set Zero Flag if result is more than 8 bits
-            _memory.SetZeroFlag();
-        }
-        else
-        {
-            // Clear Zero Flag
-            _memory.ClearZeroFlag();
-        }
+        
+        if (result == 0x100 || result == 0x00)
         {
             // Skip: increment program counter twice
             _memory.IncrementProgramCounter();
@@ -986,6 +977,7 @@ public class ALU
                 _timer.IncrementTimer();
             }
         }
+        
         if (destinationBit == 0)
         {
             // write to register W
@@ -1159,7 +1151,7 @@ public class ALU
         }
         
         // this is a mistake on the PIC hardware, but we implement it as it is
-        bool digitCarryBug = ((_memory.WReg & 0x0F) - (_memory.GetRegister(address) & 0x0F)) < 0;
+        bool digitCarryBug = ((_memory.WReg & 0x0F) - (_memory.GetRegister(address) & 0x0F)) <= 0;
         
         if (digitCarryBug)
         {
