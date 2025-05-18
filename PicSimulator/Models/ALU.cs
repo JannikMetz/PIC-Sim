@@ -600,7 +600,7 @@ public class ALU
             _memory.ClearCarryFlag();
         }
         
-        bool digitCarryBug = ((_memory.WReg & 0x0F) - (value & 0x0F)) <= 0;
+        bool digitCarryBug = ((value & 0x0F)-(_memory.WReg & 0x0F)) >= 0;
         
         if (digitCarryBug)
         {
@@ -1151,7 +1151,7 @@ public class ALU
         }
         
         // this is a mistake on the PIC hardware, but we implement it as it is
-        bool digitCarryBug = ((_memory.WReg & 0x0F) - (_memory.GetRegister(address) & 0x0F)) <= 0;
+        bool digitCarryBug = ((_memory.GetRegister(address) & 0x0F) - (_memory.WReg & 0x0F)) >= 0;
         
         if (digitCarryBug)
         {
