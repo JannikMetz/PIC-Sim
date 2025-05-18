@@ -952,7 +952,7 @@
                 </Grid>
 
                 <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Background="#1b1b1b">
-
+                    <TextBlock Text="{Binding Timer0}"/>
                 </Grid>
             </Grid>
         </Border>

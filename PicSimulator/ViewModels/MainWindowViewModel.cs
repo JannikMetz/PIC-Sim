@@ -107,6 +107,11 @@ public class MainWindowViewModel : ViewModelBase
         }
     }
     
+    public int Timer0
+    {
+        get { return _memory.MemoryArray[0,1].Value; }
+    }
+    
     #endregion
 
     #region Commands
@@ -1255,6 +1260,7 @@ public class MainWindowViewModel : ViewModelBase
                 OnPropertyChanged(nameof(PCLATH));
                 OnPropertyChanged(nameof(Prescaler));
                 OnPropertyChanged(nameof(ObservableMemoryArray));
+                OnPropertyChanged(nameof(Timer0));
                 
                 // Status bits
                 OnPropertyChanged(nameof(StatusBit0));
