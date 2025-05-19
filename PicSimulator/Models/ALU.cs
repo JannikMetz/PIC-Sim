@@ -9,6 +9,7 @@ public class ALU
     private Memory _memory;
     private Watchdog _watchdog;
     private Timer0 _timer;
+    private bool _lastOperationTook2Microseconds = false;
     public ALU(Memory memory, Watchdog watchdog, Timer0 timer)
     {
         _memory = memory;
@@ -85,22 +86,38 @@ public class ALU
                 _memory.PushToCallStack(_memory.ProgramCounter2);
                 Console.WriteLine("Jump to interrupt service routine");
                 _memory.SetProgramCounterForJump(0x0004); // Jump to interrupt service routine
-        
+
+                // like call instruction
                 if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
                 {
                     _timer.IncrementTimer();
+                    _timer.IncrementTimer();
+                }
+
+                // increment watchdog timer
+                _watchdog.Increment();
+                _watchdog.Increment();
+                if (_lastOperationTook2Microseconds)
+                {
+                    _watchdog.Increment();
+                    _lastOperationTook2Microseconds = false;
                 }
             }
             else
             {
                 BreakpointSecs = 0;
-                // Read the opcode from the program memory
+
+                _watchdog.Increment(); // increment watchdog timer
+                if (_lastOperationTook2Microseconds)
+                {
+                    _watchdog.Increment();
+                    _lastOperationTook2Microseconds = false;
+                }
                 int opcode = _memory.ProgramMemory[_memory.ProgramCounter2];
 
                 // Execute the operation
                 Console.WriteLine("Executing Opcode: " + opcode.ToString("X4") + " at PC: " +
                                   _memory.ProgramCounter2.ToString("X4"));
-                _watchdog.Increment(); // increment watchdog timer
                 GetOperation(opcode);
             }
             Thread.Sleep(ExecutionSpeed);
@@ -111,14 +128,47 @@ public class ALU
     
     public void Step()
     {
-        // Read the opcode from the program memory
-        int opcode = _memory.ProgramMemory[_memory.ProgramCounter2];
+        if (GIE && ((T0IF && T0IE) || (INTF && INTE) || (RBIF && RBIE) || (EEIF && EEIE))) 
+        {
+            _memory.MemoryArray[1,0x0B].SetBitValue(7, 0); // clear GIE
+                
+            Console.WriteLine("Interrupt");
+            _memory.PushToCallStack(_memory.ProgramCounter2);
+            Console.WriteLine("Jump to interrupt service routine");
+            _memory.SetProgramCounterForJump(0x0004); // Jump to interrupt service routine
 
-        // Execute the operation
-        Console.WriteLine("Executing Opcode: " + opcode.ToString("X4") + " at PC: " +
-                          _memory.ProgramCounter2.ToString("X4"));
-        _watchdog.Increment(); // increment watchdog timer
-        GetOperation(opcode);
+            // like call instruction
+            if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+            {
+                _timer.IncrementTimer();
+                _timer.IncrementTimer();
+            }
+
+            // increment watchdog timer
+            _watchdog.Increment();
+            _watchdog.Increment();
+            if (_lastOperationTook2Microseconds)
+            {
+                _watchdog.Increment();
+                _lastOperationTook2Microseconds = false;
+            }
+        }
+        else
+        {
+            _watchdog.Increment(); // increment watchdog timer
+            if (_lastOperationTook2Microseconds)
+            {
+                _watchdog.Increment();
+                _lastOperationTook2Microseconds = false;
+            }
+            // Read the opcode from the program memory
+            int opcode = _memory.ProgramMemory[_memory.ProgramCounter2];
+
+            // Execute the operation
+            Console.WriteLine("Executing Opcode: " + opcode.ToString("X4") + " at PC: " +
+                              _memory.ProgramCounter2.ToString("X4"));
+            GetOperation(opcode);
+        }
     }
     
     public void Skip()
@@ -243,7 +293,7 @@ public class ALU
                 return SUBLW(Opcode); // SUBLW
         }
         
-        int Mask3BitOperation = 0x3F00;
+        int Mask3BitOperation = 0x3800;
         result = Opcode & Mask3BitOperation;
         switch (result)
         {
@@ -449,6 +499,8 @@ public class ALU
             {
                 _timer.IncrementTimer();
             }
+
+            _lastOperationTook2Microseconds = true;
         }
         
         // increment program counter
@@ -475,6 +527,8 @@ public class ALU
             {
                 _timer.IncrementTimer();
             }
+            
+            _lastOperationTook2Microseconds = true;
         }
         
         // increment program counter
@@ -513,6 +567,8 @@ public class ALU
         {
             _timer.IncrementTimer();
         }
+        
+        _lastOperationTook2Microseconds = true;
         
         // program counter is not incremented here because we did it in the CALL instruction
         
@@ -636,6 +692,8 @@ public class ALU
         {
             _timer.IncrementTimer();
         }
+        
+        _lastOperationTook2Microseconds = true;
         return true;
     }
 
@@ -650,6 +708,8 @@ public class ALU
         {
             _timer.IncrementTimer();
         }
+        
+        _lastOperationTook2Microseconds = true;
         return true;
     }
 
@@ -670,7 +730,8 @@ public class ALU
         while (_watchdog.AluIsSleeping)
         {
             // wait for the watchdog to wake up
-            Thread.Sleep(1000);
+            _watchdog.Increment();
+            Thread.Sleep(ExecutionSpeed);
         }
         
         return true;
@@ -690,6 +751,7 @@ public class ALU
             _timer.IncrementTimer();
         }
         
+        _lastOperationTook2Microseconds = true;
         // program counter is not incremented here because we did it in the CALL instruction
         
         return true;
@@ -711,6 +773,7 @@ public class ALU
             _timer.IncrementTimer();
         }
 
+        _lastOperationTook2Microseconds = true;
         return true;
     }
 
@@ -907,6 +970,8 @@ public class ALU
             {
                 _timer.IncrementTimer();
             }
+            
+            _lastOperationTook2Microseconds = true;
         }
         if (destinationBit == 0)
         {
@@ -976,6 +1041,8 @@ public class ALU
             {
                 _timer.IncrementTimer();
             }
+            
+            _lastOperationTook2Microseconds = true;
         }
         
         if (destinationBit == 0)

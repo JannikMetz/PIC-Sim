@@ -863,12 +863,16 @@ public class MainWindowViewModel : ViewModelBase
             OnPropertyChanged();
         }
     }
+
+    private bool _portAPin4prev;
     
     public bool PortAPin4
     {
         get { return _memory.MemoryArray[0,5].GetBitValue(4) == 1; }
         set
         {
+            IncrementTimer(value, _portAPin4prev);
+            
             if (value)
             {
                 _memory.MemoryArray[0,5].SetBitValue(4, 1);
@@ -877,6 +881,8 @@ public class MainWindowViewModel : ViewModelBase
             {
                 _memory.MemoryArray[0,5].SetBitValue(4, 0);
             }
+            
+            _portAPin4prev = value;
             OnPropertyChanged();
         }
     }
@@ -1392,6 +1398,7 @@ public class MainWindowViewModel : ViewModelBase
     {
         _memory.ResetMemory();
         _memory.PowerOnReset();
+        _timer.Reset();
         
         var openFileDialog = new OpenFileDialog
         {
@@ -1500,6 +1507,7 @@ public class MainWindowViewModel : ViewModelBase
         Console.WriteLine("Reset command executed");
         IsExecuting = false;
         _alu.BreakpointSecs = 0;
+        _timer.Reset();
         _memory.PowerOnReset();
     }
 
@@ -1574,5 +1582,28 @@ public class MainWindowViewModel : ViewModelBase
     {
         _memory.MemoryArray[0, 0xB].SetBitValue(0, 1);
         _memory.MemoryArray[1, 0xB].SetBitValue(0, 1);
+    }
+    
+    private void IncrementTimer(bool value, bool prev)
+    {
+        if (_memory.MemoryArray[1, 1].GetBitValue(5) == 1)
+        {
+            if (_memory.MemoryArray[1, 1].GetBitValue(4) == 1)
+            {
+                // falling edge
+                if (value == false && prev == true)
+                {
+                    _timer.IncrementTimer();
+                }
+            }
+            else
+            {
+                // rising edge
+                if (value == true && prev == false)
+                {
+                    _timer.IncrementTimer();
+                }
+            }
+        }
     }
 }

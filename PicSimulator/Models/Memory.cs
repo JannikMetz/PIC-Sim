@@ -14,6 +14,8 @@ using System;
 public class Memory : ObservableObject
 {
     public event Action ResetedMemory;
+    
+    public event Action TimerWritten;
 
     // Constructor to initialize the memory with default values.
     public Memory()
@@ -200,9 +202,7 @@ public class Memory : ObservableObject
     public void MLCRReset(int status)
     {
         OnReset = true;
-        ProgramCounter2 = 0;
-        MemoryArray[0, 0x02].Value = 0x00;
-        MemoryArray[1, 0x02].Value = 0x00;
+        SetProgramCounterForReturn(0);
 
         // manipulate the status register
         int value;
@@ -335,6 +335,10 @@ public class Memory : ObservableObject
             SetProgramCounterAfterManipulation();
         }
 
+        if (address == 0x01 && bankBit == 0)
+        {
+            TimerWritten?.Invoke();
+        }
     }
 
     public int GetBit(int address, int bitNumber)
@@ -445,12 +449,11 @@ public class Memory : ObservableObject
         if (CallStack.Count == 0)
             throw new InvalidOperationException("CallStack is empty.");
 
-        int value = 0;
-        // Dispatcher.UIThread.InvokeAsync(() =>
-        // {
-            value = CallStack.Pop();
-            OnPropertyChanged(nameof(CallStack));
-        //});
+        int value = 0; 
+        value = CallStack.Pop(); 
+        
+        OnPropertyChanged(nameof(CallStack));
+        
         return value;
     }
 }

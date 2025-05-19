@@ -11,6 +11,20 @@ public class Timer0
     {
         _memory = memory;
         _timer0Value = 0;
+        _memory.TimerWritten += OnTimerWritten;
+    }
+
+    public void OnTimerWritten()
+    {
+        _timer0Value = 0;
+    }
+    
+    public void Reset()
+    {
+        _timer0Value = 0;
+        _memory.MemoryArray[0,1].Value = 0x00; // Reset Timer0 register
+        _memory.MemoryArray[1,0x0B].SetBitValue(2, 0); // Clear Timer0 overflow flag
+        _memory.MemoryArray[0,0x0B].SetBitValue(2, 0); 
     }
 
     public void IncrementTimer()
