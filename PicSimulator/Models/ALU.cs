@@ -23,7 +23,7 @@ public class ALU
     
     public bool IsActive = false;
 
-    public int ExecutionSpeed = 100;
+    public int ExecutionSpeed = 10;
 
     #region Interrupts
     public bool GIE

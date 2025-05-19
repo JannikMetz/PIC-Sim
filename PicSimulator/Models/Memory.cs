@@ -22,7 +22,8 @@ public class Memory : ObservableObject
     {
         ResetMemory();
         PowerOnReset();
-        CallStack = new Stack<int>();
+        CallStack = new int[8];
+        StackPointer = 0;
     }
 
     // This class represents the memory of the PIC microcontroller.
@@ -71,15 +72,27 @@ public class Memory : ObservableObject
 
     }
 
-    private Stack<int> _callStack;
+    private int[] _callStack;
 
-    public Stack<int> CallStack
+    public int[] CallStack
     {
         get { return _callStack; }
         set
         {
             _callStack = value;
             OnPropertyChanged(nameof(CallStack));
+        }
+    }
+    
+    private int _stackPointer;
+    
+    public int StackPointer
+    {
+        get { return _stackPointer; }
+        set
+        {
+            _stackPointer = value;
+            OnPropertyChanged();
         }
     }
 
@@ -418,42 +431,23 @@ public class Memory : ObservableObject
 
     public void PushToCallStack(int value)
     {
-        if (CallStack.Count >= 8)
+        CallStack[StackPointer] = value;
+        StackPointer++;
+        if (StackPointer > 7)
         {
-            // reverse Stack and remove the top element 
-            Stack<int> tempStack = new Stack<int>();
-
-            while (CallStack.Count > 0)
-            {
-                tempStack.Push(CallStack.Pop());
-            }
-
-            tempStack.Pop();
-
-            while (tempStack.Count > 0)
-            {
-                CallStack.Push(tempStack.Pop());
-            }
+            StackPointer = 0;
         }
-
-        Dispatcher.UIThread.InvokeAsync(() =>
-        {
-            CallStack.Push(value);
-            OnPropertyChanged(nameof(CallStack));
-        });
-
+        OnPropertyChanged(nameof(CallStack));
     }
 
     public int PopFromCallStack()
     {
-        if (CallStack.Count == 0)
-            throw new InvalidOperationException("CallStack is empty.");
-
-        int value = 0; 
-        value = CallStack.Pop(); 
-        
-        OnPropertyChanged(nameof(CallStack));
-        
+        StackPointer--;
+        if (StackPointer < 0)
+        {
+            StackPointer = 7;
+        }
+        int value = CallStack[StackPointer];
         return value;
     }
 }

@@ -167,7 +167,7 @@ public class MainWindowViewModel : ViewModelBase
     
     public int StackPointer
     {
-        get { return _memory.CallStack.Count; }
+        get { return _memory.StackPointer; }
     }
     
     
@@ -1342,6 +1342,10 @@ public class MainWindowViewModel : ViewModelBase
             if (e.PropertyName == nameof(_memory.CallStack))
             {
                 UpdateStackItems();
+            }
+
+            if (e.PropertyName == nameof(_memory.StackPointer))
+            {
                 OnPropertyChanged(nameof(StackPointer));
             }
         };
@@ -1523,13 +1527,7 @@ public class MainWindowViewModel : ViewModelBase
         {
             StackItems.Add(item);
         }
-
-        while (StackItems.Count < 8)
-        {
-            StackItems.Add(0);
-        }
         OnPropertyChanged(nameof(StackItems));
-        OnPropertyChanged(nameof(StackPointer));
     }
     
     

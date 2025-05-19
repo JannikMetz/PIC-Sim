@@ -28,6 +28,10 @@ public class Encode
         _memory = memory;
         _alu = alu;
         _mainWindow = new MainWindow();
+        for (int i = 0; i < _opcodeLines.Length; i++)
+        {
+            _opcodeLines[i] = 0; // Initialize the opcode lines to -1
+        }
     }
 
     public string ReadFile(string filePath)

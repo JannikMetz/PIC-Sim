@@ -12,11 +12,12 @@ TPicSim11.LST   ✔
 TPicSim12.LST   EEPROM
 TPicSim13.LST   ✔
 TPicSim14.LST   ✔
-TPicSim15.LST
-TPicSim21.LST
-TPicSim101.LST
+TPicSim15.LST   Port data latch
+TPicSim21.LST   ✔
+TPicSim101.LST  Array out of bounds
 
 Port data latch
 
 EEPROM
 
+Timer0 
