@@ -23,7 +23,26 @@ public class ALU
     
     public bool IsActive = false;
 
-    public int ExecutionSpeed = 10;
+    public int ExecutionSpeed = 100;
+    
+    
+    private int _frequency = 4;
+    public int Frequency
+    {
+        get { return _frequency; }
+        set
+        {
+            if (_frequency != value)
+            {
+                _frequency = value;
+            }
+        }
+    }
+    
+    public double ExecutionSpeedInMicroseconds
+    {
+        get { return 1.0 / ((double)_frequency / 4.0); } 
+    }
 
     #region Interrupts
     public bool GIE
@@ -88,31 +107,37 @@ public class ALU
                 _memory.SetProgramCounterForJump(0x0004); // Jump to interrupt service routine
 
                 // like call instruction
-                if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+                for (int i = 0; i < ExecutionSpeedInMicroseconds; i++)
                 {
-                    _timer.IncrementTimer();
-                    _timer.IncrementTimer();
-                }
+                    if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+                    {
+                        _timer.IncrementTimer();
+                        _timer.IncrementTimer();
+                    }
 
-                // increment watchdog timer
-                _watchdog.Increment();
-                _watchdog.Increment();
-                if (_lastOperationTook2Microseconds)
-                {
+                    // increment watchdog timer
                     _watchdog.Increment();
-                    _lastOperationTook2Microseconds = false;
+                    _watchdog.Increment();
+                    if (_lastOperationTook2Microseconds)
+                    {
+                        _watchdog.Increment();
+                    }
                 }
+                _lastOperationTook2Microseconds = false;
             }
             else
             {
                 BreakpointSecs = 0;
-
-                _watchdog.Increment(); // increment watchdog timer
-                if (_lastOperationTook2Microseconds)
+                for (int i = 0; i < ExecutionSpeedInMicroseconds; i++)
                 {
-                    _watchdog.Increment();
-                    _lastOperationTook2Microseconds = false;
+                    _watchdog.Increment(); // increment watchdog timer
+                    if (_lastOperationTook2Microseconds)
+                    {
+                        _watchdog.Increment();
+                    }
                 }
+                _lastOperationTook2Microseconds = false;
+                
                 int opcode = _memory.ProgramMemory[_memory.ProgramCounter2];
 
                 // Execute the operation
@@ -138,29 +163,35 @@ public class ALU
             _memory.SetProgramCounterForJump(0x0004); // Jump to interrupt service routine
 
             // like call instruction
-            if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+            for (int i = 0; i < ExecutionSpeedInMicroseconds; i++)
             {
-                _timer.IncrementTimer();
-                _timer.IncrementTimer();
-            }
+                if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+                {
+                    _timer.IncrementTimer();
+                    _timer.IncrementTimer();
+                }
 
-            // increment watchdog timer
-            _watchdog.Increment();
-            _watchdog.Increment();
-            if (_lastOperationTook2Microseconds)
-            {
+                // increment watchdog timer
                 _watchdog.Increment();
-                _lastOperationTook2Microseconds = false;
+                _watchdog.Increment();
+                if (_lastOperationTook2Microseconds)
+                {
+                    _watchdog.Increment();
+                }
             }
+            _lastOperationTook2Microseconds = false;
         }
         else
         {
-            _watchdog.Increment(); // increment watchdog timer
-            if (_lastOperationTook2Microseconds)
+            for (int i = 0; i < ExecutionSpeedInMicroseconds; i++)
             {
-                _watchdog.Increment();
-                _lastOperationTook2Microseconds = false;
+                _watchdog.Increment(); // increment watchdog timer
+                if (_lastOperationTook2Microseconds)
+                {
+                    _watchdog.Increment();
+                }
             }
+            _lastOperationTook2Microseconds = false;
             // Read the opcode from the program memory
             int opcode = _memory.ProgramMemory[_memory.ProgramCounter2];
 
@@ -199,10 +230,13 @@ public class ALU
     
     public bool GetOperation(int Opcode)
     {
-        if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+        for (int i = 0; i < ExecutionSpeedInMicroseconds; i++)
         {
-            // an Operation takes 1 microsecond at 4MHz but sometimes an
-            _timer.IncrementTimer(); // Operation takes 2 microseconds then we increment again in the Operation
+            if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+            {
+                // an Operation takes 1 microsecond at 4MHz but sometimes an
+                _timer.IncrementTimer(); // Operation takes 2 microseconds then we increment again in the Operation
+            }
         }
 
         int Mask6BitOperant = 0x3F00;
@@ -495,9 +529,12 @@ public class ALU
             _memory.IncrementProgramCounter();
             
             // only when we skip this instruction takes 2 microseconds
-            if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+            for (int i = 0; i < ExecutionSpeedInMicroseconds; i++)
             {
-                _timer.IncrementTimer();
+                if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+                {
+                    _timer.IncrementTimer();
+                }
             }
 
             _lastOperationTook2Microseconds = true;
@@ -523,11 +560,14 @@ public class ALU
             _memory.IncrementProgramCounter();
             
             // only when we skip this instruction takes 2 microseconds
-            if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+            for (int i = 0; i < ExecutionSpeedInMicroseconds; i++)
             {
-                _timer.IncrementTimer();
+                if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+                {
+                    _timer.IncrementTimer();
+                }
             }
-            
+
             _lastOperationTook2Microseconds = true;
         }
         
@@ -563,11 +603,14 @@ public class ALU
         _memory.SetProgramCounterForReturn(pc);
         
         // this instruction takes 2 microseconds
-        if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+        for (int i = 0; i < ExecutionSpeedInMicroseconds; i++)
         {
-            _timer.IncrementTimer();
+            if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+            {
+                _timer.IncrementTimer();
+            }
         }
-        
+
         _lastOperationTook2Microseconds = true;
         
         // program counter is not incremented here because we did it in the CALL instruction
@@ -688,11 +731,14 @@ public class ALU
         Console.WriteLine("Calling Stack done");
         _memory.SetProgramCounterForJump(pc);
         
-        if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+        for (int i = 0; i < ExecutionSpeedInMicroseconds; i++)
         {
-            _timer.IncrementTimer();
+            if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+            {
+                _timer.IncrementTimer();
+            }
         }
-        
+
         _lastOperationTook2Microseconds = true;
         return true;
     }
@@ -703,12 +749,15 @@ public class ALU
         
         // set the program counter
         _memory.SetProgramCounterForJump(pc);
-        
-        if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+
+        for (int i = 0; i < ExecutionSpeedInMicroseconds; i++)
         {
-            _timer.IncrementTimer();
+            if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+            {
+                _timer.IncrementTimer();
+            }
         }
-        
+
         _lastOperationTook2Microseconds = true;
         return true;
     }
@@ -746,11 +795,14 @@ public class ALU
         _memory.SetProgramCounterForReturn(pc);
         
         // this instruction takes 2 microseconds
-        if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+        for (int i = 0; i < ExecutionSpeedInMicroseconds; i++)
         {
-            _timer.IncrementTimer();
+            if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+            {
+                _timer.IncrementTimer();
+            }
         }
-        
+
         _lastOperationTook2Microseconds = true;
         // program counter is not incremented here because we did it in the CALL instruction
         
@@ -768,9 +820,12 @@ public class ALU
         _memory.MemoryArray[1,0x0B].SetBitValue(7, 1); // set GIE to 1
 
         // this instruction takes 2 microseconds
-        if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+        for (int i = 0; i < ExecutionSpeedInMicroseconds; i++)
         {
-            _timer.IncrementTimer();
+            if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+            {
+                _timer.IncrementTimer();
+            }
         }
 
         _lastOperationTook2Microseconds = true;
@@ -966,11 +1021,14 @@ public class ALU
             _memory.IncrementProgramCounter();
             
             // only when we skip this instruction takes 2 microseconds
-            if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+            for (int i = 0; i < ExecutionSpeedInMicroseconds; i++)
             {
-                _timer.IncrementTimer();
+                if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+                {
+                    _timer.IncrementTimer();
+                }
             }
-            
+
             _lastOperationTook2Microseconds = true;
         }
         if (destinationBit == 0)
@@ -1037,11 +1095,14 @@ public class ALU
             _memory.IncrementProgramCounter();
             
             // only when we skip this instruction takes 2 microseconds
-            if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+            for (int i = 0; i < ExecutionSpeedInMicroseconds; i++)
             {
-                _timer.IncrementTimer();
+                if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+                {
+                    _timer.IncrementTimer();
+                }
             }
-            
+
             _lastOperationTook2Microseconds = true;
         }
         

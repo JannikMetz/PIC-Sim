@@ -112,6 +112,20 @@ public class MainWindowViewModel : ViewModelBase
         get { return _memory.MemoryArray[0,1].Value; }
     }
     
+    public ObservableCollection<int> Frequencies { get; set; } = new()
+    {
+        1, 2, 4
+    };
+
+    public int SelectedFrequency
+    {
+        get { return _alu.Frequency; }
+        set
+        {
+            _alu.Frequency = value;
+        }
+    }
+    
     #endregion
 
     #region Commands

@@ -28,10 +28,6 @@ public class Encode
         _memory = memory;
         _alu = alu;
         _mainWindow = new MainWindow();
-        for (int i = 0; i < _opcodeLines.Length; i++)
-        {
-            _opcodeLines[i] = 0; // Initialize the opcode lines to -1
-        }
     }
 
     public string ReadFile(string filePath)
@@ -51,7 +47,7 @@ public class Encode
     public ObservableCollection<ProgramLine> ExtractOpcodes(string input)
     {
         ObservableCollection<ProgramLine> programLines = new ObservableCollection<ProgramLine>();
-        List<int> opcodes = new List<int>();
+        int[] opcodes = new int[1024];
         string[] lines = input.Split('\n');
         int ProgramCounterLineIndex = 0;
         int lineIndex = 0;
@@ -69,9 +65,10 @@ public class Encode
             {
                 string[] parts = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
                 // Extract the opcode from the line
-                string code = parts[1];
+                int code = int.Parse(parts[1], System.Globalization.NumberStyles.HexNumber);
+                int programCounter = int.Parse(parts[0], System.Globalization.NumberStyles.HexNumber);
                 Console.WriteLine($"Opcode found at line index {Array.IndexOf(lines, line) + 1}: {code}");
-                opcodes.Add(int.Parse(code, System.Globalization.NumberStyles.HexNumber));
+                opcodes[programCounter] = code;
 
                 // Save the opcode to the opcodeLines array
                 _opcodeLines[ProgramCounterLineIndex] = Array.IndexOf(lines, line);
@@ -83,7 +80,7 @@ public class Encode
         Console.WriteLine("<----------- End of Opcodes ----------->");
 
         // Write the opcodes to the program memory
-        _memory.ProgramMemory = opcodes.ToArray();
+        _memory.ProgramMemory = opcodes;
         return programLines;
     }
 

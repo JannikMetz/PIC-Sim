@@ -12,7 +12,7 @@ public class Watchdog : INotifyPropertyChanged
     private int _watchdogTimerValue; // this is the actual watchdog timer value
     private bool _aluIsSleeping = false;
     private bool _watchdogEnabled = false;
-    
+
     public int WatchdogTimerValue
     {
         get { return _watchdogTimerValue; }

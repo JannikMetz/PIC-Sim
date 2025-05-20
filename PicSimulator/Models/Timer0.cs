@@ -13,7 +13,7 @@ public class Timer0
         _timer0Value = 0;
         _memory.TimerWritten += OnTimerWritten;
     }
-
+    
     public void OnTimerWritten()
     {
         _timer0Value = 0;
