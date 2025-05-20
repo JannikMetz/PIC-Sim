@@ -1,17 +1,44 @@
 using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace PicSimulator.Models;
 
-public class Timer0
+public class Timer0 : INotifyPropertyChanged
 {
     private Memory _memory;
-    private int _timer0Value;
+    private int _timer0Value; // this is only used for the prescaler
+    private Runtimetimer _runtimetimer;
+    public int Timer
+    {
+        get { return _runtimetimer.Timer; }
+    }
+    
+    public int Frequency
+    {
+        get {return _runtimetimer.Frequency;}
+        set
+        {
+            if (_runtimetimer.Frequency != value)
+            {
+                _runtimetimer.Frequency = value;
+            }
+        }
+    }
     
     public Timer0(Memory memory)
     {
         _memory = memory;
         _timer0Value = 0;
         _memory.TimerWritten += OnTimerWritten;
+        _runtimetimer = new Runtimetimer(4);
+        _runtimetimer.PropertyChanged += (sender, args) =>
+        {
+            if (args.PropertyName == nameof(Runtimetimer.Timer))
+            {
+                OnPropertyChanged(nameof(Timer));
+            }
+        };
     }
     
     public void OnTimerWritten()
@@ -29,6 +56,7 @@ public class Timer0
 
     public void IncrementTimer()
     {
+        _runtimetimer.IncrementTimer();
         int preScaler = 1;
         if (_memory.MemoryArray[1,1].GetBitValue(3) == 0)
         {
@@ -52,5 +80,11 @@ public class Timer0
             }
             _timer0Value = 0;
         }
+    }
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

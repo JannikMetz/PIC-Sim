@@ -12,18 +12,22 @@ public class Watchdog : INotifyPropertyChanged
     private int _watchdogTimerValue; // this is the actual watchdog timer value
     private bool _aluIsSleeping = false;
     private bool _watchdogEnabled = false;
+    private int _frequency = 4;
+    public int Frequency
+    {
+        get { return _frequency; }
+        set
+        {
+            if (_frequency != value)
+            {
+                _frequency = value;
+            }
+        }
+    }
 
     public int WatchdogTimerValue
     {
-        get { return _watchdogTimerValue; }
-        set
-        {
-            if (_watchdogTimerValue != value)
-            {
-                _watchdogTimerValue = value;
-                OnPropertyChanged();
-            }
-        }
+        get { return (int)(1.0 / (_frequency / 4.0)) * _watchdogTimerValue; }
     }
     
     public bool WatchdogEnabled
@@ -63,6 +67,7 @@ public class Watchdog : INotifyPropertyChanged
     {
         _watchdogValue = 0;
         _watchdogTimerValue = 0;
+        OnPropertyChanged(nameof(WatchdogTimerValue));
     }
 
     public void Increment()
@@ -81,7 +86,7 @@ public class Watchdog : INotifyPropertyChanged
         _watchdogValue++;
         if (_watchdogValue >= preScaler)
         {
-            if (WatchdogTimerValue >= 18000)
+            if (_watchdogTimerValue >= 18000)
             {
                 _watchdogTimerValue = 0;
                 if (AluIsSleeping)
@@ -96,9 +101,10 @@ public class Watchdog : INotifyPropertyChanged
             }
             else
             {
-                WatchdogTimerValue++;
+                _watchdogTimerValue++;
             }
             _watchdogValue = 0;
+            OnPropertyChanged(nameof(WatchdogTimerValue));
         }
     }
 
@@ -108,5 +114,4 @@ public class Watchdog : INotifyPropertyChanged
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
-    
 }

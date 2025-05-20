@@ -955,7 +955,6 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
@@ -975,7 +974,7 @@
                                         <ColumnDefinition Width="3*" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="Timer0" VerticalAlignment="Center"
+                                    <TextBlock Grid.Column="0" Text="Runtimetimer" VerticalAlignment="Center"
                                                HorizontalAlignment="Stretch" TextAlignment="Left" Margin="10" />
                                     <TextBlock Grid.Column="1" Text="{Binding Timer0}" VerticalAlignment="Center"
                                                HorizontalAlignment="Stretch" TextAlignment="Right" Margin="10" />
@@ -987,14 +986,16 @@
                                     BorderThickness="3" CornerRadius="10" Margin="2" ClipToBounds="True">
                                 <Grid Margin="5">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="3*" />
+                                        <ColumnDefinition Width="2*" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="0" Text="Frequency" VerticalAlignment="Center"
                                                HorizontalAlignment="Stretch" TextAlignment="Left" Margin="10" />
                                     <ComboBox Grid.Column="1" ItemsSource="{Binding Frequencies}" SelectedItem="{Binding SelectedFrequency, Mode=TwoWay }" VerticalAlignment="Center"
                                                HorizontalAlignment="Stretch"  Margin="10" />
+                                    <TextBlock Grid.Column="2" Text="μs" VerticalAlignment="Center"
+                                               HorizontalAlignment="Stretch" TextAlignment="Left" Margin="0,10,10,10" />
                                 </Grid>
                             </Border>
 

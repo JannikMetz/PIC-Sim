@@ -109,7 +109,7 @@ public class MainWindowViewModel : ViewModelBase
     
     public int Timer0
     {
-        get { return _memory.MemoryArray[0,1].Value; }
+        get { return _timer.Timer; }
     }
     
     public ObservableCollection<int> Frequencies { get; set; } = new()
@@ -119,10 +119,11 @@ public class MainWindowViewModel : ViewModelBase
 
     public int SelectedFrequency
     {
-        get { return _alu.Frequency; }
+        get { return _timer.Frequency; }
         set
         {
-            _alu.Frequency = value;
+            _watchdog.Frequency = value;
+            _timer.Frequency = value;
         }
     }
     
