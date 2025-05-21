@@ -810,10 +810,18 @@ public class MainWindowViewModel : ViewModelBase
     #endregion
     
     #region PortA
-    
+
+    private bool[] _portA = new bool[8];
     public bool PortAPin0
     {
-        get { return _memory.MemoryArray[0,5].GetBitValue(0) == 1; }
+        get
+        {
+            if (!TrisAPin0)
+            {
+                _portA[0] = _memory.MemoryArray[0,5].GetBitValue(0) == 1;
+            }
+            return _portA[0];
+        }
         set
         {
             if (value)
@@ -824,13 +832,21 @@ public class MainWindowViewModel : ViewModelBase
             {
                 _memory.MemoryArray[0,5].SetBitValue(0, 0);
             }
+            _portA[0] = value;
             OnPropertyChanged();
         }
     }
     
     public bool PortAPin1
     {
-        get { return _memory.MemoryArray[0,5].GetBitValue(1) == 1; }
+        get
+        {
+            if (!TrisAPin1)
+            {
+                _portA[1] = _memory.MemoryArray[0,5].GetBitValue(1) == 1;
+            }
+            return _portA[1];
+        }
         set
         {
             if (value)
@@ -841,13 +857,21 @@ public class MainWindowViewModel : ViewModelBase
             {
                 _memory.MemoryArray[0,5].SetBitValue(1, 0);
             }
+            _portA[1] = value;
             OnPropertyChanged();
         }
     }
     
     public bool PortAPin2
     {
-        get { return _memory.MemoryArray[0,5].GetBitValue(2) == 1; }
+        get
+        {
+            if (!TrisAPin2)
+            {
+                _portA[2] = _memory.MemoryArray[0,5].GetBitValue(2) == 1;
+            }
+            return _portA[2];
+        }
         set
         {
             if (value)
@@ -858,13 +882,21 @@ public class MainWindowViewModel : ViewModelBase
             {
                 _memory.MemoryArray[0,5].SetBitValue(2, 0);
             }
+            _portA[2] = value;
             OnPropertyChanged();
         }
     }
     
     public bool PortAPin3
     {
-        get { return _memory.MemoryArray[0,5].GetBitValue(3) == 1; }
+        get
+        {
+            if (!TrisAPin3)
+            {
+                _portA[3] = _memory.MemoryArray[0,5].GetBitValue(3) == 1;
+            }
+            return _portA[3];
+        }
         set
         {
             if (value)
@@ -875,6 +907,7 @@ public class MainWindowViewModel : ViewModelBase
             {
                 _memory.MemoryArray[0,5].SetBitValue(3, 0);
             }
+            _portA[3] = value;
             OnPropertyChanged();
         }
     }
@@ -883,7 +916,14 @@ public class MainWindowViewModel : ViewModelBase
     
     public bool PortAPin4
     {
-        get { return _memory.MemoryArray[0,5].GetBitValue(4) == 1; }
+        get
+        {
+            if (!TrisAPin4)
+            {
+                _portA[4] = _memory.MemoryArray[0,5].GetBitValue(4) == 1;
+            }
+            return _portA[4];
+        }
         set
         {
             IncrementTimer(value, _portAPin4prev);
@@ -897,14 +937,23 @@ public class MainWindowViewModel : ViewModelBase
                 _memory.MemoryArray[0,5].SetBitValue(4, 0);
             }
             
+            _portA[4] = value;
             _portAPin4prev = value;
             OnPropertyChanged();
         }
     }
     
+    // not used
     public bool PortAPin5
     {
-        get { return _memory.MemoryArray[0,5].GetBitValue(5) == 1; }
+        get
+        {
+            if (!TrisAPin5)
+            {
+                _portA[5] = _memory.MemoryArray[0,5].GetBitValue(5) == 1;
+            }
+            return _portA[5];
+        }
         set
         {
             if (value)
@@ -915,13 +964,21 @@ public class MainWindowViewModel : ViewModelBase
             {
                 _memory.MemoryArray[0,5].SetBitValue(5, 0);
             }
+            _portA[5] = value;
             OnPropertyChanged();
         }
     }
     
     public bool PortAPin6
     {
-        get { return _memory.MemoryArray[0,5].GetBitValue(6) == 1; }
+        get
+        {
+            if (!TrisAPin6)
+            {
+                _portA[6] = _memory.MemoryArray[0,5].GetBitValue(6) == 1;
+            }
+            return _portA[6];
+        }
         set
         {
             if (value)
@@ -932,13 +989,21 @@ public class MainWindowViewModel : ViewModelBase
             {
                 _memory.MemoryArray[0,5].SetBitValue(6, 0);
             }
+            _portA[6] = value;
             OnPropertyChanged();
         }
     }
     
     public bool PortAPin7
     {
-        get { return _memory.MemoryArray[0,5].GetBitValue(7) == 1; }
+        get
+        {
+            if (!TrisAPin7)
+            {
+                _portA[7] = _memory.MemoryArray[0,5].GetBitValue(7) == 1;
+            }
+            return _portA[7];
+        }
         set
         {
             if (value)
@@ -949,6 +1014,7 @@ public class MainWindowViewModel : ViewModelBase
             {
                 _memory.MemoryArray[0,5].SetBitValue(7, 0);
             }
+            _portA[7] = value;
             OnPropertyChanged();
         }
     }
@@ -1100,12 +1166,22 @@ public class MainWindowViewModel : ViewModelBase
     #region PortB
     
     private bool _portBPin0;
+    private bool[] _portB = new bool[8];
+    
     public bool PortBPin0
     {
         get
         {
-            _portBPin0 = _memory.MemoryArray[0,6].GetBitValue(0) == 1;
-            return _portBPin0;
+            if (!TrisBPin0)
+            {
+                _portB[0] = _memory.MemoryArray[0,6].GetBitValue(0) == 1;
+            }
+            else
+            {
+                _portB[0] = _portBPin0;
+            }
+            
+            return _portB[0];
         }
         set
         {
@@ -1120,7 +1196,8 @@ public class MainWindowViewModel : ViewModelBase
                 {
                     _memory.MemoryArray[0, 6].SetBitValue(0, 0);
                 }
-
+                _portB[0] = value;
+                _portBPin0 = value;
                 OnPropertyChanged();
             }
         }
@@ -1128,7 +1205,14 @@ public class MainWindowViewModel : ViewModelBase
     
     public bool PortBPin1
     {
-        get { return _memory.MemoryArray[0,6].GetBitValue(1) == 1; }
+        get
+        {
+            if (!TrisBPin1)
+            {
+                _portB[1] = _memory.MemoryArray[0,6].GetBitValue(1) == 1;
+            }
+            return _portB[1];
+        }
         set
         {
             if (value)
@@ -1139,13 +1223,21 @@ public class MainWindowViewModel : ViewModelBase
             {
                 _memory.MemoryArray[0,6].SetBitValue(1, 0);
             }
+            _portB[1] = value;
             OnPropertyChanged();
         }
     }
     
     public bool PortBPin2
     {
-        get { return _memory.MemoryArray[0,6].GetBitValue(2) == 1; }
+        get
+        {
+            if (!TrisBPin2)
+            {
+                _portB[2] = _memory.MemoryArray[0,6].GetBitValue(2) == 1;
+            }
+            return _portB[2];
+        }
         set
         {
             if (value)
@@ -1156,13 +1248,21 @@ public class MainWindowViewModel : ViewModelBase
             {
                 _memory.MemoryArray[0,6].SetBitValue(2, 0);
             }
+            _portB[2] = value;
             OnPropertyChanged();
         }
     }
     
     public bool PortBPin3
     {
-        get { return _memory.MemoryArray[0,6].GetBitValue(3) == 1; }
+        get
+        {
+            if (!TrisBPin3)
+            {
+                _portB[3] = _memory.MemoryArray[0,6].GetBitValue(3) == 1;
+            }
+            return _portB[3];
+        }
         set
         {
             if (value)
@@ -1173,13 +1273,21 @@ public class MainWindowViewModel : ViewModelBase
             {
                 _memory.MemoryArray[0,6].SetBitValue(3, 0);
             }
+            _portB[3] = value;
             OnPropertyChanged();
         }
     }
     
     public bool PortBPin4
     {
-        get { return _memory.MemoryArray[0,6].GetBitValue(4) == 1; }
+        get
+        {
+            if (!TrisBPin4)
+            {
+                _portB[4] = _memory.MemoryArray[0,6].GetBitValue(4) == 1;
+            }
+            return _portB[4];
+        }
         set
         {
             PortBInterrupt();
@@ -1191,13 +1299,21 @@ public class MainWindowViewModel : ViewModelBase
             {
                 _memory.MemoryArray[0,6].SetBitValue(4, 0);
             }
+            _portB[4] = value;
             OnPropertyChanged();
         }
     }
     
     public bool PortBPin5
     {
-        get { return _memory.MemoryArray[0,6].GetBitValue(5) == 1; }
+        get
+        {
+            if (!TrisBPin5)
+            {
+                _portB[5] = _memory.MemoryArray[0,6].GetBitValue(5) == 1;
+            }
+            return _portB[5];
+        }
         set
         {
             PortBInterrupt();
@@ -1209,13 +1325,21 @@ public class MainWindowViewModel : ViewModelBase
             {
                 _memory.MemoryArray[0,6].SetBitValue(5, 0);
             }
+            _portB[5] = value;
             OnPropertyChanged();
         }
     }
     
     public bool PortBPin6
     {
-        get { return _memory.MemoryArray[0,6].GetBitValue(6) == 1; }
+        get
+        {
+            if (!TrisBPin6)
+            {
+                _portB[6] = _memory.MemoryArray[0,6].GetBitValue(6) == 1;
+            }
+            return _portB[6];
+        }
         set
         {
             PortBInterrupt();
@@ -1227,13 +1351,21 @@ public class MainWindowViewModel : ViewModelBase
             {
                 _memory.MemoryArray[0,6].SetBitValue(6, 0);
             }
+            _portB[6] = value;
             OnPropertyChanged();
         }
     }
     
     public bool PortBPin7
     {
-        get { return _memory.MemoryArray[0,6].GetBitValue(7) == 1; }
+        get
+        {
+            if (!TrisBPin7)
+            {
+                _portB[7] = _memory.MemoryArray[0,6].GetBitValue(7) == 1;
+            }
+            return _portB[7];
+        }
         set
         {
             PortBInterrupt();
@@ -1245,6 +1377,7 @@ public class MainWindowViewModel : ViewModelBase
             {
                 _memory.MemoryArray[0,6].SetBitValue(7, 0);
             }
+            _portB[7] = value;
             OnPropertyChanged();
         }
     }
