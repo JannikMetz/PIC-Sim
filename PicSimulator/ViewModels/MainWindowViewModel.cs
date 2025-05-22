@@ -143,6 +143,8 @@ public class MainWindowViewModel : ViewModelBase
     public ICommand StepCommand { get; }
     
     public ICommand SkipCommand { get; }
+    
+    public ICommand ClearEepromCommand { get; }
 
 
     #endregion
@@ -1530,7 +1532,7 @@ public class MainWindowViewModel : ViewModelBase
         SkipCommand = new RelayCommand(Skip);
         ResetCommand = new RelayCommand(Reset);
         PauseCommand = new RelayCommand(Pause);
-        
+        ClearEepromCommand = new RelayCommand(ClearEeprom);
     }
     
     private void InitializeObservableMemoryArray()
@@ -1606,6 +1608,13 @@ public class MainWindowViewModel : ViewModelBase
     {
         Console.WriteLine("Save as command executed");
     }
+    
+    private void ClearEeprom(object parameter)
+    {
+        Console.WriteLine("Clear EEPROM command executed");
+        _memory.ClearEeprom();
+    }
+    
     private void Start(object parameter)
     {
         if (_fileContent == null || _fileContent == string.Empty)

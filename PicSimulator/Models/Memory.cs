@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -16,6 +17,8 @@ public class Memory : ObservableObject
     public event Action ResetedMemory;
     
     public event Action TimerWritten;
+    
+    private EEPROMService _eepromService;
 
     // Constructor to initialize the memory with default values.
     public Memory()
@@ -24,6 +27,12 @@ public class Memory : ObservableObject
         PowerOnReset();
         CallStack = new int[8];
         StackPointer = 0;
+        
+        string projectDirectory = AppDomain.CurrentDomain.BaseDirectory;
+        string projectRoot = Path.GetFullPath(Path.Combine(projectDirectory, "..", "..", ".."));
+        string eepromPath = Path.Combine(projectRoot, "EEPROM.txt");
+        // Initialize the EEPROM service.
+        _eepromService = new EEPROMService(eepromPath, this);
     }
 
     // This class represents the memory of the PIC microcontroller.
@@ -106,6 +115,11 @@ public class Memory : ObservableObject
             _programCounter2 = value;
             OnPropertyChanged();
         }
+    }
+    
+    public void ClearEeprom()
+    {
+        _eepromService.ClearEeprom();
     }
 
     public void IncrementProgramCounter()
@@ -352,6 +366,27 @@ public class Memory : ObservableObject
         {
             TimerWritten?.Invoke();
         }
+        if (address == 0x08 && bankBit == 1)
+        {
+            // EEPROM
+            if ((value & 0x01) == 1)
+            {
+                // Read from EEPROM
+                _eepromService.ReadByte();
+            }
+            
+            if ((value & 0x02) == 1)
+            {
+                // Write to EEPROM
+                _eepromService.WriteByteAsync();
+            }
+        }
+        
+        if(address == 0x09 && bankBit == 1)
+        {
+            // EECON2
+            _eepromService.WriteToEECON2();
+        }
     }
 
     public int GetBit(int address, int bitNumber)
@@ -390,6 +425,39 @@ public class Memory : ObservableObject
         {
             // Update the other bank as well
             MemoryArray[1 - bankBit, address].SetBitValue(bitNumber, value);
+        }
+        
+        // update the program counter
+        if (address == 0x02)
+        {
+            SetProgramCounterAfterManipulation();
+        }
+
+        if (address == 0x01 && bankBit == 0)
+        {
+            TimerWritten?.Invoke();
+        }
+        
+        if (address == 0x08 && bankBit == 1)
+        {
+            // EEPROM
+            if (bitNumber == 0)
+            {
+                // Read from EEPROM
+                _eepromService.ReadByte();
+            }
+
+            if (bitNumber == 1)
+            {
+                // Write to EEPROM
+                _eepromService.WriteByteAsync();
+            }
+        }
+        
+        if(address == 0x09 && bankBit == 1)
+        {
+            // EECON2
+            _eepromService.WriteToEECON2();
         }
     }
 
