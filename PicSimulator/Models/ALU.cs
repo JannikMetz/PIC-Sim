@@ -15,6 +15,7 @@ public class ALU
         _memory = memory;
         _watchdog = watchdog;
         _timer = timer;
+        _memory.RuntimeTimer = _timer.RuntimeTimer;
     }
     
     public int BreakpointSecs = 0;
@@ -75,7 +76,6 @@ public class ALU
             // Check if Breakpoints are active
             if(_breakpoints[_memory.ProgramCounter2])
             {
-                Console.WriteLine("Breakpoint active at: " + _memory.ProgramCounter2.ToString("X4") +  " for " + BreakpointSecs + " Secs");
                 BreakpointSecs++;
             }
             // Check if any interrupt is active
@@ -83,9 +83,7 @@ public class ALU
             {
                 _memory.MemoryArray[1,0x0B].SetBitValue(7, 0); // clear GIE
                 
-                Console.WriteLine("Interrupt");
                 _memory.PushToCallStack(_memory.ProgramCounter2);
-                Console.WriteLine("Jump to interrupt service routine");
                 _memory.SetProgramCounterForJump(0x0004); // Jump to interrupt service routine
 
                 // like call instruction
@@ -101,6 +99,7 @@ public class ALU
                     _watchdog.Increment();
                     if (_lastOperationTook2Microseconds)
                     {
+                        _timer.RuntimeTimer.IncrementTimer();
                         _watchdog.Increment();
                 _lastOperationTook2Microseconds = false;
                     }
@@ -109,26 +108,25 @@ public class ALU
             else
             {
                 BreakpointSecs = 0;
-                
-                    _watchdog.Increment(); // increment watchdog timer
-                    if (_lastOperationTook2Microseconds)
-                    {
-                        _watchdog.Increment();
-                _lastOperationTook2Microseconds = false;
-                    }
+
+                _watchdog.Increment(); // increment watchdog timer
+                if (_lastOperationTook2Microseconds)
+                {
+                    _timer.RuntimeTimer.IncrementTimer();
+                    _watchdog.Increment();
+                    _lastOperationTook2Microseconds = false;
+                }
                 
                 
                 int opcode = _memory.ProgramMemory[_memory.ProgramCounter2];
 
                 // Execute the operation
-                Console.WriteLine("Executing Opcode: " + opcode.ToString("X4") + " at PC: " +
-                                  _memory.ProgramCounter2.ToString("X4"));
                 GetOperation(opcode);
             }
+            _timer.RuntimeTimer.IncrementTimer();
             Thread.Sleep(ExecutionSpeed);
         }
         // Stopped 
-        Console.WriteLine("Execution Stopped");
     }
     
     public void Step()
@@ -137,9 +135,7 @@ public class ALU
         {
             _memory.MemoryArray[1,0x0B].SetBitValue(7, 0); // clear GIE
                 
-            Console.WriteLine("Interrupt");
             _memory.PushToCallStack(_memory.ProgramCounter2);
-            Console.WriteLine("Jump to interrupt service routine");
             _memory.SetProgramCounterForJump(0x0004); // Jump to interrupt service routine
 
             // like call instruction
@@ -155,6 +151,7 @@ public class ALU
                 _watchdog.Increment();
                 if (_lastOperationTook2Microseconds)
                 {
+                    _timer.RuntimeTimer.IncrementTimer();
                     _watchdog.Increment();
                     _lastOperationTook2Microseconds = false;
                 }
@@ -166,6 +163,7 @@ public class ALU
                 _watchdog.Increment(); // increment watchdog timer
                 if (_lastOperationTook2Microseconds)
                 {
+                    _timer.RuntimeTimer.IncrementTimer();
                     _watchdog.Increment();
             _lastOperationTook2Microseconds = false;
                 }
@@ -174,10 +172,9 @@ public class ALU
             int opcode = _memory.ProgramMemory[_memory.ProgramCounter2];
 
             // Execute the operation
-            Console.WriteLine("Executing Opcode: " + opcode.ToString("X4") + " at PC: " +
-                              _memory.ProgramCounter2.ToString("X4"));
             GetOperation(opcode);
         }
+        _timer.RuntimeTimer.IncrementTimer();
     }
     
     public void Skip()
@@ -186,8 +183,6 @@ public class ALU
         int opcode = _memory.ProgramMemory[_memory.ProgramCounter2];
 
         // Execute the operation
-        Console.WriteLine("Skipping Opcode: " + opcode.ToString("X4") + " at PC: " +
-                          _memory.ProgramCounter2.ToString("X4"));
         _watchdog.Increment(); // increment watchdog timer
         _memory.IncrementProgramCounter();
     }
@@ -197,7 +192,6 @@ public class ALU
     {
         if (ProgramCounterIndex <= 1024 && ProgramCounterIndex >= 0)
         {
-            Console.WriteLine("Updating Breakpoint at Program counter: " + ProgramCounterIndex.ToString("X4"));
             _breakpoints[ProgramCounterIndex] = active;
         }
         else
@@ -697,9 +691,7 @@ public class ALU
         int pc = opcode & 0x07FF;
         
         // push the program counter, incremented by 1, onto the call stack
-        Console.WriteLine("Calling Stack");
         _memory.PushToCallStack(_memory.ProgramCounter2 + 1);
-        Console.WriteLine("Calling Stack done");
         _memory.SetProgramCounterForJump(pc);
         
         

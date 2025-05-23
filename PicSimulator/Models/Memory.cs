@@ -19,6 +19,21 @@ public class Memory : ObservableObject
     public event Action TimerWritten;
     
     private EEPROMService _eepromService;
+    
+    private Runtimetimer _runtimetimer;
+    
+    public Runtimetimer RuntimeTimer
+    {
+        get { return _runtimetimer; }
+        set
+        {
+            if (_runtimetimer != value)
+            {
+                _runtimetimer = value;
+                OnPropertyChanged(nameof(RuntimeTimer));
+            }
+        }
+    }
 
     // Constructor to initialize the memory with default values.
     public Memory()
@@ -51,7 +66,6 @@ public class Memory : ObservableObject
         {
             // value.CopyTo(_programMemory, 0); Could also work 
             _programMemory = value;
-            Console.WriteLine("Program Memory Set");
             OnPropertyChanged(nameof(ProgramMemory));
         }
     } // Program memory (ROM) - 2kB
@@ -170,7 +184,6 @@ public class Memory : ObservableObject
     public void ResetMemory()
     {
         OnReset = true;
-        Console.WriteLine("Resetting Memory");
         // Reset the memory to default values.
         for (int bank = 0; bank < 2; bank++)
         {
@@ -191,7 +204,6 @@ public class Memory : ObservableObject
             }
         }
 
-        Console.WriteLine("Resetting W-Register");
         WReg = 0; // Reset W register
         ProgramCounter2 = 0;
         OnReset = false;
@@ -202,14 +214,8 @@ public class Memory : ObservableObject
     public void PowerOnReset()
     {
         OnReset = true;
-        Console.WriteLine("Initializing Memory");
-
-        Console.WriteLine("Resetting Program Counter");
 
         ProgramCounter2 = 0;
-
-        Console.WriteLine("Setting Registers to Reset Values");
-
 
         // DO NOT USE SetRegister() HERE BECAUSE IT ONLY SETS ADDRESSES ON CURRENT BANK
 
@@ -308,11 +314,7 @@ public class Memory : ObservableObject
 
     public int GetBank()
     {
-        Console.WriteLine("Getting the Bank Status");
-
         int bankBit = MemoryArray[0, 0x03].GetBitValue(5); // Bit 5 of the status register
-
-        Console.WriteLine("Bank Status: " + bankBit);
 
         return bankBit;
     }
@@ -329,7 +331,6 @@ public class Memory : ObservableObject
             address = address & 0x7F;
         }
 
-        Console.WriteLine($"Getting Memory in Bank {bankBit} at address {address}");
         return MemoryArray[bankBit, address].Value;
     }
 
@@ -346,7 +347,6 @@ public class Memory : ObservableObject
             address = address & 0x7F;
         }
         
-        Console.WriteLine($"Setting Memory in Bank {bankBit} at address {address} to {value}");
         MemoryArray[bankBit, address].WriteValueFromUiThread(value);
 
         // these addresses are mirrored in the other bank
@@ -401,7 +401,6 @@ public class Memory : ObservableObject
             address = address & 0x7F;
         }
         
-        Console.WriteLine($"Getting Bit {bitNumber} in Bank {bankBit} at address {address}");
         int value = MemoryArray[bankBit, address].GetBitValue(bitNumber);
         return value;
     }
@@ -418,7 +417,6 @@ public class Memory : ObservableObject
             address = address & 0x7F;
         }
         
-        Console.WriteLine($"Setting Bit {bitNumber} in Bank {bankBit} at address {address} to {value}");
         MemoryArray[bankBit, address].SetBitValue(bitNumber, value);
         // these addresses are mirrored in the other bank
         if (address == 0x02 || address == 0x03 || address == 0x04 || address == 0x0A || address == 0x0B)

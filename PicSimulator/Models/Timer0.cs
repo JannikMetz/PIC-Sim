@@ -9,6 +9,19 @@ public class Timer0 : INotifyPropertyChanged
     private Memory _memory;
     private int _timer0Value; // this is only used for the prescaler
     private Runtimetimer _runtimetimer;
+
+    public Runtimetimer RuntimeTimer
+    {
+        get { return _runtimetimer; }
+        set
+        {
+            if (_runtimetimer != value)
+            {
+                _runtimetimer = value;
+                OnPropertyChanged(nameof(RuntimeTimer));
+            }
+        }
+    }
     public int Timer
     {
         get { return _runtimetimer.Timer; }
@@ -56,7 +69,6 @@ public class Timer0 : INotifyPropertyChanged
 
     public void IncrementTimer()
     {
-        _runtimetimer.IncrementTimer();
         int preScaler = 1;
         if (_memory.MemoryArray[1,1].GetBitValue(3) == 0)
         {

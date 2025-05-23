@@ -28,6 +28,7 @@ public class MainWindowViewModel : ViewModelBase
     private MainWindow _mainWindow;
     private Watchdog _watchdog;
     private Timer0 _timer;
+    private Runtimetimer _runtimetimer;
 
     #endregion
 

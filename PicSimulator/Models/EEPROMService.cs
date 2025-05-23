@@ -55,7 +55,7 @@ public class EEPROMService
             File.Create(eepromFilePath).Close();
             var emptyEeprom = new string[EepromSize];
             for (int i = 0; i < EepromSize; i++)
-                emptyEeprom[i] = "00"; 
+                emptyEeprom[i] = "FF"; 
 
             File.WriteAllLines(eepromFilePath, emptyEeprom);
         }
@@ -65,7 +65,7 @@ public class EEPROMService
     {
         var emptyEeprom = new string[EepromSize];
         for (int i = 0; i < EepromSize; i++)
-            emptyEeprom[i] = "00"; 
+            emptyEeprom[i] = "FF"; 
 
         File.WriteAllLines(eepromFilePath, emptyEeprom);
     }
@@ -84,7 +84,16 @@ public class EEPROMService
 
     public async Task WriteByteAsync()
     {
-        await Task.Delay(1000); // simulate write delay (this is longer than normal, but that's just for simulation)
+        if (_memory.RuntimeTimer == null)
+        {
+            throw new InvalidOperationException("Runtime timer is not set.");
+        }
+        int timer = _memory.RuntimeTimer.Timer;
+        while (_memory.RuntimeTimer.Timer < timer + 1000)
+        {
+            await Task.Delay(1);
+        }
+        
         // check if the WREN is set
         if ((EECON1 & 0x04) == 0)
         {
