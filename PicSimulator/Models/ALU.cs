@@ -24,7 +24,7 @@ public class ALU
     
     public bool IsActive = false;
 
-    public int ExecutionSpeed = 100;
+    public int ExecutionSpeed = 5; // fastest my pc can handle
     
 
     #region Interrupts
@@ -74,7 +74,7 @@ public class ALU
         {
             
             // Check if Breakpoints are active
-            if(_breakpoints[_memory.ProgramCounter2])
+            if(_breakpoints[_memory.ProgramCounter])
             {
                 BreakpointSecs++;
             }
@@ -83,7 +83,7 @@ public class ALU
             {
                 _memory.MemoryArray[1,0x0B].SetBitValue(7, 0); // clear GIE
                 
-                _memory.PushToCallStack(_memory.ProgramCounter2);
+                _memory.PushToCallStack(_memory.ProgramCounter);
                 _memory.SetProgramCounterForJump(0x0004); // Jump to interrupt service routine
 
                 // like call instruction
@@ -118,7 +118,7 @@ public class ALU
                 }
                 
                 
-                int opcode = _memory.ProgramMemory[_memory.ProgramCounter2];
+                int opcode = _memory.ProgramMemory[_memory.ProgramCounter];
 
                 // Execute the operation
                 GetOperation(opcode);
@@ -135,7 +135,7 @@ public class ALU
         {
             _memory.MemoryArray[1,0x0B].SetBitValue(7, 0); // clear GIE
                 
-            _memory.PushToCallStack(_memory.ProgramCounter2);
+            _memory.PushToCallStack(_memory.ProgramCounter);
             _memory.SetProgramCounterForJump(0x0004); // Jump to interrupt service routine
 
             // like call instruction
@@ -169,7 +169,7 @@ public class ALU
                 }
             
             // Read the opcode from the program memory
-            int opcode = _memory.ProgramMemory[_memory.ProgramCounter2];
+            int opcode = _memory.ProgramMemory[_memory.ProgramCounter];
 
             // Execute the operation
             GetOperation(opcode);
@@ -180,7 +180,7 @@ public class ALU
     public void Skip()
     {
         // Read the opcode from the program memory
-        int opcode = _memory.ProgramMemory[_memory.ProgramCounter2];
+        int opcode = _memory.ProgramMemory[_memory.ProgramCounter];
 
         // Execute the operation
         _watchdog.Increment(); // increment watchdog timer
@@ -691,7 +691,7 @@ public class ALU
         int pc = opcode & 0x07FF;
         
         // push the program counter, incremented by 1, onto the call stack
-        _memory.PushToCallStack(_memory.ProgramCounter2 + 1);
+        _memory.PushToCallStack(_memory.ProgramCounter + 1);
         _memory.SetProgramCounterForJump(pc);
         
         

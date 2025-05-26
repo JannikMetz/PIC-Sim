@@ -160,7 +160,7 @@ public class MainWindowViewModel : ViewModelBase
     }
     public int ProgramCounter
     {
-        get { return _memory.ProgramCounter2; }
+        get { return _memory.ProgramCounter; }
     }
     
     public int FSR
@@ -1402,7 +1402,7 @@ public class MainWindowViewModel : ViewModelBase
                 OnPropertyChanged(nameof(WReg));
             }
             
-            if (e.PropertyName == nameof(_memory.ProgramCounter2))
+            if (e.PropertyName == nameof(_memory.ProgramCounter))
             {
                 OnPropertyChanged(nameof(ProgramCounter));
                 HighlightCurrentLine();
@@ -1695,7 +1695,7 @@ public class MainWindowViewModel : ViewModelBase
         
         foreach (var line in ProgramLines)
         {
-            line.IsHighlighted = (line.LineNumber == _encode.OpcodeLines[_memory.ProgramCounter2]);
+            line.IsHighlighted = (line.LineNumber == _encode.OpcodeLines[_memory.ProgramCounter]);
         }
     }
     

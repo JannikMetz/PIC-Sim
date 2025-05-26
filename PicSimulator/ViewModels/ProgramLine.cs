@@ -7,9 +7,11 @@ namespace PicSimulator.ViewModels;
 public class ProgramLine : ViewModelBase
 {
     public int LineNumber { get; set; }
+    public int OpCodeNumber { get; set; }
     public string Content { get; set; }
     private bool _isHighlighted;
     private bool _isBreakpoint;
+    
     
     public ProgramLine(int lineNumber, string content, bool isHighlighted = false, bool isBreakpoint = false)
     {

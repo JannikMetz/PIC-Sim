@@ -119,14 +119,14 @@ public class Memory : ObservableObject
         }
     }
 
-    private int _programCounter2;
+    private int _programCounter;
 
-    public int ProgramCounter2
+    public int ProgramCounter
     {
-        get { return _programCounter2; }
+        get { return _programCounter; }
         set
         {
-            _programCounter2 = value;
+            _programCounter = value;
             OnPropertyChanged();
         }
     }
@@ -138,7 +138,7 @@ public class Memory : ObservableObject
 
     public void IncrementProgramCounter()
     {
-        int pc = ProgramCounter2;
+        int pc = ProgramCounter;
         if (pc == 0x3FF)
         {
             pc = 0;
@@ -149,7 +149,7 @@ public class Memory : ObservableObject
         }
 
         SetRegister(0x02, pc & 0xFF); // Only lower 8 bits are represented in the register
-        ProgramCounter2 = pc;
+        ProgramCounter = pc;
     }
 
     public void SetProgramCounterForJump(int address)
@@ -163,13 +163,13 @@ public class Memory : ObservableObject
         int pc = address + (pcLath << 8);
 
         SetRegister(0x02, pc & 0xFF); // Only lower 8 bits are represented in the register
-        ProgramCounter2 = pc;
+        ProgramCounter = pc;
     }
 
     public void SetProgramCounterForReturn(int value)
     {
         SetRegister(0x02, value & 0xFF); // Only lower 8 bits are represented in the register
-        ProgramCounter2 = value;
+        ProgramCounter = value;
     }
 
     public void SetProgramCounterAfterManipulation()
@@ -177,7 +177,7 @@ public class Memory : ObservableObject
         int pc = GetRegister(0x02);
         int pcLath = GetRegister(0x0A);
 
-        ProgramCounter2 = pc + ((pcLath & 0x1F) << 8);
+        ProgramCounter = pc + ((pcLath & 0x1F) << 8);
     }
 
     // set everything to 0
@@ -205,7 +205,7 @@ public class Memory : ObservableObject
         }
 
         WReg = 0; // Reset W register
-        ProgramCounter2 = 0;
+        ProgramCounter = 0;
         OnReset = false;
 
         ResetedMemory?.Invoke();
@@ -215,7 +215,7 @@ public class Memory : ObservableObject
     {
         OnReset = true;
 
-        ProgramCounter2 = 0;
+        ProgramCounter = 0;
 
         // DO NOT USE SetRegister() HERE BECAUSE IT ONLY SETS ADDRESSES ON CURRENT BANK
 

@@ -49,7 +49,6 @@ public class Encode
         ObservableCollection<ProgramLine> programLines = new ObservableCollection<ProgramLine>();
         int[] opcodes = new int[1024];
         string[] lines = input.Split('\n');
-        int ProgramCounterLineIndex = 0;
         int lineIndex = 0;
         Console.WriteLine("<----------- Extracting Opcodes ----------->");
 
@@ -57,8 +56,8 @@ public class Encode
         {
             // Create a new ProgramLine object and add it to the collection
             ProgramLine programLine = new ProgramLine(lineIndex, line);
-            lineIndex++;
             programLines.Add(programLine);
+            lineIndex++;
 
             //check if line starts with whitespace or number
             if (!string.IsNullOrWhiteSpace(line) && line[0] != ' ')
@@ -71,9 +70,7 @@ public class Encode
                 opcodes[programCounter] = code;
 
                 // Save the opcode to the opcodeLines array
-                _opcodeLines[ProgramCounterLineIndex] = Array.IndexOf(lines, line);
-
-                ProgramCounterLineIndex++;
+                _opcodeLines[programCounter] = Array.IndexOf(lines, line);
             }
         }
 
