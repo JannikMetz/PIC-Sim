@@ -77,6 +77,7 @@ public class ALU
             if(_breakpoints[_memory.ProgramCounter])
             {
                 BreakpointSecs++;
+                continue;
             }
             // Check if any interrupt is active
             else if (GIE && ((T0IF && T0IE) || (INTF && INTE) || (RBIF && RBIE) || (EEIF && EEIE))) 
@@ -116,7 +117,6 @@ public class ALU
                     _watchdog.Increment();
                     _lastOperationTook2Microseconds = false;
                 }
-                
                 
                 int opcode = _memory.ProgramMemory[_memory.ProgramCounter];
 
