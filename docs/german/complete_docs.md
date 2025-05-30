@@ -89,3 +89,51 @@ Im Falle dieses Projektes wird ein PIC16F84 Mikrocontroller simuliert. Dieser wi
 Die Simulation erfolgt über eine reine logische Ebene, die die Funktionen des Mikrocontrollers nachbildet. Es werden keine elektrischen Komponenten oder physische Hardware simuliert. 
 
 Somit sind Systemvariablen wie Spannung, Stromstärke, Stromverbrauch, Temperatur und weitere Randbedingungen in diesem Projekt nicht von Relevanz.
+
+## Vor- und Nachteile einer Simulation
+
+
+
+## Programmoberfläche und deren Handhabung
+
+Der Simulator kann durch eine GUI bedient werden. Auf der Navigationleiste befinden sich 3 Menus. Mit dem ersten, File, kann eine Simulationsdatei geladen werden. Unter Settings kann
+die Simulations geschwindigkeit angepasst werden und der EEPROM-Speicher für test zwecke gelöscht werden. Mit dem Menu Dokumentation wird diese Dokumentation aufgerufen. Auf der linken Seite des Hauptfenstern ist der Speicher des PIC abgebildet, durch klicken kann der gespeicherte Wert geändert werden. Der neue Wert muss im Hexadezimalsystem eingeben werden.Oben rechts im Hauptfenster befindet sich eine übersicht über die wichtigsten Register des PIC's. Dazu gehören die Port A und B Register und die korrespondierenden Tris-Register. Mit hilfe der Checkboxen kann der User die Tris-Register einstellen und die Port's setzen, insofern sie als Input fungieren. Weitere Register sind: Status, Option und Intcon. Auch der Watchdogtimer und Stack sind hier abgebildet. Die Quartzfrequenz kann per Combobox eingestellt werden. Der dritte Block, unten rechts, zeigt die geladene LST Datei hier können links Breakpoints gesetzt werden. Rechts befinden sich Buttons mit der der User die Simulation steuern kann. Run startet das Programm, mit Step Forward kann Schritt für Schritt vorgegangen werden. Mit Skip To Next wird ein Befehl übersprungen ohne ihn auszuführen. Bei Pause stoppt das Programm am Aktuellen Befehl und mit Reset wird der Simulator komplett resetet.
+![Pic Simulator GUI](images/PicSimulatorGUI.png)
+
+# Realisierung
+
+## Beschreibung des Grundkonzepts
+
+
+
+## Beschreibung der Gliederung
+
+## Programmstruktur und Ablaufdiagramme
+
+## Verwendete Programmiersprache
+
+Das Backend des Simualators ist in C# programmiert. C# wurde aufgrund unserer familiarität mit der Programmiersprache gewählt. Zudem bietet C# durch .NET eine zuferlässige Entwicklungsumgebung. Das Frontend wurde Mit Avalonia UI gebaut. Die erste Überlegung war es WPF zu nutzen, WPF ist ein UI Framework für .NET Applicationen. Es war wichtig das der Simulator Platform übergreifend funktioniert, vorallem auf Windows und Linux. Da WPF ein Windows exlusives Framework ist fiel die Entscheidung auf Avalonia UI. Avalonia UI eine platformübergreifende Opensource-Alternative zu WPF. Es ist vom WPF inspiriert und hat sehr ähnliche Features. Als IDE wurde JetBrains Rider verwendet. Bei Rider handelt es sich um eine Platformübergreifende IDE für C# und .NET.
+
+## Funktionsbeschreibung ausgewählter Befehle
+
+## Realisierung der Flags
+
+## Implementierung von Interrupts
+
+## Realisierung des TRIS-Registers
+
+## Hardwareansteuerung (optional)
+
+## EEPROM-State-Machine
+
+# Zusammenfassung
+
+## Erreichte Funktionalität
+
+## Fazit und persönliche Erfahrungen
+
+# Anhang
+
+## Programmlisting
+
+## Projektverlauf und Versionsverwaltung
