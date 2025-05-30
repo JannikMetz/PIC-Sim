@@ -7,52 +7,192 @@ namespace PicSimulator.Models;
 public class ALU
 {
     private Memory _memory;
-    public ALU(Memory memory)
+    private Watchdog _watchdog;
+    private Timer0 _timer;
+    private bool _lastOperationTook2Microseconds = false;
+    public ALU(Memory memory, Watchdog watchdog, Timer0 timer)
     {
         _memory = memory;
+        _watchdog = watchdog;
+        _timer = timer;
+        _memory.RuntimeTimer = _timer.RuntimeTimer;
     }
     
     public int BreakpointSecs = 0;
     
-    private static bool[] breakpoints = new bool[1024]; // Max of 1024 Opcodes
+    private static bool[] _breakpoints = new bool[1024]; // Max of 1024 Opcodes
     
-    public bool IsActive = true;
+    public bool IsActive = false;
+
+    public int ExecutionSpeed = 5; // fastest my pc can handle
+    
+
+    #region Interrupts
+    public bool GIE
+    {
+        get => _memory.MemoryArray[1, 0x0B].GetBitValue(7) == 1;
+    }
+    public bool EEIE
+    {
+        get => _memory.MemoryArray[1, 0x0B].GetBitValue(6) == 1;
+    }
+    public bool T0IE
+    {
+        get => _memory.MemoryArray[1, 0x0B].GetBitValue(5) == 1;
+    }
+    public bool INTE
+    {
+        get => _memory.MemoryArray[1, 0x0B].GetBitValue(4) == 1;
+    }
+    public bool RBIE
+    {
+        get => _memory.MemoryArray[1, 0x0B].GetBitValue(3) == 1;
+    }
+    public bool T0IF
+    {
+        get => _memory.MemoryArray[1, 0x0B].GetBitValue(2) == 1;
+    }
+    public bool INTF
+    {
+        get => _memory.MemoryArray[1, 0x0B].GetBitValue(1) == 1;
+    }
+    public bool RBIF
+    {
+        get => _memory.MemoryArray[1, 0x0B].GetBitValue(0) == 1;
+    }
+    public bool EEIF
+    {
+        get => _memory.MemoryArray[1, 0x08].GetBitValue(4)== 1; 
+    }
+    
+    #endregion
     
     public void Start()
     {
-        
-        while (IsActive)
+
+        while (IsActive)  // false if Execution is stopped by Reset or Pausing
         {
-            if(breakpoints[_memory.ProgramCounter])
+            
+            // Check if Breakpoints are active
+            if(_breakpoints[_memory.ProgramCounter])
             {
-                Console.WriteLine("Breakpoint active at: " + _memory.ProgramCounter.ToString("X4") +  " for " + BreakpointSecs + " Secs");
                 BreakpointSecs++;
+                continue;
+            }
+            // Check if any interrupt is active
+            else if (GIE && ((T0IF && T0IE) || (INTF && INTE) || (RBIF && RBIE) || (EEIF && EEIE))) 
+            {
+                _memory.MemoryArray[1,0x0B].SetBitValue(7, 0); // clear GIE
+                
+                _memory.PushToCallStack(_memory.ProgramCounter);
+                _memory.SetProgramCounterForJump(0x0004); // Jump to interrupt service routine
+
+                // like call instruction
+                
+                    if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+                    {
+                        _timer.IncrementTimer();
+                        _timer.IncrementTimer();
+                    }
+
+                    // increment watchdog timer
+                    _watchdog.Increment();
+                    _watchdog.Increment();
+                    if (_lastOperationTook2Microseconds)
+                    {
+                        _timer.RuntimeTimer.IncrementTimer();
+                        _watchdog.Increment();
+                _lastOperationTook2Microseconds = false;
+                    }
+                
             }
             else
             {
                 BreakpointSecs = 0;
-                // Read the opcode from the program memory
+
+                _watchdog.Increment(); // increment watchdog timer
+                if (_lastOperationTook2Microseconds)
+                {
+                    _timer.RuntimeTimer.IncrementTimer();
+                    _watchdog.Increment();
+                    _lastOperationTook2Microseconds = false;
+                }
+                
                 int opcode = _memory.ProgramMemory[_memory.ProgramCounter];
 
                 // Execute the operation
-                Console.WriteLine("Executing Opcode: " + opcode.ToString("X4") + " at PC: " +
-                                  _memory.ProgramCounter.ToString("X4"));
                 GetOperation(opcode);
             }
-            Thread.Sleep(1000);
+            _timer.RuntimeTimer.IncrementTimer();
+            Thread.Sleep(ExecutionSpeed);
         }
         // Stopped 
-        Console.WriteLine("Execution Stopped");
-        
-        
     }
+    
+    public void Step()
+    {
+        if (GIE && ((T0IF && T0IE) || (INTF && INTE) || (RBIF && RBIE) || (EEIF && EEIE))) 
+        {
+            _memory.MemoryArray[1,0x0B].SetBitValue(7, 0); // clear GIE
+                
+            _memory.PushToCallStack(_memory.ProgramCounter);
+            _memory.SetProgramCounterForJump(0x0004); // Jump to interrupt service routine
+
+            // like call instruction
+            
+                if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+                {
+                    _timer.IncrementTimer();
+                    _timer.IncrementTimer();
+                }
+
+                // increment watchdog timer
+                _watchdog.Increment();
+                _watchdog.Increment();
+                if (_lastOperationTook2Microseconds)
+                {
+                    _timer.RuntimeTimer.IncrementTimer();
+                    _watchdog.Increment();
+                    _lastOperationTook2Microseconds = false;
+                }
+            
+        }
+        else
+        {
+           
+                _watchdog.Increment(); // increment watchdog timer
+                if (_lastOperationTook2Microseconds)
+                {
+                    _timer.RuntimeTimer.IncrementTimer();
+                    _watchdog.Increment();
+            _lastOperationTook2Microseconds = false;
+                }
+            
+            // Read the opcode from the program memory
+            int opcode = _memory.ProgramMemory[_memory.ProgramCounter];
+
+            // Execute the operation
+            GetOperation(opcode);
+        }
+        _timer.RuntimeTimer.IncrementTimer();
+    }
+    
+    public void Skip()
+    {
+        // Read the opcode from the program memory
+        int opcode = _memory.ProgramMemory[_memory.ProgramCounter];
+
+        // Execute the operation
+        _watchdog.Increment(); // increment watchdog timer
+        _memory.IncrementProgramCounter();
+    }
+    
     
     public void UpdateBreakpoints(int ProgramCounterIndex, bool active)
     {
         if (ProgramCounterIndex <= 1024 && ProgramCounterIndex >= 0)
         {
-            Console.WriteLine("Updating Breakpoint at Program counter: " + ProgramCounterIndex.ToString("X4"));
-            breakpoints[ProgramCounterIndex] = active;
+            _breakpoints[ProgramCounterIndex] = active;
         }
         else
         {
@@ -62,9 +202,14 @@ public class ALU
     
     public bool GetOperation(int Opcode)
     {
-                            // an Operation takes 1 microsecond at 4MHz but sometimes an
-         _memory.Timer++;   // Operation takes 2 microseconds then we increment again in the Operation
         
+            if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+            {
+                // an Operation takes 1 microsecond at 4MHz but sometimes an
+                _timer.IncrementTimer(); // Operation takes 2 microseconds then we increment again in the Operation
+            }
+        
+
         int Mask6BitOperant = 0x3F00;
         int result = Opcode & Mask6BitOperant;
         switch (result)
@@ -153,7 +298,7 @@ public class ALU
                 return SUBLW(Opcode); // SUBLW
         }
         
-        int Mask3BitOperation = 0x3F00;
+        int Mask3BitOperation = 0x3800;
         result = Opcode & Mask3BitOperation;
         switch (result)
         {
@@ -355,7 +500,13 @@ public class ALU
             _memory.IncrementProgramCounter();
             
             // only when we skip this instruction takes 2 microseconds
-            _memory.Timer++;
+                if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+                {
+                    _timer.IncrementTimer();
+                }
+            
+
+            _lastOperationTook2Microseconds = true;
         }
         
         // increment program counter
@@ -378,7 +529,13 @@ public class ALU
             _memory.IncrementProgramCounter();
             
             // only when we skip this instruction takes 2 microseconds
-            _memory.Timer++;
+                if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+                {
+                    _timer.IncrementTimer();
+                }
+            
+
+            _lastOperationTook2Microseconds = true;
         }
         
         // increment program counter
@@ -407,15 +564,21 @@ public class ALU
         _memory.WReg = value;
 
         // get the last program counter from the top of the call stack
-        int pc = _memory.CallStack.Pop();
+        int pc = _memory.PopFromCallStack();
         
         // set program counter
-        _memory.ProgramCounter = pc;
+        _memory.SetProgramCounterForReturn(pc);
         
         // this instruction takes 2 microseconds
-        _memory.Timer++;
+            if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+            {
+                _timer.IncrementTimer();
+            }
         
-        // prgramm counter is not incremented here because we did it in the CALL instruction
+
+        _lastOperationTook2Microseconds = true;
+        
+        // program counter is not incremented here because we did it in the CALL instruction
         
         return true;
     }
@@ -426,6 +589,43 @@ public class ALU
         int value = opcode & 0x00FF;
         // ADD to WReg
         int result = _memory.WReg + value;
+        
+        if (result == 0)
+        {
+            // Set Zero Flag
+            _memory.SetZeroFlag();
+        }
+        else
+        {
+            // Clear Zero Flag
+            _memory.ClearZeroFlag();
+        }
+        
+        // this is a mistake on the PIC hardware, but we implement it as it is
+        if (result >= 0xFF)
+        {
+            // Set Carry Flag
+            _memory.SetCarryFlag();
+        }
+        else
+        {
+            // Clear Carry Flag
+            _memory.ClearCarryFlag();
+        }
+        
+        bool digitCarry = (_memory.WReg & 0x0F) + (value & 0x0F) > 0x0F;
+        
+        if (digitCarry)
+        {
+            // Set Digit Carry Flag
+            _memory.SetDigitCarryFlag();
+        }
+        else
+        {
+            // Clear Digit Carry Flag
+            _memory.ClearDigitCarryFlag();
+        }
+        
         _memory.WReg = result;
         
         // increment program counter
@@ -464,9 +664,9 @@ public class ALU
             _memory.ClearCarryFlag();
         }
         
-        int digitCarry = result & 0x000F;
+        bool digitCarryBug = ((value & 0x0F)-(_memory.WReg & 0x0F)) >= 0;
         
-        if (digitCarry >= 0)
+        if (digitCarryBug)
         {
             // Set Digit Carry Flag
             _memory.SetDigitCarryFlag();
@@ -491,12 +691,17 @@ public class ALU
         int pc = opcode & 0x07FF;
         
         // push the program counter, incremented by 1, onto the call stack
-        Console.WriteLine("Calling Stack");
-        _memory.CallStack.Push(_memory.ProgramCounter + 1);
-        Console.WriteLine("Calling Stack done");
-        _memory.ProgramCounter = pc;
+        _memory.PushToCallStack(_memory.ProgramCounter + 1);
+        _memory.SetProgramCounterForJump(pc);
         
-        _memory.Timer++;
+        
+            if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+            {
+                _timer.IncrementTimer();
+            }
+        
+
+        _lastOperationTook2Microseconds = true;
         return true;
     }
 
@@ -505,44 +710,95 @@ public class ALU
         int pc = opcode & 0x07FF; 
         
         // set the program counter
-        _memory.ProgramCounter = pc;
+        _memory.SetProgramCounterForJump(pc);
+
         
-        _memory.Timer++;
+            if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+            {
+                _timer.IncrementTimer();
+            }
+        
+        _lastOperationTook2Microseconds = true;
         return true;
     }
 
     private bool SLEEP()
     {
-        // TODO: implement sleep mode (watchdog timer is needed)
+        _watchdog.Reset();
+        
+        // set PD to 0 on both banks 
+        _memory.MemoryArray[0,3].SetBitValue(3, 0);
+        _memory.MemoryArray[1,3].SetBitValue(3, 0);
+        
+        // set TO to 1 on both banks
+        _memory.MemoryArray[0,3].SetBitValue(4, 1);
+        _memory.MemoryArray[1,3].SetBitValue(4, 1);
+        
+        _watchdog.AluIsSleeping = true;
+        
+        while (_watchdog.AluIsSleeping)
+        {
+            // wait for the watchdog to wake up
+            _watchdog.Increment();
+            Thread.Sleep(ExecutionSpeed);
+        }
+        
         return true;
     }
 
     private bool RETURN()
     {
         // get the last program counter from the top of the call stack
-        int pc = _memory.CallStack.Pop();
+        int pc = _memory.PopFromCallStack();
         
         // set program counter
-        _memory.ProgramCounter = pc;
+        _memory.SetProgramCounterForReturn(pc);
         
         // this instruction takes 2 microseconds
-        _memory.Timer++;
         
-        // prgramm counter is not incremented here because we did it in the CALL instruction
+            if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+            {
+                _timer.IncrementTimer();
+            }
+        
+
+        _lastOperationTook2Microseconds = true;
+        // program counter is not incremented here because we did it in the CALL instruction
         
         return true;
     }
 
     private bool RETFIE()
     {
-        // TODO: implement RETFIE (return from interrupt)
-        _memory.Timer++;
+        // get the last program counter from the top of the call stack
+        int pc = _memory.PopFromCallStack();
+        
+        // set program counter
+        _memory.SetProgramCounterForReturn(pc);
+        
+        _memory.MemoryArray[1,0x0B].SetBitValue(7, 1); // set GIE to 1
+
+        // this instruction takes 2 microseconds
+        
+            if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+            {
+                _timer.IncrementTimer();
+            }
+        
+
+        _lastOperationTook2Microseconds = true;
         return true;
     }
 
     private bool CLRWDT()
     {
-        // TODO: implement CLRWDT (clear watchdog timer)
+        _watchdog.Reset();
+        
+        _memory.MemoryArray[0,3].SetBitValue(3, 1);
+        _memory.MemoryArray[1,3].SetBitValue(3, 1);
+        _memory.MemoryArray[0,3].SetBitValue(4, 1);
+        _memory.MemoryArray[1,3].SetBitValue(4, 1);
+        
         return true;
     }
     
@@ -573,9 +829,9 @@ public class ALU
             _memory.ClearCarryFlag();
         }
         
-        int digitCarry = result & 0x000F;
+        bool digitCarry = (_memory.WReg & 0x0F) + (_memory.GetRegister(address) & 0x0F) > 0x0F;
         
-        if (digitCarry > 0x0F)
+        if (digitCarry)
         {
             // Set Digit Carry Flag
             _memory.SetDigitCarryFlag();
@@ -723,7 +979,13 @@ public class ALU
             _memory.IncrementProgramCounter();
             
             // only when we skip this instruction takes 2 microseconds
-            _memory.Timer++;
+                if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+                {
+                    _timer.IncrementTimer();
+                }
+            
+
+            _lastOperationTook2Microseconds = true;
         }
         if (destinationBit == 0)
         {
@@ -782,24 +1044,21 @@ public class ALU
         int destinationBit = f & 0x0080;
         int result = _memory.GetRegister(address);
         result++;
-
-        if (result == 0x100)
-        {
-            // Set Zero Flag if result is more than 8 bits
-            _memory.SetZeroFlag();
-        }
-        else
-        {
-            // Clear Zero Flag
-            _memory.ClearZeroFlag();
-        }
+        
+        if (result == 0x100 || result == 0x00)
         {
             // Skip: increment program counter twice
             _memory.IncrementProgramCounter();
             
             // only when we skip this instruction takes 2 microseconds
-            _memory.Timer++;
+                if (_memory.MemoryArray[1, 1].GetBitValue(5) == 0)
+                {
+                    _timer.IncrementTimer();
+                }
+
+            _lastOperationTook2Microseconds = true;
         }
+        
         if (destinationBit == 0)
         {
             // write to register W
@@ -972,9 +1231,10 @@ public class ALU
             _memory.ClearCarryFlag();
         }
         
-        int digitCarry = result & 0x000F;
+        // this is a mistake on the PIC hardware, but we implement it as it is
+        bool digitCarryBug = ((_memory.GetRegister(address) & 0x0F) - (_memory.WReg & 0x0F)) >= 0;
         
-        if (digitCarry >= 0)
+        if (digitCarryBug)
         {
             // Set Digit Carry Flag
             _memory.SetDigitCarryFlag();
@@ -1073,6 +1333,5 @@ public class ALU
         
         return true;
     }
-    
 }
 

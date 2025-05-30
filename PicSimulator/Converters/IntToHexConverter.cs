@@ -10,7 +10,8 @@ namespace PicSimulator.Converters
         {
             if (value is int intValue)
             {
-                return $"{intValue:X2}";
+                var format = parameter as string ?? "X2"; // Default ist "X2"
+                return intValue.ToString(format);
             }
             return value;
         }

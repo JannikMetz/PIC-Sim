@@ -3,8 +3,8 @@
         xmlns:vm="using:PicSimulator.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="using:PicSimulator.ViewModels"
         xmlns:converters="clr-namespace:PicSimulator.Converters"
+        xmlns:BoolConverters="clr-namespace:PicSimulator.Converters"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="PicSimulator.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
@@ -14,53 +14,114 @@
     <Window.Resources>
         <converters:BooleanToBrushConverter x:Key="BooleanToBrushConverter" />
         <converters:IntToHexConverter x:Key="IntToHexConverter" />
-        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <BoolConverters:AndConverter x:Key="And" />
+        <BoolConverters:OrConverter x:Key="Or" />
+
     </Window.Resources>
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
+        <vm:MainWindowViewModel />
     </Design.DataContext>
     <Grid>
         <!-- Grid defintion -->
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.4*"/>
-            <RowDefinition Height="5*"/>
-            <RowDefinition Height="5*"/>
+            <RowDefinition Height="0.4*" />
+            <RowDefinition Height="5*" />
+            <RowDefinition Height="5*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
-        
+
         <!-- Navbar for Loading, Saving, Running Code -->
-        <Menu Grid.Row="0" Grid.ColumnSpan="3" Background="#1b1b1b" >
+        <Menu Grid.Row="0" Grid.ColumnSpan="3" Background="#1b1b1b">
+
+            <!-- ~1~ Quick Access to Run etc. Commands  @1@ -->
+            <!-- <MenuItem Command="{Binding StartCommand}" MinWidth="32"> -->
+            <!--     <MenuItem.Icon> -->
+            <!--         <Image Source="/Assets/FontAwesome/png/red-play-solid.png" Width="16" Height="16"  /> -->
+            <!--     </MenuItem.Icon> -->
+            <!-- </MenuItem> -->
+            <!-- <MenuItem Command="{Binding StepCommand}"> -->
+            <!--     <MenuItem.Icon> -->
+            <!--         <Image Source="/Assets/FontAwesome/png/red-forward-solid.png" Width="16" Height="16" /> -->
+            <!--     </MenuItem.Icon> -->
+            <!-- </MenuItem> -->
+            <!-- <MenuItem Command="{Binding PauseCommand}"> -->
+            <!--     <MenuItem.Icon> -->
+            <!--         <Image Source="/Assets/FontAwesome/png/red-pause-solid.png" Width="16" Height="16" /> -->
+            <!--     </MenuItem.Icon> -->
+            <!-- </MenuItem> -->
+            <!-- <MenuItem Command="{Binding ResetCommand}"> -->
+            <!--     <MenuItem.Icon> -->
+            <!--         <Image Source="/Assets/FontAwesome/png/red-stop-solid.png" Width="16" Height="16" /> -->
+            <!--     </MenuItem.Icon> -->
+            <!-- </MenuItem> -->
+            <!-- -->
+            <!-- <Separator/> -->
+
+
+            <!-- Loading Saving Files -->
             <MenuItem Header="File">
-                <MenuItem Header="Load" Command="{Binding LoadCommand}"/>
-                <Separator/>
-                <MenuItem Header="Save" Command="{Binding SaveCommand}"/>
-                <MenuItem Header="Save As" Command="{Binding SaveAsCommand}"/>
-                <MenuItem Header="Test-Opcodes" Command="{Binding TestCommand}"/>
-            </MenuItem>
-            
-            <MenuItem Header="Code Execution">
-                <MenuItem Header="Run" Command="{Binding StartCommand}"/>
+                <MenuItem Header="Load" Command="{Binding LoadCommand}" />
                 <Separator />
-                <MenuItem Header="Pause" Command="{Binding PauseCommand}"/>
-                <MenuItem Header="Reset" Command="{Binding ResetCommand}"/>
+                <MenuItem Header="Save" Command="{Binding SaveCommand}" />
+                <MenuItem Header="Save As" Command="{Binding SaveAsCommand}" />
+                <Separator />
+                <MenuItem Header="Clear EEPROM" Command="{Binding ClearEepromCommand}" />
             </MenuItem>
+
+            <!-- Code Execution and Pausing Commands -->
+            <!-- <MenuItem Header="Code Execution"> -->
+            <!--     <MenuItem Header="Run" Command="{Binding StartCommand}"> -->
+            <!--         <MenuItem.Icon> -->
+            <!--             <Image Source="/Assets/FontAwesome/png/red-play-solid.png" Width="16" Height="16" /> -->
+            <!--         </MenuItem.Icon> -->
+            <!--     </MenuItem> -->
+            <!--     <MenuItem Header="Step Forward" Command="{Binding StepCommand }" IsEnabled="{Binding !IsExecuting}"> -->
+            <!--         <MenuItem.Icon> -->
+            <!--             <Image Source="/Assets/FontAwesome/png/red-forward-step-solid.png" Width="16" Height="16" /> -->
+            <!--         </MenuItem.Icon> -->
+            <!--     </MenuItem> -->
+            <!--     <MenuItem Header="Skip To Next" Command="{Binding SkipCommand}" IsEnabled="{Binding !IsExecuting}"> -->
+            <!--         <MenuItem.Icon> -->
+            <!--             <Image Source="/Assets/FontAwesome/png/red-forward-solid.png" Width="16" Height="16" /> -->
+            <!--         </MenuItem.Icon> -->
+            <!--     </MenuItem> -->
+            <!--     <Separator /> -->
+            <!-- -->
+            <!--     <MenuItem Header="Pause" Command="{Binding PauseCommand}" IsEnabled="{Binding IsExecuting}"> -->
+            <!--         <MenuItem.Icon> -->
+            <!--             <Image Source="/Assets/FontAwesome/png/red-pause-solid.png" Width="16" Height="16" /> -->
+            <!--         </MenuItem.Icon> -->
+            <!--     </MenuItem> -->
+            <!--     <MenuItem Header="Reset" Command="{Binding ResetCommand}"> -->
+            <!--         <MenuItem.Icon> -->
+            <!--             <Image Source="/Assets/FontAwesome/png/red-stop-solid.png" Width="16" Height="16" /> -->
+            <!--         </MenuItem.Icon> -->
+            <!--     </MenuItem> -->
+            <!-- </MenuItem> -->
             <MenuItem Header="Settings">
+                <MenuItem Header="Execution Speed" IsEnabled="{Binding !IsExecuting}">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <TextBlock Text="Speed:" VerticalAlignment="Center"/>
+                        <TextBox Width="100"
+                                 Text="{Binding SetExecutionSpeed, Mode=TwoWay}"
+                                 VerticalAlignment="Center"/>
+                    </StackPanel>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="Documentation" Click="OnOpenWebsiteClick">
             </MenuItem>
         </Menu>
-        
-        
-        
+
+
         <!-- Registers -->
-        <Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" BorderBrush="#FF000000" BorderThickness="1" CornerRadius="10" Margin="10,10,10,10" ClipToBounds="True">
-            <ScrollViewer Background="#1b1b1b" Padding="0, 20, 20, 20">
+        <Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" BorderBrush="#FF000000" BorderThickness="1"
+                CornerRadius="10" Margin="10,10,10,10" ClipToBounds="True">
+            <ScrollViewer Background="#1b1b1b" Padding="0">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" /> <!-- Spaltenüberschriften -->
@@ -72,7 +133,8 @@
                     </Grid.ColumnDefinitions>
 
                     <!-- Spaltenüberschriften -->
-                    <ItemsControl Grid.Row="0" Grid.Column="1" ItemsSource="{Binding ColumnHeaders}" HorizontalAlignment="Stretch">
+                    <ItemsControl Grid.Row="0" Grid.Column="1" ItemsSource="{Binding ColumnHeaders}"
+                                  HorizontalAlignment="Stretch">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <UniformGrid Columns="{Binding ColumnHeaders.Count}" />
@@ -91,7 +153,7 @@
                     </ItemsControl>
 
                     <!-- Zeilenüberschriften -->
-                    <ItemsControl Grid.Row="1" Grid.Column="0" ItemsSource="{Binding RowHeaders}" >
+                    <ItemsControl Grid.Row="1" Grid.Column="0" ItemsSource="{Binding RowHeaders}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel Orientation="Vertical" />
@@ -111,265 +173,963 @@
                     <ItemsControl Grid.Row="1" Grid.Column="1" ItemsSource="{Binding ObservableMemoryArray}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <StackPanel Orientation="Vertical" />
+                                <UniformGrid Columns="8" />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <ItemsControl ItemsSource="{Binding}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <UniformGrid Columns="8" />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBox
-                                                Text="{Binding Value, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}"
-                                                HorizontalAlignment="Stretch"
-                                                VerticalAlignment="Center"
-                                                TextAlignment="Center"
-                                                FontFamily="Consolas"
-                                                Padding="0,10,0,10"
-                                                Background="Transparent"
-                                                BorderBrush="Transparent"
-                                                Foreground="White"
-                                                MaxLength="2"
-                                                TextInput="HexTextBox_TextInput"
-                                                GotFocus="HexTextBox_GotFocus"
-                                                LostFocus="HexTextBox_LostFocus"
-                                                KeyDown="HexTextBox_KeyDown" />
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
+                                <TextBox
+                                    Text="{Binding Value, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Center"
+                                    TextAlignment="Center"
+                                    FontFamily="Consolas"
+                                    Padding="0,10,0,10"
+                                    Background="Transparent"
+                                    BorderBrush="Transparent"
+                                    Foreground="White"
+                                    MaxLength="2"
+                                    TextInput="HexTextBox_TextInput"
+                                    GotFocus="HexTextBox_GotFocus"
+                                    LostFocus="HexTextBox_LostFocus"
+                                    KeyDown="HexTextBox_KeyDown" />
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </Grid>
             </ScrollViewer>
         </Border>
-        
-<!-- IO Pins and Other -->
-<Border Grid.Row="1" Grid.Column="1" BorderBrush="#FF000000" BorderThickness="1" CornerRadius="10" Margin="0,10,10,10" ClipToBounds="True">
-    
 
-    
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="0.5*" />
-            <RowDefinition Height="0.5*" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" /> <!-- PORTS -->
-            <ColumnDefinition Width="Auto" /> <!-- OTHERS -->
-        </Grid.ColumnDefinitions>
-        
-        
-        <!-- PORTA PINS -->
-            <Grid Grid.Row="0" Background="#1b1b1b">
+        <!-- IO Pins and Other -->
+        <Border Grid.Row="1" Grid.Column="1" BorderBrush="#FF000000" BorderThickness="1" CornerRadius="10"
+                Margin="0,10,10,10" ClipToBounds="True">
+
+
+            <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" /> <!-- PORT Description -->
-                    <RowDefinition Height="Auto" /> <!-- PIN Number -->
-                    <RowDefinition Height="*" />    <!-- PORTA -->
-                    <RowDefinition Height="*" />    <!-- TRISA -->
+                    <RowDefinition Height="0.5*" />
+                    <RowDefinition Height="0.5*" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" /> <!-- PIN0 -->
-                    <ColumnDefinition Width="*" /> <!-- PIN1 -->
-                    <ColumnDefinition Width="*" /> <!-- PIN2 -->
-                    <ColumnDefinition Width="*" /> <!-- PIN3 -->
-                    <ColumnDefinition Width="*" /> <!-- PIN4 -->
-                    <ColumnDefinition Width="*" /> <!-- PIN5 -->
-                    <ColumnDefinition Width="*" /> <!-- PIN6 -->
-                    <ColumnDefinition Width="*" /> <!-- PIN7 -->
+                    <ColumnDefinition Width="*" /> <!-- PORTS -->
+                    <ColumnDefinition Width="*" /> <!-- Specialfunktionregister -->
+                    <ColumnDefinition Width="*" /> <!-- OTHERS -->
                 </Grid.ColumnDefinitions>
 
-                <!-- PORTA Description -->
 
-                <TextBlock Grid.Row="0" Text="PORTA" 
-                           HorizontalAlignment="Center"
-                           Foreground="White"
-                           Margin="5"/>
+                <Grid Grid.Row="0" Grid.RowSpan="2" Background="#1b1b1b">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="2*" /> <!-- PortA -->
+                        <RowDefinition Height="2*" /> <!-- PortB -->
+                        <RowDefinition Height="*" /> <!-- LEDs -->
+                    </Grid.RowDefinitions>
 
-                <!-- 0 - 7 -->
-                <ItemsControl Grid.Row="1" ItemsSource="{Binding PinNumbers}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding}" 
-                                       HorizontalAlignment="Center"
-                                       Foreground="White"
-                                       Margin="5"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <UniformGrid Columns="8"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
+                    <!-- PortA -->
+                    <Border Grid.Row="0" BorderBrush="#FF000000"
+                            BorderThickness="3" CornerRadius="10" Margin="2" ClipToBounds="True">
+                        <Grid Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
 
-                <!-- TRISA -->
-                <ItemsControl Grid.Row="2" ItemsSource="{Binding IOPins}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <CheckBox
-                                IsEnabled="{Binding CheckTRISAEnabled}"
-                                IsVisible="{Binding IsTRISA}"
-                                IsChecked="{Binding IsSet}"
-                                Foreground="White"
-                                Margin="5"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <UniformGrid Columns="8"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="8" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="PortA" TextAlignment="Center" />
 
-                <!-- PORTA -->
-                <ItemsControl Grid.Row="3" ItemsSource="{Binding IOPins}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <CheckBox
-                                IsEnabled="{Binding IsInput}"
-                                IsVisible="{Binding IsPORTA}"
-                                IsChecked="{Binding IsSet}"
-                                Foreground="White"
-                                Margin="5"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <UniformGrid Columns="8"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
-            </Grid>
-        
-        <!-- PORTB PINS -->
-            <Grid Grid.Row="1" Background="#1b1b1b">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" /> <!-- PORT Description -->
-                    <RowDefinition Height="Auto" /> <!-- PIN Number -->
-                    <RowDefinition Height="*" />    <!-- PORTB -->
-                    <RowDefinition Height="*" />    <!-- TRISB -->
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" /> <!-- PIN0 -->
-                    <ColumnDefinition Width="Auto" /> <!-- PIN1 -->
-                    <ColumnDefinition Width="Auto" /> <!-- PIN2 -->
-                    <ColumnDefinition Width="Auto" /> <!-- PIN3 -->
-                    <ColumnDefinition Width="Auto" /> <!-- PIN4 -->
-                    <ColumnDefinition Width="Auto" /> <!-- PIN5 -->
-                    <ColumnDefinition Width="Auto" /> <!-- PIN6 -->
-                    <ColumnDefinition Width="Auto" /> <!-- PIN7 -->
-                </Grid.ColumnDefinitions>
-                
-                <!-- PORTB Description -->
-                
-                            <TextBlock Grid.Row="0" Text="PORTB" 
-                                       HorizontalAlignment="Center"
-                                       Foreground="White"
-                                       Margin="5"/>
+                            <!-- Pin Numbers -->
+                            <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="7" TextAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="6" TextAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="5" TextAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="3" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="4" TextAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="4" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="3" TextAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="5" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="2" TextAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="6" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="1" TextAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="7" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="0" TextAlignment="Center" />
 
-                
-                
-                <!-- 0 - 7 -->
-                <ItemsControl Grid.Row="1" ItemsSource="{Binding PinNumbers}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding}" 
-                                       HorizontalAlignment="Center"
-                                       Foreground="White"
-                                       Margin="5"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <UniformGrid Columns="8"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
-                
-            <!-- TRISB -->
-            <ItemsControl Grid.Row="2" ItemsSource="{Binding IOPins}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <CheckBox
-                                  IsVisible="{Binding IsTRISB}"
-                                  IsChecked="{Binding IsSet}"
-                                  Foreground="White"
-                                  Margin="5"/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <UniformGrid Columns="8"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
-                
-                <!-- PORTB -->
-                <ItemsControl Grid.Row="3" ItemsSource="{Binding IOPins}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <CheckBox
-                                IsEnabled="{Binding IsInput}"
-                                IsVisible="{Binding IsPORTB}"
-                                IsChecked="{Binding IsSet}"
-                                Foreground="White"
-                                Margin="5"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <UniformGrid Columns="8"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
-            </Grid>
-    </Grid>
-</Border>
+                            <!-- TrisA -->
+                            <CheckBox Grid.Column="0" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisAPin7, Mode=TwoWay}"
+                                      IsEnabled="False" />
+                            <CheckBox Grid.Column="1" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisAPin6, Mode=TwoWay}"
+                                      IsEnabled="False" />
+                            <CheckBox Grid.Column="2" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisAPin5, Mode=TwoWay}"
+                                      IsEnabled="False" />
+                            <CheckBox Grid.Column="3" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisAPin4, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="4" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisAPin3, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="5" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisAPin2, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="6" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisAPin1, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="7" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisAPin0, Mode=TwoWay}" />
 
-        
-        <!-- Codeview with Breakpoints -->
-        <Border Grid.Row="2" Grid.Column="1" BorderBrush="#FF000000" BorderThickness="1" CornerRadius="10" Margin="0,10,10,10" ClipToBounds="True">
-            <ScrollViewer  Background="#1b1b1b">
+                            <!-- PortA -->
+                            <CheckBox Grid.Column="0" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortAPin7, Mode=TwoWay}"
+                                      IsEnabled="False" />
+                            <CheckBox Grid.Column="1" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortAPin6, Mode=TwoWay}"
+                                      IsEnabled="False" />
+                            <CheckBox Grid.Column="2" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortAPin5, Mode=TwoWay}"
+                                      IsEnabled="False" />
+                            <CheckBox Grid.Column="3" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortAPin4, Mode=TwoWay}"
+                                      IsEnabled="{Binding TrisAPin4}" />
+                            <CheckBox Grid.Column="4" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortAPin3, Mode=TwoWay}"
+                                      IsEnabled="{Binding TrisAPin3}" />
+                            <CheckBox Grid.Column="5" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortAPin2, Mode=TwoWay}"
+                                      IsEnabled="{Binding TrisAPin2}" />
+                            <CheckBox Grid.Column="6" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortAPin1, Mode=TwoWay}"
+                                      IsEnabled="{Binding TrisAPin1}" />
+                            <CheckBox Grid.Column="7" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortAPin0, Mode=TwoWay}"
+                                      IsEnabled="{Binding TrisAPin0}" />
+                        </Grid>
+                    </Border>
 
-                <Grid>
+                    <!-- PortB -->
+                    <Border Grid.Row="1" BorderBrush="#FF000000"
+                            BorderThickness="3" CornerRadius="10" Margin="2" ClipToBounds="True">
+                        <Grid Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <!-- PortB -->
+                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="8" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="PortB" TextAlignment="Center" />
+
+                            <!-- Pin Numbers -->
+                            <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="7" TextAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="6" TextAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="5" TextAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="3" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="4" TextAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="4" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="3" TextAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="5" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="2" TextAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="6" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="1" TextAlignment="Center" />
+                            <TextBlock Grid.Row="1" Grid.Column="7" VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" Text="0" TextAlignment="Center" />
+
+                            <!-- TrisB -->
+                            <CheckBox Grid.Column="0" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisBPin7, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="1" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisBPin6, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="2" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisBPin5, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="3" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisBPin4, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="4" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisBPin3, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="5" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisBPin2, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="6" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisBPin1, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="7" Grid.Row="2" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding TrisBPin0, Mode=TwoWay}" />
+
+                            <!-- PortB -->
+                            <CheckBox Grid.Column="0" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortBPin7, Mode=TwoWay}"
+                                      IsEnabled="{Binding TrisBPin7}" />
+                            <CheckBox Grid.Column="1" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortBPin6, Mode=TwoWay}"
+                                      IsEnabled="{Binding TrisBPin6}" />
+                            <CheckBox Grid.Column="2" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortBPin5, Mode=TwoWay}"
+                                      IsEnabled="{Binding TrisBPin5}" />
+                            <CheckBox Grid.Column="3" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortBPin4, Mode=TwoWay}"
+                                      IsEnabled="{Binding TrisBPin4}" />
+                            <CheckBox Grid.Column="4" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortBPin3, Mode=TwoWay}"
+                                      IsEnabled="{Binding TrisBPin3}" />
+                            <CheckBox Grid.Column="5" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortBPin2, Mode=TwoWay}"
+                                      IsEnabled="{Binding TrisBPin2}" />
+                            <CheckBox Grid.Column="6" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortBPin1, Mode=TwoWay}"
+                                      IsEnabled="{Binding TrisBPin1}" />
+                            <CheckBox Grid.Column="7" Grid.Row="3" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding PortBPin0, Mode=TwoWay}"
+                                      IsEnabled="{Binding TrisBPin0}" />
+                        </Grid>
+                    </Border>
+
+                    <!-- LEDs -->
+                    <Border Grid.Row="2" BorderBrush="#FF000000"
+                            BorderThickness="3" CornerRadius="10" Margin="2" ClipToBounds="True">
+                        <Grid Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Led1 -->
+                            <Image Grid.Column="0" Source="/Assets/FontAwesome/png/yellow-lightbulb-solid.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource And}">
+                                        <Binding Path="!TrisBPin7" />
+                                        <Binding Path="PortBPin7" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+                            <Image Grid.Column="0" Source="/Assets/FontAwesome/png/red-lightbulb-regular.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource Or}">
+                                        <Binding Path="TrisBPin7" />
+                                        <Binding Path="!PortBPin7" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+
+                            <!-- Led2 -->
+                            <Image Grid.Column="1" Source="/Assets/FontAwesome/png/yellow-lightbulb-solid.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource And}">
+                                        <Binding Path="!TrisBPin6" />
+                                        <Binding Path="PortBPin6" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+                            <Image Grid.Column="1" Source="/Assets/FontAwesome/png/red-lightbulb-regular.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource Or}">
+                                        <Binding Path="TrisBPin6" />
+                                        <Binding Path="!PortBPin6" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+
+                            <!-- Led3 -->
+                            <Image Grid.Column="2" Source="/Assets/FontAwesome/png/yellow-lightbulb-solid.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource And}">
+                                        <Binding Path="!TrisBPin5" />
+                                        <Binding Path="PortBPin5" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+                            <Image Grid.Column="2" Source="/Assets/FontAwesome/png/red-lightbulb-regular.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource Or}">
+                                        <Binding Path="TrisBPin5" />
+                                        <Binding Path="!PortBPin5" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+
+                            <!-- Led4 -->
+                            <Image Grid.Column="3" Source="/Assets/FontAwesome/png/yellow-lightbulb-solid.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource And}">
+                                        <Binding Path="!TrisBPin4" />
+                                        <Binding Path="PortBPin4" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+                            <Image Grid.Column="3" Source="/Assets/FontAwesome/png/red-lightbulb-regular.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource Or}">
+                                        <Binding Path="TrisBPin4" />
+                                        <Binding Path="!PortBPin4" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+
+                            <!-- Led5 -->
+                            <Image Grid.Column="4" Source="/Assets/FontAwesome/png/yellow-lightbulb-solid.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource And}">
+                                        <Binding Path="!TrisBPin3" />
+                                        <Binding Path="PortBPin3" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+                            <Image Grid.Column="4" Source="/Assets/FontAwesome/png/red-lightbulb-regular.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource Or}">
+                                        <Binding Path="TrisBPin3" />
+                                        <Binding Path="!PortBPin3" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+
+                            <!-- Led6 -->
+                            <Image Grid.Column="5" Source="/Assets/FontAwesome/png/yellow-lightbulb-solid.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource And}">
+                                        <Binding Path="!TrisBPin2" />
+                                        <Binding Path="PortBPin2" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+                            <Image Grid.Column="5" Source="/Assets/FontAwesome/png/red-lightbulb-regular.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource Or}">
+                                        <Binding Path="TrisBPin2" />
+                                        <Binding Path="!PortBPin2" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+
+                            <!-- Led7 -->
+                            <Image Grid.Column="6" Source="/Assets/FontAwesome/png/yellow-lightbulb-solid.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource And}">
+                                        <Binding Path="!TrisBPin1" />
+                                        <Binding Path="PortBPin1" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+                            <Image Grid.Column="6" Source="/Assets/FontAwesome/png/red-lightbulb-regular.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource Or}">
+                                        <Binding Path="TrisBPin1" />
+                                        <Binding Path="!PortBPin1" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+
+                            <!-- Led8 -->
+                            <Image Grid.Column="7" Source="/Assets/FontAwesome/png/yellow-lightbulb-solid.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource And}">
+                                        <Binding Path="!TrisBPin0" />
+                                        <Binding Path="PortBPin0" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+                            <Image Grid.Column="7" Source="/Assets/FontAwesome/png/red-lightbulb-regular.png"
+                                   Width="16"
+                                   Height="16">
+                                <Image.IsVisible>
+                                    <MultiBinding Converter="{StaticResource Or}">
+                                        <Binding Path="TrisBPin0" />
+                                        <Binding Path="!PortBPin0" />
+                                    </MultiBinding>
+                                </Image.IsVisible>
+                            </Image>
+
+                        </Grid>
+                    </Border>
+
+                </Grid>
+
+                <!-- Specialfunctionregister -->
+                <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Background="#1b1b1b">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="2*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
 
-                                
-                                <!-- Breakpoints -->
-                                <ItemsControl Grid.Column="0" ItemsSource="{Binding Breakpoints}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <CheckBox IsChecked="{Binding IsActive}" Content="{Binding LineNumberPlusOne}"
-                                                      Margin="5,0,10,0" IsEnabled="{Binding IsOpcode}"
-                                            />
-                                            <!-- IsVisible="{Binding IsOpcode}"  -->
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl> 
-                                
-                                <!-- Codeview -->
-                                <ItemsControl Grid.Column="1" ItemsSource="{Binding ProgramLines}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                        <TextBlock Text="{Binding Content}" 
-                                       TextWrapping="Wrap" 
-                                       FontFamily="Consolas" 
-                                       Background="{Binding IsHighlighted, 
-                                       Converter={StaticResource BooleanToBrushConverter}}" />
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl> 
+                    <!--visible registers-->
+                    <Border Grid.Column="0" Grid.Row="0" BorderBrush="#FF000000" BorderThickness="3" CornerRadius="10"
+                            Margin="2" ClipToBounds="True">
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="W-Reg" TextAlignment="Left" VerticalAlignment="Center"
+                                           FontSize="11" />
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding WReg, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}"
+                                           TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="FSR" TextAlignment="Left" VerticalAlignment="Center"
+                                           FontSize="11" />
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding FSR, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}"
+                                           TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
+                            </Grid>
+                            <Grid Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="PCL" TextAlignment="Left" VerticalAlignment="Center"
+                                           FontSize="11" />
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding PCL, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}"
+                                           TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
+                            </Grid>
+                            <Grid Grid.Row="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="PCLATH" TextAlignment="Left"
+                                           VerticalAlignment="Center" FontSize="11" />
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding PCLATH, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}"
+                                           TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
+                            </Grid>
+                            <Grid Grid.Row="4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="Status" TextAlignment="Left"
+                                           VerticalAlignment="Center" FontSize="11" />
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding StatusReg, Converter={StaticResource IntToHexConverter}, Mode=TwoWay}"
+                                           TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
+                            </Grid>
+                        </Grid>
+                    </Border>
+
+                    <!--hidden registers-->
+                    <Border Grid.Column="1" Grid.Row="0" BorderBrush="#FF000000" BorderThickness="3" CornerRadius="10"
+                            Margin="2" ClipToBounds="True">
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="PC" TextAlignment="Left" VerticalAlignment="Center"
+                                           FontSize="11" />
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding ProgramCounter, Converter={StaticResource IntToHexConverter}, ConverterParameter=X4, Mode=TwoWay}"
+                                           TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="Stackptr" TextAlignment="Left"
+                                           VerticalAlignment="Center" FontSize="11" />
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding StackPointer, Mode=TwoWay}"
+                                           TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
+                            </Grid>
+                            <Grid Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="Prescaler" TextAlignment="Left"
+                                           VerticalAlignment="Center" FontSize="11" />
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding Prescaler, Converter={StaticResource IntToHexConverter}, ConverterParameter=X2, Mode=TwoWay}"
+                                           TextAlignment="Right" VerticalAlignment="Center" FontSize="11" />
+                            </Grid>
+                            <Grid Grid.Row="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="WDT active" TextAlignment="Left"
+                                           VerticalAlignment="Center" FontSize="11" />
+                                <CheckBox Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                          FontSize="11" Padding="0" IsChecked="{Binding IsWDTEnabled, Mode=TwoWay}" />
+                            </Grid>
+                            <Grid Grid.Row="4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="WDT" TextAlignment="Left" VerticalAlignment="Center"
+                                           FontSize="11" />
+                                <TextBlock Grid.Column="1" Text="{Binding WDT, Mode=TwoWay}" TextAlignment="Right"
+                                           VerticalAlignment="Center" FontSize="11" />
+                            </Grid>
+                        </Grid>
+                    </Border>
+
+                    <!--Stack-->
+                    <Border Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" BorderBrush="#FF000000" BorderThickness="3"
+                            CornerRadius="10" Margin="2" ClipToBounds="True">
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="Stack" FontSize="11"
+                                       HorizontalAlignment="Center" />
+                            <ItemsControl Grid.Row="1" ItemsSource="{Binding StackItems}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <UniformGrid Rows="8" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock
+                                            Text="{Binding}"
+                                            Margin="0"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            FontSize="11" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Grid>
+                    </Border>
+
+                    <!--Status Reg-->
+                    <Border Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" BorderBrush="#FF000000"
+                            BorderThickness="3" CornerRadius="10" Margin="2" ClipToBounds="True">
+                        <Grid Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Column="0" Grid.Row="0" Text="IRF" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="1" Grid.Row="0" Text="RP1" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="2" Grid.Row="0" Text="RPO" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="3" Grid.Row="0" Text="TO" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="4" Grid.Row="0" Text="PD" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="5" Grid.Row="0" Text="Z" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="6" Grid.Row="0" Text="DC" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="7" Grid.Row="0" Text="C" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+
+                            <CheckBox Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding StatusBit7, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding StatusBit6, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding StatusBit5, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="3" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding StatusBit4, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="4" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding StatusBit3, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="5" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding StatusBit2, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="6" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding StatusBit1, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="7" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding StatusBit0, Mode=TwoWay}" />
+                        </Grid>
+                    </Border>
+
+                    <!--Option Reg-->
+                    <Border Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3" BorderBrush="#FF000000"
+                            BorderThickness="3" CornerRadius="10" Margin="5" ClipToBounds="True">
+                        <Grid Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Column="0" Grid.Row="0" Text="RBPU" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="1" Grid.Row="0" Text="INTEDG" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="2" Grid.Row="0" Text="T0CS" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="3" Grid.Row="0" Text="T0SE" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="4" Grid.Row="0" Text="PSA" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="5" Grid.Row="0" Text="PS2" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="6" Grid.Row="0" Text="PS1" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="7" Grid.Row="0" Text="PS0" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+
+                            <CheckBox Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding OptionBit7, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding OptionBit6, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding OptionBit5, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="3" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding OptionBit4, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="4" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding OptionBit3, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="5" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding OptionBit2, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="6" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding OptionBit1, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="7" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding OptionBit0, Mode=TwoWay}" />
+                        </Grid>
+                    </Border>
+
+                    <!--INTCON Reg-->
+                    <Border Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3" BorderBrush="#FF000000"
+                            BorderThickness="3" CornerRadius="10" Margin="5" ClipToBounds="True">
+                        <Grid Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Column="0" Grid.Row="0" Text="GIE" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="1" Grid.Row="0" Text="EEIE" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="3" Grid.Row="0" Text="T0IE" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="4" Grid.Row="0" Text="INTE" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="5" Grid.Row="0" Text="RBIE" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="6" Grid.Row="0" Text="T0IF" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="2" Grid.Row="0" Text="INTF" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Grid.Column="7" Grid.Row="0" Text="RBIF" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+
+                            <CheckBox Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding IntconBit7, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding IntconBit6, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding IntconBit5, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="3" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding IntconBit4, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="4" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding IntconBit3, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="5" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding IntconBit2, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="6" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding IntconBit1, Mode=TwoWay}" />
+                            <CheckBox Grid.Column="7" Grid.Row="1" HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" IsChecked="{Binding IntconBit0, Mode=TwoWay}" />
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Background="#1b1b1b">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Column="0" Grid.Row="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <Border Grid.Row="0" BorderBrush="#FF000000"
+                                    BorderThickness="3" CornerRadius="10" Margin="2" ClipToBounds="True">
+                                <Grid Margin="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="3*" />
+                                        <ColumnDefinition Width="3*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="Runtimetimer" VerticalAlignment="Center"
+                                               HorizontalAlignment="Stretch" TextAlignment="Left" Margin="10" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Timer0}" VerticalAlignment="Center"
+                                               HorizontalAlignment="Stretch" TextAlignment="Right" Margin="10" />
+                                    <TextBlock Grid.Column="2" Text="μs" VerticalAlignment="Center"
+                                               HorizontalAlignment="Stretch" TextAlignment="Left" Margin="0,10,10,10" />
+                                </Grid>
+                            </Border>
+                            <Border Grid.Row="1" BorderBrush="#FF000000"
+                                    BorderThickness="3" CornerRadius="10" Margin="2" ClipToBounds="True">
+                                <Grid Margin="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="3*" />
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="Frequency" VerticalAlignment="Center"
+                                               HorizontalAlignment="Stretch" TextAlignment="Left" Margin="10" />
+                                    <ComboBox Grid.Column="1" ItemsSource="{Binding Frequencies}" SelectedItem="{Binding SelectedFrequency, Mode=TwoWay }" VerticalAlignment="Center"
+                                               HorizontalAlignment="Stretch"  Margin="10" />
+                                    <TextBlock Grid.Column="2" Text="MHz" VerticalAlignment="Center"
+                                               HorizontalAlignment="Stretch" TextAlignment="Left" Margin="0,10,10,10" />
+                                </Grid>
+                            </Border>
+
+                        </Grid>
+                        
                     </Grid>
-            </ScrollViewer>
+
+                </Grid>
+            </Grid>
+        </Border>
+
+
+        <!-- Codeview with Breakpoints -->
+        <Border Grid.Row="2" Grid.Column="1" BorderBrush="#FF000000" BorderThickness="1" CornerRadius="10"
+                Margin="0,10,10,10" ClipToBounds="True">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="6*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <ScrollViewer Grid.Column="0" Background="#1b1b1b" VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding CombinedList}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="5"
+                                        Background="{Binding Line.IsHighlighted, 
+                                       Converter={StaticResource BooleanToBrushConverter}}">
+                                    <StackPanel Orientation="Horizontal"><!--Content="{Binding Breakpoint.LineNumberPlusOne}"-->
+
+                                        <CheckBox IsChecked="{Binding Breakpoint.IsActive}"
+                                                  IsEnabled="{Binding Breakpoint.IsOpcode}" Margin="10,0,10,0"
+                                                  VerticalAlignment="Center" />
+                                        <TextBlock Text="{Binding Line.Content}"
+                                                   VerticalAlignment="Center"
+                                                   HorizontalAlignment="Center"
+                                                   TextWrapping="Wrap"
+                                                   FontFamily="Consolas"
+                                                   Margin="0" />
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+
+                <Grid Grid.Column="1" Background="#1b1b1b">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Button Grid.Row="0" Command="{Binding StartCommand}" ToolTip.Tip="Run"
+                            HorizontalAlignment="Stretch" Margin="2">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Image Grid.Column="0" Source="/Assets/FontAwesome/png/red-play-solid.png" Width="24"
+                                   Height="24" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="1" Text="Run" Foreground="White" HorizontalAlignment="Stretch"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                        </Grid>
+                    </Button>
+                    <Button Grid.Row="1" Command="{Binding StepCommand}" IsEnabled="{Binding !IsExecuting}"
+                            ToolTip.Tip="Step Forward" HorizontalAlignment="Stretch" Margin="2">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Image Grid.Column="0" Source="/Assets/FontAwesome/png/red-forward-step-solid.png"
+                                   Width="24" Height="24" />
+                            <TextBlock Grid.Column="1" Text="Step Forward" Foreground="White"
+                                       HorizontalAlignment="Stretch" VerticalAlignment="Center" TextAlignment="Center" />
+                        </Grid>
+                    </Button>
+                    <Button Grid.Row="2" Command="{Binding SkipCommand}" IsEnabled="{Binding !IsExecuting}"
+                            ToolTip.Tip="Skip To Next" HorizontalAlignment="Stretch" Margin="2">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Image Grid.Column="0" Source="/Assets/FontAwesome/png/red-forward-solid.png" Width="24"
+                                   Height="24" />
+                            <TextBlock Grid.Column="1" Text="Skip To Next" Foreground="White"
+                                       HorizontalAlignment="Stretch" VerticalAlignment="Center" TextAlignment="Center" />
+                        </Grid>
+                    </Button>
+                    <Button Grid.Row="3" Command="{Binding PauseCommand}" IsEnabled="{Binding IsExecuting}"
+                            ToolTip.Tip="Pause" HorizontalAlignment="Stretch" Margin="2">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Image Grid.Column="0" Source="/Assets/FontAwesome/png/red-pause-solid.png" Width="24"
+                                   Height="24" />
+                            <TextBlock Grid.Column="1" Text="Pause" Foreground="White" HorizontalAlignment="Stretch"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                        </Grid>
+                    </Button>
+                    <Button Grid.Row="4" Command="{Binding ResetCommand}" ToolTip.Tip="Reset"
+                            HorizontalAlignment="Stretch" Margin="2">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Image Grid.Column="0" Source="/Assets/FontAwesome/png/red-stop-solid.png" Width="24"
+                                   Height="24" />
+                            <TextBlock Grid.Column="1" Text="Reset" Foreground="White" HorizontalAlignment="Stretch"
+                                       VerticalAlignment="Center" TextAlignment="Center" />
+                        </Grid>
+                    </Button>
+                </Grid>
+            </Grid>
         </Border>
     </Grid>
 </Window>

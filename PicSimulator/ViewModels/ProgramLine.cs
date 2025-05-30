@@ -11,6 +11,7 @@ public class ProgramLine : ViewModelBase
     private bool _isHighlighted;
     private bool _isBreakpoint;
     
+    
     public ProgramLine(int lineNumber, string content, bool isHighlighted = false, bool isBreakpoint = false)
     {
         LineNumber = lineNumber;
