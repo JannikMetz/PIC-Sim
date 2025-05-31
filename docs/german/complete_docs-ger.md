@@ -7,21 +7,16 @@
     2.3 [Vor- und Nachteile einer Simulation](#vor--und-nachteile-einer-simulation)  
     2.4 [Programmoberfläche und deren Handhabung](#programmoberfläche-und-deren-handhabung)
 3. [Realisierung](#realisierung)  
-   3.1 [Beschreibung des Grundkonzepts](#beschreibung-des-grundkonzepts)  
-   3.2 [Beschreibung der Gliederung](#beschreibung-der-gliederung)  
-   3.3 [Programmstruktur und Ablaufdiagramme](#programmstruktur-und-ablaufdiagramme)  
-   3.4 [Verwendete Programmiersprache](#verwendete-programmiersprache)  
-   3.5 [Funktionsbeschreibung ausgewählter Befehle](#funktionsbeschreibung-ausgewählter-befehle)  
-   3.6 [Realisierung der Flags](#realisierung-der-flags)  
-   3.7 [Implementierung von Interrupts](#implementierung-von-interrupts)  
-   3.8 [Realisierung des TRIS-Registers](#realisierung-des-tris-registers)  
-   3.9 [EEPROM-State-Machine](#eeprom-state-machine)  
+   3.1 [Beschreibung des Grundkonzepts](#beschreibung-des-grundkonzepts)   
+   3.2 [Verwendete Programmiersprache](#verwendete-programmiersprache)  
+   3.3 [Funktionsbeschreibung ausgewählter Befehle](#funktionsbeschreibung-ausgewählter-befehle)  
+   3.4 [Realisierung der Flags](#realisierung-der-flags)  
+   3.5 [Implementierung von Interrupts](#implementierung-von-interrupts)  
+   3.6 [Realisierung des TRIS-Registers](#realisierung-des-tris-registers)  
+   3.7 [EEPROM-State-Machine](#eeprom-state-machine)  
 4. [Zusammenfassung](#zusammenfassung)  
    4.1 [Erreichte Funktionalität](#erreichte-funktionalität)  
    4.2 [Fazit und persönliche Erfahrungen](#fazit-und-persönliche-erfahrungen)  
-5. [Anhang](#anhang)  
-   5.1 [Programmlisting](#programmlisting)  
-   5.2 [Projektverlauf und Versionsverwaltung](#projektverlauf-und-versionsverwaltung)
 
 # Einleitung
 
@@ -89,6 +84,24 @@ Somit sind Systemvariablen wie Spannung, Stromstärke, Stromverbrauch, Temperatu
 
 ## Vor- und Nachteile einer Simulation
 
+Eine Simulation bringt sowohl Vorteile als auch Nachteile mit sich, je nachdem in welchem Kontext und zu welchem Zweck sie eingesetzt wird. Hier eine übersichtliche Gegenüberstellung im Falle dieses Projektes:
+
+### Vorteile
+| Vorteil | Begründung |
+| ------- | --------- |
+| **Kostenersparnis** | Keine Hardware erforderlich |
+| **Fehleranalyse** | Breakpoints, Schritt-für-Schritt-Ausführung, Register-Überwachung etc. ermöglichen präzises Debugging |
+| **Flexibilität** | Schnelles Testen von Code-Änderungen ohne Hardware-Anpassungen (z. B. Flashen) |
+| **Portabilität** | Simulationen können auf verschiedenen Computern unabhängig von der physischen Hardware ausgeführt werden. |
+
+
+### Nachteile
+| Nachteil | Begründung |
+| -------- | --------- |
+| **Eingeschränkte Genauigkeit** | Hardware-spezifische Details wie Timing, Signalverhalten und Störungen werden nicht berücksichtigt |
+| **Fehlende Interaktion** | Physische Komponenten wie Sensoren, Motoren oder Aktoren können nicht direkt getestet werden |
+| **Performance-Unterschiede** | Zeitverhalten in der Simulation kann vom echten Mikrocontroller stark abweichen – kritische Timing-Tests sind schwierig |
+| **Hardware-nahe Probleme werden nicht erkannt** | Probleme wie Lötfehler, Spannungsabfälle, elektrische Störungen oder thermische Effekte bleiben verborgen. |
 
 
 ## Programmoberfläche und deren Handhabung
@@ -107,10 +120,6 @@ Danach wird immer der Befehl mit dem Index des Programmzählers ausgeführt. Der
 In dieser Funktion wird dann der Befehlscode ausgeführt, der die Register des PIC16F84 entsprechend ändert. 
 Die meisten Befehle inkrementieren den Programmzähler um 1, sodass der nächste Befehl im Array ausgeführt wird. Außnamen sind Sprungbefehle, die den Programmzähler auf eine andere Adresse setzen, und Befehle wie `BTFSx`, die den nächsten Befehl überspringen, wenn eine Bedingung erfüllt ist.
 Ausserdem wird der Timer und Watchdog Timer (falls aktiviert) bei jedem Befehl aktualisiert.
-
-## Beschreibung der Gliederung
-
-## Programmstruktur und Ablaufdiagramme
 
 ## Verwendete Programmiersprache
 
@@ -174,9 +183,3 @@ Die Arbeit mit Avalonia UI war anfangs herausfordernd, dies lag vor allem daran,
 Die Entscheidung, C# für das Backend zu verwenden, erwies sich als vorteilhaft, da es eine robuste und gut unterstützte Sprache ist, die eine schnelle Entwicklung ermöglicht.
 
 Zudem wurden unsere Git-Kenntnisse durch die Arbeit an diesem Projekt verbessert, da wir unsere Versionsverwaltung mit GitHub verwaltet haben.
-
-# Anhang
-
-## Programmlisting
-
-## Projektverlauf und Versionsverwaltung
